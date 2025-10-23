@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
   web:
     image: polylend-web
+    container_name: polylend-web
     build:
       context: .
       dockerfile: Dockerfile
