@@ -9,10 +9,10 @@ export default function Nav() {
         Home
       </Link>
       <Link href="/lend" style={link}>
-        About
+        Lend
       </Link>
       <Link href="/borrow" style={link}>
-        Contact
+        Borrow
       </Link>
     </nav>
   );
