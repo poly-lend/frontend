@@ -16,7 +16,10 @@ export default function Home() {
         <div style={{ padding: "50px" }}></div>
         <p className="text-lg">
           <LinkIcon />{" "}
-          <a href="https://dexscreener.com/solana/9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump">
+          <a
+            className="text-blue-500"
+            href="https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh"
+          >
             9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump
           </a>
         </p>
