@@ -14,6 +14,9 @@ export default function Nav() {
       <Link href="/borrow" style={link}>
         Borrow
       </Link>
+      <Link href="/points" style={link}>
+        Points
+      </Link>
     </nav>
   );
 }
