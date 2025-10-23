@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="flex pitems-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex pitems-center justify-center">
       <main>
         <div style={{ padding: "100px" }}></div>
         <h1 className="text-4xl font-bold">
