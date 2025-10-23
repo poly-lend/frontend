@@ -1,7 +1,7 @@
 services:
   caddy:
     image: caddy
-    container_name: liquid-caddy
+    container_name: polylend-caddy
     ports:
       - "80:80"
       - "443:443"
@@ -9,3 +9,13 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./src:/wwwroot
     restart: unless-stopped
+  web:
+    image: polylend-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    command: ["npm", "start"]

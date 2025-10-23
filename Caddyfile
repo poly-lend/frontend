@@ -1,4 +1,3 @@
 polylend.cc {
-    root * /wwwroot
-    file_server
+    reverse_proxy web:3000
 }
