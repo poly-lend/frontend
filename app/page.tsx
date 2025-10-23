@@ -15,12 +15,9 @@ export default function Home() {
         </h1>
         <div style={{ padding: "50px" }}></div>
         <p className="text-lg">
-          <LinkIcon />
-          <a
-            className="text-blue-500"
-            href="https://dexscreener.com/solana/7ernkhxegyj5vsy26mzeeyevzpdksrgp1dx3ugt9mmph"
-          >
-            7ernkhxegyj5vsy26mzeeyevzpdksrgp1dx3ugt9mmph
+          <LinkIcon />{" "}
+          <a href="https://dexscreener.com/solana/9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump">
+            9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump
           </a>
         </p>
         <p>
