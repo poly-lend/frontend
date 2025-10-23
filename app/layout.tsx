@@ -1,6 +1,7 @@
 import Nav from "@/components/nav";
 import Top from "@/components/top";
 import "@rainbow-me/rainbowkit/styles.css";
+
 import type { Metadata } from "next";
 import "./globals.css";
 

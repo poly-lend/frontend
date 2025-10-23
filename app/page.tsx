@@ -1,3 +1,8 @@
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkIcon from "@mui/icons-material/Link";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import XIcon from "@mui/icons-material/X";
+
 export default function Home() {
   return (
     <div className="flex pitems-center justify-center">
@@ -8,7 +13,7 @@ export default function Home() {
         </h1>
         <div style={{ padding: "50px" }}></div>
         <p className="text-lg">
-          CA:
+          <LinkIcon />
           <a
             className="text-blue-500"
             href="https://dexscreener.com/solana/7ernkhxegyj5vsy26mzeeyevzpdksrgp1dx3ugt9mmph"
@@ -17,19 +22,19 @@ export default function Home() {
           </a>
         </p>
         <p>
-          GH:
+          <GitHubIcon />
           <a className="text-blue-500" href="https://github.com/poly-lend/">
             https://github.com/poly-lend/
           </a>
         </p>
         <p>
-          TG:{" "}
+          <TelegramIcon />
           <a className="text-blue-500" href="https://t.me/poly_lend">
             @poly_lend
           </a>
         </p>
         <p>
-          X:{" "}
+          <XIcon />
           <a className="text-blue-500" href="https://x.com/poly_lend">
             @poly_lend
           </a>
