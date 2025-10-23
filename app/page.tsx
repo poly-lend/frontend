@@ -1,10 +1,12 @@
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex pitems-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main>
+        <div style={{ padding: "100px" }}></div>
         <h1 className="text-4xl font-bold">
           This is the place where PolyLend will live
         </h1>
+        <div style={{ padding: "50px" }}></div>
         <p className="text-lg">
           CA:
           <a
