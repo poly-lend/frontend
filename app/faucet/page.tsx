@@ -54,7 +54,7 @@ export default function Faucet() {
         onClick={() => mintUSDC()}
         disabled={isPending}
       >
-        {isPending ? "Minting..." : "Mint USDC"}
+        {isPending ? "Minting..." : "Mint pfUSDC"}
       </Button>
       {hash && (
         <div>
