@@ -1,5 +1,3 @@
-"use client";
-
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkIcon from "@mui/icons-material/Link";
 import TelegramIcon from "@mui/icons-material/Telegram";

@@ -1,10 +1,5 @@
-"use client";
-
-import { ConnectButton, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
-import { WagmiProvider } from "wagmi";
-import { config, queryClient } from "./wagmi";
 
 export default function Nav() {
   const link = { marginRight: 12 };
@@ -31,15 +26,12 @@ export default function Nav() {
           <Link href="/points" style={link}>
             Points
           </Link>
+          <Link href="/faucet" style={link}>
+            Faucet
+          </Link>
         </div>
         <div>
-          <WagmiProvider config={config}>
-            <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider>
-                <ConnectButton />
-              </RainbowKitProvider>
-            </QueryClientProvider>
-          </WagmiProvider>
+          <ConnectButton />
         </div>
       </nav>
     </>
