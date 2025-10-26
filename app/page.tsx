@@ -2,6 +2,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkIcon from "@mui/icons-material/Link";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import XIcon from "@mui/icons-material/X";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,30 +15,30 @@ export default function Home() {
         <div style={{ padding: "50px" }}></div>
         <p className="text-lg">
           <LinkIcon />{" "}
-          <a
-            className="text-blue-500"
+          <Link
+            style={{ color: "blue" }}
             href="https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh"
           >
-            9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump
-          </a>
+            https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh
+          </Link>
         </p>
         <p>
-          <GitHubIcon />
-          <a className="text-blue-500" href="https://github.com/poly-lend/">
+          <GitHubIcon />{" "}
+          <Link style={{ color: "blue" }} href="https://github.com/poly-lend/">
             https://github.com/poly-lend/
-          </a>
+          </Link>
         </p>
         <p>
-          <TelegramIcon />
-          <a className="text-blue-500" href="https://t.me/poly_lend">
+          <TelegramIcon />{" "}
+          <Link style={{ color: "blue" }} href="https://t.me/poly_lend">
             @poly_lend
-          </a>
+          </Link>
         </p>
         <p>
-          <XIcon />
-          <a className="text-blue-500" href="https://x.com/poly_lend">
+          <XIcon />{" "}
+          <Link style={{ color: "blue" }} href="https://x.com/poly_lend">
             @poly_lend
-          </a>
+          </Link>
         </p>
       </main>
     </div>

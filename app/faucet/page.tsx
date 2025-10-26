@@ -50,7 +50,19 @@ export default function Faucet() {
       <button onClick={() => mintUSDC()} disabled={isPending}>
         {isPending ? "Minting..." : "Mint USDC"}
       </button>
-      {hash && <div>Transaction Hash: {hash}</div>}
+      {hash && (
+        <div>
+          Transaction Hash:{" "}
+          <a
+            style={{ color: "blue" }}
+            href={`https://polygonscan.com/tx/${hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {hash}
+          </a>
+        </div>
+      )}
       {isConfirming && <div>Waiting for confirmation...</div>}
       {isConfirmed && <div>Transaction confirmed.</div>}
       {error && (
