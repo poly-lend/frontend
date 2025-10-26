@@ -3,6 +3,8 @@
 import { BalanceRefreshContext } from "@/components/context";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
+import { Input } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useContext, useEffect, useState } from "react";
 import {
   BaseError,
@@ -41,15 +43,19 @@ export default function Faucet() {
     <div>
       <h1>Faucet</h1>
       <div style={{ padding: "50px" }}></div>
-      <input
-        type="number"
+      <Input
+        inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
         placeholder="Amount"
         value={amount}
         onChange={(e) => setAmount(Number(e.target.value))}
       />
-      <button onClick={() => mintUSDC()} disabled={isPending}>
+      <Button
+        variant="contained"
+        onClick={() => mintUSDC()}
+        disabled={isPending}
+      >
         {isPending ? "Minting..." : "Mint USDC"}
-      </button>
+      </Button>
       {hash && (
         <div>
           Transaction Hash:{" "}
