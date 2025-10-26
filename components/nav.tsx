@@ -1,5 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
+import Balance from "./balance";
 
 export default function Nav() {
   const link = { marginRight: 12 };
@@ -30,7 +31,8 @@ export default function Nav() {
             Faucet
           </Link>
         </div>
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Balance />
           <ConnectButton />
         </div>
       </nav>
