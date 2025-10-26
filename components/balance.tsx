@@ -19,12 +19,12 @@ export default function Balance() {
   useEffect(() => {
     refetch();
     setBalanceRefresh(false);
-  }, [balanceRefresh]);
+  }, [balanceRefresh, refetch, setBalanceRefresh]);
 
   return (
     address && (
       <div style={{ fontSize: 16, fontWeight: 600 }}>
-        {balance ? Number(balance) / 10 ** usdcDecimals : 0} USDC
+        {balance ? Number(balance) / 10 ** usdcDecimals : 0} pfUSDC
       </div>
     )
   );

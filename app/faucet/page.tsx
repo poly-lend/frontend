@@ -35,7 +35,7 @@ export default function Faucet() {
     if (isConfirmed) {
       setBalanceRefresh(true);
     }
-  }, [isConfirmed]);
+  }, [isConfirmed, setBalanceRefresh]);
 
   return (
     <div>
