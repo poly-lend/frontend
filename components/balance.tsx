@@ -1,15 +1,25 @@
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
+import { useContext, useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi";
+import { BalanceRefreshContext } from "./context";
 
 export default function Balance() {
   const { address } = useAccount();
+  const { balanceRefresh, setBalanceRefresh } = useContext(
+    BalanceRefreshContext
+  );
 
-  const { data: balance } = useReadContract({
+  const { data: balance, refetch } = useReadContract({
     ...usdcConfig,
     functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
+
+  useEffect(() => {
+    refetch();
+    setBalanceRefresh(false);
+  }, [balanceRefresh]);
 
   return (
     address && (

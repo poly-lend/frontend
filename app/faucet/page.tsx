@@ -1,8 +1,9 @@
 "use client";
 
+import { BalanceRefreshContext } from "@/components/context";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   BaseError,
   useAccount,
@@ -13,6 +14,7 @@ import {
 export default function Faucet() {
   const { address } = useAccount();
   const [amount, setAmount] = useState(1000);
+  const { setBalanceRefresh } = useContext(BalanceRefreshContext);
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -28,6 +30,12 @@ export default function Faucet() {
       args: [address as `0x${string}`, BigInt(amount * 10 ** usdcDecimals)],
     });
   };
+
+  useEffect(() => {
+    if (isConfirmed) {
+      setBalanceRefresh(true);
+    }
+  }, [isConfirmed]);
 
   return (
     <div>
