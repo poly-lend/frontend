@@ -40,40 +40,52 @@ export default function Faucet() {
   }, [isConfirmed, setBalanceRefresh]);
 
   return (
-    <div>
-      <h1>Faucet</h1>
-      <div style={{ padding: "50px" }}></div>
-      <Input
-        inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
-      />
-      <Button
-        variant="contained"
-        onClick={() => mintUSDC()}
-        disabled={isPending}
-      >
-        {isPending ? "Minting..." : "Mint pfUSDC"}
-      </Button>
-      {hash && (
-        <div>
-          Transaction Hash:{" "}
-          <a
-            style={{ color: "blue" }}
-            href={`https://polygonscan.com/tx/${hash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {hash}
-          </a>
-        </div>
-      )}
-      {isConfirming && <div>Waiting for confirmation...</div>}
-      {isConfirmed && <div>Transaction confirmed.</div>}
-      {error && (
-        <div>Error: {(error as BaseError).shortMessage || error.message}</div>
-      )}
-    </div>
+    <>
+      <div className="flex pitems-center justify-center">
+        <h1
+          style={{
+            fontSize: 48,
+            fontWeight: 800,
+            paddingTop: 50,
+            paddingBottom: 50,
+          }}
+        >
+          Faucet
+        </h1>
+      </div>
+      <div style={{ padding: "50px" }}>
+        <Input
+          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+        />
+        <Button
+          variant="contained"
+          onClick={() => mintUSDC()}
+          disabled={isPending}
+        >
+          {isPending ? "Minting..." : "Mint pfUSDC"}
+        </Button>
+        {hash && (
+          <div>
+            Transaction Hash:{" "}
+            <a
+              style={{ color: "blue" }}
+              href={`https://polygonscan.com/tx/${hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {hash}
+            </a>
+          </div>
+        )}
+        {isConfirming && <div>Waiting for confirmation...</div>}
+        {isConfirmed && <div>Transaction confirmed.</div>}
+        {error && (
+          <div>Error: {(error as BaseError).shortMessage || error.message}</div>
+        )}
+      </div>
+    </>
   );
 }

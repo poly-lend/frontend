@@ -8,9 +8,15 @@ export default function Home() {
   return (
     <div className="flex pitems-center justify-center">
       <main>
-        <div style={{ padding: "100px" }}></div>
-        <h1 className="text-4xl font-bold">
-          This is the place where PolyLend will live
+        <h1
+          style={{
+            fontSize: 48,
+            fontWeight: 800,
+            paddingTop: 100,
+            textAlign: "center",
+          }}
+        >
+          PolyLend
         </h1>
         <div style={{ padding: "50px" }}></div>
         <p className="text-lg">

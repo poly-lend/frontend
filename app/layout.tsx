@@ -1,5 +1,5 @@
+import "@fontsource/roboto/700.css";
 import "@rainbow-me/rainbowkit/styles.css";
-
 import type { Metadata } from "next";
 import Children from "./children";
 import "./globals.css";

@@ -1,9 +1,17 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
+import { useState } from "react";
 import Balance from "./balance";
 
 export default function Nav() {
-  const link = { marginRight: 12 };
+  const [selected, setSelected] = useState("home");
+  const links = [
+    { href: "/", label: "Home", id: "home" },
+    { href: "/lend", label: "Lend", id: "lend" },
+    { href: "/borrow", label: "Borrow", id: "borrow" },
+    { href: "/faucet", label: "Faucet", id: "faucet" },
+  ];
+
   return (
     <>
       <nav
@@ -15,21 +23,20 @@ export default function Nav() {
         }}
       >
         <div>
-          <Link href="/" style={link}>
-            Home
-          </Link>
-          <Link href="/lend" style={link}>
-            Lend
-          </Link>
-          <Link href="/borrow" style={link}>
-            Borrow
-          </Link>
-          <Link href="/points" style={link}>
-            Points
-          </Link>
-          <Link href="/faucet" style={link}>
-            Faucet
-          </Link>
+          {links.map((link) => (
+            <Link
+              href={link.href}
+              key={link.id}
+              style={{
+                marginRight: 20,
+                fontWeight: 800,
+                color: selected === link.id ? "blue" : "",
+              }}
+              onClick={() => setSelected(link.id)}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Balance />
