@@ -22,6 +22,7 @@ export default function Home() {
         <p className="text-lg">
           <LinkIcon />{" "}
           <Link
+            target="_blank"
             style={{ color: "violet" }}
             href="https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh"
           >
@@ -31,6 +32,7 @@ export default function Home() {
         <p>
           <GitHubIcon />{" "}
           <Link
+            target="_blank"
             style={{ color: "violet" }}
             href="https://github.com/poly-lend/"
           >
@@ -39,13 +41,21 @@ export default function Home() {
         </p>
         <p>
           <TelegramIcon />{" "}
-          <Link style={{ color: "violet" }} href="https://t.me/poly_lend">
+          <Link
+            target="_blank"
+            style={{ color: "violet" }}
+            href="https://t.me/poly_lend"
+          >
             @poly_lend
           </Link>
         </p>
         <p>
           <XIcon />{" "}
-          <Link style={{ color: "violet" }} href="https://x.com/poly_lend">
+          <Link
+            target="_blank"
+            style={{ color: "violet" }}
+            href="https://x.com/poly_lend"
+          >
             @poly_lend
           </Link>
         </p>
