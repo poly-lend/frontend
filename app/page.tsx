@@ -22,7 +22,7 @@ export default function Home() {
         <p className="text-lg">
           <LinkIcon />{" "}
           <Link
-            style={{ color: "blue" }}
+            style={{ color: "violet" }}
             href="https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh"
           >
             https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh
@@ -30,19 +30,22 @@ export default function Home() {
         </p>
         <p>
           <GitHubIcon />{" "}
-          <Link style={{ color: "blue" }} href="https://github.com/poly-lend/">
+          <Link
+            style={{ color: "violet" }}
+            href="https://github.com/poly-lend/"
+          >
             https://github.com/poly-lend/
           </Link>
         </p>
         <p>
           <TelegramIcon />{" "}
-          <Link style={{ color: "blue" }} href="https://t.me/poly_lend">
+          <Link style={{ color: "violet" }} href="https://t.me/poly_lend">
             @poly_lend
           </Link>
         </p>
         <p>
           <XIcon />{" "}
-          <Link style={{ color: "blue" }} href="https://x.com/poly_lend">
+          <Link style={{ color: "violet" }} href="https://x.com/poly_lend">
             @poly_lend
           </Link>
         </p>

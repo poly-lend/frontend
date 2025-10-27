@@ -30,7 +30,7 @@ export default function Nav() {
               style={{
                 marginRight: 20,
                 fontWeight: 800,
-                color: selected === link.id ? "blue" : "",
+                color: selected === link.id ? "violet" : "",
               }}
               onClick={() => setSelected(link.id)}
             >
