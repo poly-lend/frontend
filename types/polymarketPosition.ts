@@ -1,0 +1,25 @@
+export type Position = {
+  proxyWallet: `0x${string}`;
+  asset: bigint;
+  conditionId: `0x${string}`;
+  size: number;
+  avgPrice: number;
+  initialValue: number;
+  currentValue: number;
+  cashPnl: number;
+  percentPnl: number;
+  totalBought: number;
+  realizedPnl: number;
+  percentRealizedPnl: number;
+  title: string;
+  slug: string;
+  icon: string;
+  eventId: string;
+  eventSlug: string;
+  outcome: string;
+  outcomeIndex: number;
+  oppositeOutcome: string;
+  oppositeAsset: `0x${string}`;
+  endDate: string;
+  negativeRisk: boolean;
+};

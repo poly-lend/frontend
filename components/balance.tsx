@@ -2,7 +2,7 @@ import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
 import { useContext, useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import { BalanceRefreshContext } from "./context";
+import { BalanceRefreshContext } from "../app/context";
 
 export default function Balance() {
   const { address } = useAccount();

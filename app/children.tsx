@@ -1,9 +1,9 @@
 "use client";
 
-import { BalanceRefreshContext } from "@/components/context";
+import { BalanceRefreshContext } from "@/app/context";
 import Nav from "@/components/nav";
 import Top from "@/components/top";
-import { config, queryClient } from "@/components/wagmi";
+import { config, queryClient } from "@/utils/wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClientProvider } from "@tanstack/react-query";

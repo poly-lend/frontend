@@ -1,6 +1,6 @@
 "use client";
 
-import { BalanceRefreshContext } from "@/components/context";
+import { BalanceRefreshContext } from "@/app/context";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
 import { Input } from "@mui/material";

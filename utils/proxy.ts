@@ -14,14 +14,14 @@ const SAFE_ABI = parseAbi([
 
 type SafeTx = {
   to: Address;
-  value: bigint;
-  data: `0x${string}`;
-  operation: 0 | 1; // 0 = CALL, 1 = DELEGATECALL
-  safeTxGas: bigint;
-  baseGas: bigint;
-  gasPrice: bigint;
-  gasToken: Address; // 0x000...000 for ETH
-  refundReceiver: Address; // 0x000...000 to refund tx.origin
+  value?: bigint;
+  data?: `0x${string}`;
+  operation?: 0 | 1; // 0 = CALL, 1 = DELEGATECALL
+  safeTxGas?: bigint;
+  baseGas?: bigint;
+  gasPrice?: bigint;
+  gasToken?: Address; // 0x000...000 for ETH
+  refundReceiver?: Address; // 0x000...000 to refund tx.origin
 };
 
 // EIP-712 types used by Safe v1.3.x
@@ -83,14 +83,15 @@ export async function execSafeTransaction(params: {
     account: params.walletClient.account!,
     message: {
       to: tx.to,
-      value: tx.value,
-      data: tx.data,
-      operation: tx.operation,
-      safeTxGas: tx.safeTxGas,
-      baseGas: tx.baseGas,
-      gasPrice: tx.gasPrice,
-      gasToken: tx.gasToken,
-      refundReceiver: tx.refundReceiver,
+      value: tx.value ?? BigInt(0),
+      data: tx.data ?? "0x",
+      operation: tx.operation ?? 0,
+      safeTxGas: tx.safeTxGas ?? BigInt(0),
+      baseGas: tx.baseGas ?? BigInt(0),
+      gasPrice: tx.gasPrice ?? BigInt(0),
+      gasToken: tx.gasToken ?? "0x0000000000000000000000000000000000000000",
+      refundReceiver:
+        tx.refundReceiver ?? "0x0000000000000000000000000000000000000000",
       nonce,
     },
   });
@@ -102,14 +103,14 @@ export async function execSafeTransaction(params: {
     functionName: "getTransactionHash",
     args: [
       tx.to,
-      tx.value,
-      tx.data,
-      tx.operation,
-      tx.safeTxGas,
-      tx.baseGas,
-      tx.gasPrice,
-      tx.gasToken,
-      tx.refundReceiver,
+      tx.value ?? BigInt(0),
+      tx.data ?? "0x",
+      tx.operation ?? 0,
+      tx.safeTxGas ?? BigInt(0),
+      tx.baseGas ?? BigInt(0),
+      tx.gasPrice ?? BigInt(0),
+      tx.gasToken ?? "0x0000000000000000000000000000000000000000",
+      tx.refundReceiver ?? "0x0000000000000000000000000000000000000000",
       nonce,
     ],
   })) as `0x${string}`;
@@ -129,14 +130,14 @@ export async function execSafeTransaction(params: {
     functionName: "execTransaction",
     args: [
       tx.to,
-      tx.value,
-      tx.data,
-      tx.operation,
-      tx.safeTxGas,
-      tx.baseGas,
-      tx.gasPrice,
-      tx.gasToken,
-      tx.refundReceiver,
+      tx.value ?? BigInt(0),
+      tx.data ?? "0x",
+      tx.operation ?? 0,
+      tx.safeTxGas ?? BigInt(0),
+      tx.baseGas ?? BigInt(0),
+      tx.gasPrice ?? BigInt(0),
+      tx.gasToken ?? "0x0000000000000000000000000000000000000000",
+      tx.refundReceiver ?? "0x0000000000000000000000000000000000000000",
       sigsPacked,
     ],
   });

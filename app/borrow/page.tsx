@@ -1,9 +1,15 @@
 "use client";
 
+import { polylendAddress, polymarketTokensAddress } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
+import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import { proxyConfig } from "@/contracts/proxy";
+import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
-import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { encodeFunctionData } from "viem";
 import {
   useAccount,
   usePublicClient,
@@ -13,6 +19,9 @@ import {
 
 export default function Borrow() {
   const { address } = useAccount();
+  const [selectedPosition, selectPosition] = useState<Position | null>(null);
+  const [amount, setAmount] = useState<bigint>(BigInt(0));
+  const [minimumDuration, setMinimumDuration] = useState(10);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
@@ -21,76 +30,64 @@ export default function Borrow() {
     functionName: "computeProxyAddress",
     args: [address as `0x${string}`],
   });
-  type Position = {
-    proxyWallet: `0x${string}`;
-    asset: `0x${string}`;
-    conditionId: `0x${string}`;
-    size: number;
-    avgPrice: number;
-    initialValue: number;
-    currentValue: number;
-    cashPnl: number;
-    percentPnl: number;
-    totalBought: number;
-    realizedPnl: number;
-    percentRealizedPnl: number;
-    title: string;
-    slug: string;
-    icon: string;
-    eventId: string;
-    eventSlug: string;
-    outcome: string;
-    outcomeIndex: number;
-    oppositeOutcome: string;
-    oppositeAsset: `0x${string}`;
-    endDate: string;
-    negativeRisk: boolean;
-  };
-  const [positions, setPositions] = useState<Position[]>([]);
-  const [selectedPosition, setSelectedPosition] = useState<Position | null>(
-    null
-  );
 
   const requestLoan = async () => {
     if (!walletClient || !publicClient) return;
     await execSafeTransaction({
       safe: proxyAddress as `0x${string}`,
       tx: {
-        to: proxyAddress as `0x${string}`,
-        data: "0x",
-        value: BigInt(1),
-        operation: 0,
-        safeTxGas: BigInt(0),
-        baseGas: BigInt(0),
-        gasPrice: BigInt(0),
-        gasToken: "0x0000000000000000000000000000000000000000",
-        refundReceiver: "0x0000000000000000000000000000000000000000",
+        to: polylendAddress as `0x${string}`,
+        data: encodeFunctionData({
+          abi: polylendConfig.abi,
+          functionName: "request",
+          args: [
+            selectedPosition!.asset,
+            BigInt(amount),
+            BigInt(minimumDuration * 24 * 60 * 60),
+          ],
+        }),
       },
       walletClient,
       publicClient,
     });
   };
 
-  const fetchPositions = async (proxyAddress: `0x${string}`) => {
-    const response = await fetch(
-      `https://data-api.polymarket.com/positions?user=${proxyAddress}`
-    );
-    const positions = await response.json();
-    setPositions(positions);
-    setSelectedPosition(positions[0]);
+  const giveApproval = async () => {
+    if (!walletClient || !publicClient) return;
+    await execSafeTransaction({
+      safe: proxyAddress as `0x${string}`,
+      tx: {
+        to: polymarketTokensAddress as `0x${string}`,
+        data: encodeFunctionData({
+          abi: polymarketTokensConfig.abi,
+          functionName: "setApprovalForAll",
+          args: [polylendAddress as `0x${string}`, true],
+        }),
+      },
+      walletClient,
+      publicClient,
+    });
   };
 
-  useEffect(() => {
-    if (!proxyAddress) return;
-    const loadPositions = async () => {
-      await fetchPositions(proxyAddress as `0x${string}`);
-    };
-    loadPositions();
-  }, [proxyAddress]);
+  const {
+    data: positions,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const r = await fetch(
+        `https://data-api.polymarket.com/positions?user=${proxyAddress}`
+      );
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json() as Promise<Position[]>;
+    },
+    staleTime: 60_000,
+  });
 
   return (
     <>
-      <div className="flex pitems-center justify-center">
+      <Stack spacing={2}>
         <h1
           style={{
             fontSize: 48,
@@ -101,26 +98,63 @@ export default function Borrow() {
         >
           Borrow
         </h1>
-      </div>
+        <h2>Proxy Address: {proxyAddress}</h2>
+        <h2>Positions: {positions?.length}</h2>
+        <Select
+          label="Select a position"
+          style={{ width: "100%" }}
+          value={selectedPosition?.asset}
+          onChange={(e) => {
+            const position =
+              positions?.find(
+                (position) => position.asset === e.target.value
+              ) || null;
+            selectPosition(position);
+            setAmount(BigInt(position!.size! * 10 ** 6 || 0));
+          }}
+        >
+          {positions?.map((position) => (
+            <MenuItem
+              key={position.asset.toString()}
+              value={position.asset.toString()}
+            >
+              <img
+                src={position.icon}
+                alt={position.title}
+                width={50}
+                height={50}
+              />
+              <h3>{position.title}</h3>
+              <p>{position.currentValue.toFixed(2)}</p>
+            </MenuItem>
+          ))}
+        </Select>
 
-      <h2>Proxy Address: {proxyAddress}</h2>
-      <h2>Positions: {positions.length}</h2>
-      {positions.map((position) => (
-        <div key={position.conditionId}>
-          <img
-            src={position.icon}
-            alt={position.title}
-            width={100}
-            height={100}
-          />
-          <h3>{position.title}</h3>
+        <h2>Selected Position: {selectedPosition?.title}</h2>
+        <h2>Selected Asset: {selectedPosition?.asset.toString()}</h2>
+        <TextField
+          type="number"
+          label="Shares"
+          placeholder="Shares"
+          value={amount.toString()}
+          onChange={(e) => setAmount(BigInt(e.target.value))}
+        />
 
-          <p>{position.currentValue}</p>
-        </div>
-      ))}
-      <Button variant="contained" color="primary" onClick={requestLoan}>
-        Request a loan
-      </Button>
+        <TextField
+          type="number"
+          label="Minimum Duration days"
+          placeholder="Minimum Duration days"
+          value={minimumDuration}
+          onChange={(e) => setMinimumDuration(Number(e.target.value))}
+        />
+        <Button variant="contained" color="primary" onClick={giveApproval}>
+          Give approval
+        </Button>
+
+        <Button variant="contained" color="primary" onClick={requestLoan}>
+          Request a loan
+        </Button>
+      </Stack>
     </>
   );
 }
