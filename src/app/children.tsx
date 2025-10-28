@@ -14,22 +14,18 @@ export default function Children({ children }: { children: React.ReactNode }) {
   const [balanceRefresh, setBalanceRefresh] = useState(false);
 
   return (
-    <html lang="en">
-      <body className="min-h-screen">
-        <BalanceRefreshContext.Provider
-          value={{ balanceRefresh, setBalanceRefresh }}
-        >
-          <WagmiProvider config={config}>
-            <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider>
-                <Top />
-                <Nav />
-                {children}
-              </RainbowKitProvider>
-            </QueryClientProvider>
-          </WagmiProvider>
-        </BalanceRefreshContext.Provider>
-      </body>
-    </html>
+    <BalanceRefreshContext.Provider
+      value={{ balanceRefresh, setBalanceRefresh }}
+    >
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider>
+            <Top />
+            <Nav />
+            <div className="w-full max-w-7xl mx-auto px-4">{children}</div>
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </BalanceRefreshContext.Provider>
   );
 }

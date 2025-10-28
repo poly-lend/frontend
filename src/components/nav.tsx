@@ -13,36 +13,30 @@ export default function Nav() {
   ];
 
   return (
-    <>
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "0 1rem",
-        }}
-      >
-        <div>
+    <nav className="sticky top-0 w-full bg-gray-900 text-white flex justify-between items-center px-4 h-16">
+      <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
+        <div className="flex">
+          <img src="/logo.svg" alt="logo" className="h-8 w-auto mr-12" />
+
           {links.map((link) => (
             <Link
               href={link.href}
               key={link.id}
-              style={{
-                marginRight: 20,
-                fontWeight: 800,
-                color: selected === link.id ? "violet" : "",
-              }}
+              className={`${
+                selected === link.id ? "text-violet-500" : ""
+              } mr-8 font-bold`}
               onClick={() => setSelected(link.id)}
             >
               {link.label}
             </Link>
           ))}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+
+        <div className="flex items-center  h-16 px-4">
           <Balance />
-          <ConnectButton />
+          <ConnectButton showBalance={false} />
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 }

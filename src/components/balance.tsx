@@ -23,7 +23,7 @@ export default function Balance() {
 
   return (
     address && (
-      <div style={{ fontSize: 16, fontWeight: 600 }}>
+      <div className="mr-4 font-bold">
         {balance ? Number(balance) / 10 ** usdcDecimals : 0} pfUSDC
       </div>
     )
