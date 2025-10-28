@@ -1,7 +1,7 @@
 "use client";
 
-import { execSafeTransaction } from "@/components/proxy";
 import { proxyConfig } from "@/contracts/proxy";
+import { execSafeTransaction } from "@/utils/proxy";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
