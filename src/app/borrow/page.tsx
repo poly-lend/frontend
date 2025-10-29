@@ -5,6 +5,7 @@ import { polylendConfig } from "@/contracts/polylend";
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import { proxyConfig } from "@/contracts/proxy";
 import { Position } from "@/types/polymarketPosition";
+import { fetchRequests } from "@/utils/fetchRequests";
 import { execSafeTransaction } from "@/utils/proxy";
 import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +20,9 @@ import {
 
 export default function Borrow() {
   const { address } = useAccount();
+  const [requests, setRequests] = useState<
+    [`0x${string}`, bigint, bigint, bigint][]
+  >([]);
   const [selectedPosition, selectPosition] = useState<Position | null>(null);
   const [amount, setAmount] = useState<bigint>(BigInt(0));
   const [minimumDuration, setMinimumDuration] = useState(10);
@@ -31,61 +35,22 @@ export default function Borrow() {
   });
 
   useEffect(() => {
-    const fetchRequests = async () => {
-      if (publicClient && address && proxyAddress) {
-        const calls = [];
-        for (var i = 0; i < 100; i++) {
-          calls.push({
-            address: polylendAddress as `0x${string}`,
-            abi: polylendConfig.abi,
-            functionName: "requests",
-            args: [i],
-          });
-        }
-
-        const requestsData = await publicClient.multicall({
-          contracts: calls,
-        });
-        const requests = requestsData
-          .filter((request) => request.status === "success")
-          .map(
-            (request) =>
-              request.result as unknown as [
-                `0x${string}`,
-                bigint,
-                bigint,
-                bigint
-              ]
-          )
-          .filter(
-            (request) =>
-              request[0].toLowerCase() === proxyAddress?.toLocaleLowerCase()
-          );
-
-        console.log(requests);
-      }
-    };
-    fetchRequests();
-  }, [publicClient, address, proxyAddress]);
+    if (!publicClient || !address) return;
+    fetchRequests({ publicClient, address }).then(setRequests);
+  }, [publicClient, address]);
 
   const requestLoan = async () => {
     if (!walletClient || !publicClient) return;
-    await execSafeTransaction({
-      safe: proxyAddress as `0x${string}`,
-      tx: {
-        to: polylendAddress as `0x${string}`,
-        data: encodeFunctionData({
-          abi: polylendConfig.abi,
-          functionName: "request",
-          args: [
-            selectedPosition!.asset,
-            BigInt(amount),
-            BigInt(minimumDuration * 24 * 60 * 60),
-          ],
-        }),
-      },
-      walletClient,
-      publicClient,
+    walletClient.writeContract({
+      address: polylendAddress as `0x${string}`,
+      abi: polylendConfig.abi,
+      functionName: "request",
+      args: [
+        proxyAddress as `0x${string}`,
+        selectedPosition!.asset,
+        BigInt(amount),
+        BigInt(minimumDuration * 24 * 60 * 60),
+      ],
     });
   };
 
@@ -123,75 +88,78 @@ export default function Borrow() {
   });
 
   return (
-    <>
-      <Stack spacing={2}>
-        <h1
-          style={{
-            fontSize: 48,
-            fontWeight: 800,
-            paddingTop: 50,
-            paddingBottom: 50,
-          }}
-        >
-          Borrow
-        </h1>
-        <h2>Proxy Address: {proxyAddress}</h2>
-        <h2>Positions: {positions?.length}</h2>
-        <Select
-          label="Select a position"
-          style={{ width: "100%" }}
-          value={selectedPosition?.asset}
-          onChange={(e) => {
-            const position =
-              positions?.find(
-                (position) => position.asset === e.target.value
-              ) || null;
-            selectPosition(position);
-            setAmount(BigInt(position!.size! * 10 ** 6 || 0));
-          }}
-        >
-          {positions?.map((position) => (
-            <MenuItem
-              key={position.asset.toString()}
-              value={position.asset.toString()}
-            >
-              <img
-                src={position.icon}
-                alt={position.title}
-                width={50}
-                height={50}
-              />
-              <h3>{position.title}</h3>
-              <p>{position.currentValue.toFixed(2)}</p>
-            </MenuItem>
-          ))}
-        </Select>
+    <Stack spacing={2}>
+      <h1
+        style={{
+          fontSize: 48,
+          fontWeight: 800,
+          paddingTop: 50,
+          paddingBottom: 50,
+        }}
+      >
+        Borrow
+      </h1>
+      <h2>Proxy Address: {proxyAddress}</h2>
+      <h2>Positions: {positions?.length}</h2>
+      <Select
+        label="Select a position"
+        style={{ width: "100%" }}
+        value={selectedPosition?.asset}
+        onChange={(e) => {
+          const position =
+            positions?.find((position) => position.asset === e.target.value) ||
+            null;
+          selectPosition(position);
+          setAmount(BigInt(position!.size! * 10 ** 6 || 0));
+        }}
+      >
+        {positions?.map((position) => (
+          <MenuItem
+            key={position.asset.toString()}
+            value={position.asset.toString()}
+          >
+            <img
+              src={position.icon}
+              alt={position.title}
+              width={50}
+              height={50}
+            />
+            <h3>{position.title}</h3>
+            <p>{position.currentValue.toFixed(2)}</p>
+          </MenuItem>
+        ))}
+      </Select>
 
-        <h2>Selected Position: {selectedPosition?.title}</h2>
-        <h2>Selected Asset: {selectedPosition?.asset.toString()}</h2>
-        <TextField
-          type="number"
-          label="Shares"
-          placeholder="Shares"
-          value={amount.toString()}
-          onChange={(e) => setAmount(BigInt(e.target.value))}
-        />
+      <h2>Selected Position: {selectedPosition?.title}</h2>
+      <h2>Selected Asset: {selectedPosition?.asset.toString()}</h2>
+      <TextField
+        type="number"
+        label="Shares"
+        placeholder="Shares"
+        value={amount.toString()}
+        onChange={(e) => setAmount(BigInt(e.target.value))}
+      />
 
-        <TextField
-          type="number"
-          label="Minimum Duration days"
-          placeholder="Minimum Duration days"
-          value={minimumDuration}
-          onChange={(e) => setMinimumDuration(Number(e.target.value))}
-        />
-        <Button variant="contained" color="primary" onClick={giveApproval}>
-          Give approval
-        </Button>
+      <TextField
+        type="number"
+        label="Minimum Duration days"
+        placeholder="Minimum Duration days"
+        value={minimumDuration}
+        onChange={(e) => setMinimumDuration(Number(e.target.value))}
+      />
+      <Button variant="contained" color="primary" onClick={giveApproval}>
+        Give approval
+      </Button>
 
-        <Button variant="contained" color="primary" onClick={requestLoan}>
-          Request a loan
-        </Button>
-      </Stack>
-    </>
+      <Button variant="contained" color="primary" onClick={requestLoan}>
+        Request a loan
+      </Button>
+      <h2>Requests: {requests.length}</h2>
+      <ul>
+        {requests.map((request, index) => (
+          <li key={index}>{request[0]}</li>
+        ))}
+      </ul>
+    </Stack>
   );
 }
