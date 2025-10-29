@@ -1,5 +1,6 @@
 "use client";
 
+import RequestsTable from "@/components/requestsTable";
 import { fetchRequests } from "@/utils/fetchRequests";
 import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -27,12 +28,7 @@ export default function Lend() {
       >
         Lend
       </h1>
-      <h2>Requests: {requests.length}</h2>
-      <ul>
-        {requests.map((request, index) => (
-          <li key={index}>{request[0]}</li>
-        ))}
-      </ul>
+      <RequestsTable />
     </Stack>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import RequestsTable from "@/components/requestsTable";
 import { polylendAddress, polymarketTokensAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import { proxyConfig } from "@/contracts/proxy";
+import { LoanRequest } from "@/types/polyLend";
 import { Position } from "@/types/polymarketPosition";
 import { fetchRequests } from "@/utils/fetchRequests";
 import { execSafeTransaction } from "@/utils/proxy";
@@ -20,9 +22,7 @@ import {
 
 export default function Borrow() {
   const { address } = useAccount();
-  const [requests, setRequests] = useState<
-    [`0x${string}`, bigint, bigint, bigint][]
-  >([]);
+  const [requests, setRequests] = useState<LoanRequest[]>([]);
   const [selectedPosition, selectPosition] = useState<Position | null>(null);
   const [amount, setAmount] = useState<bigint>(BigInt(0));
   const [minimumDuration, setMinimumDuration] = useState(10);
@@ -154,12 +154,7 @@ export default function Borrow() {
       <Button variant="contained" color="primary" onClick={requestLoan}>
         Request a loan
       </Button>
-      <h2>Requests: {requests.length}</h2>
-      <ul>
-        {requests.map((request, index) => (
-          <li key={index}>{request[0]}</li>
-        ))}
-      </ul>
+      {address && <RequestsTable address={address} />}
     </Stack>
   );
 }
