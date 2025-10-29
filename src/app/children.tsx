@@ -3,7 +3,7 @@
 import { BalanceRefreshContext } from "@/app/context";
 import Nav from "@/components/nav";
 import Top from "@/components/top";
-import { config, queryClient } from "@/utils/wagmi";
+import { queryClient, wagmiConfig } from "@/utils/wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -17,7 +17,7 @@ export default function Children({ children }: { children: React.ReactNode }) {
     <BalanceRefreshContext.Provider
       value={{ balanceRefresh, setBalanceRefresh }}
     >
-      <WagmiProvider config={config}>
+      <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>
             <Top />

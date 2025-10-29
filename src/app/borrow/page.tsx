@@ -8,7 +8,7 @@ import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
 import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
 import {
   useAccount,
@@ -24,12 +24,49 @@ export default function Borrow() {
   const [minimumDuration, setMinimumDuration] = useState(10);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
-
   const { data: proxyAddress } = useReadContract({
     ...proxyConfig,
     functionName: "computeProxyAddress",
     args: [address as `0x${string}`],
   });
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (publicClient && address && proxyAddress) {
+        const calls = [];
+        for (var i = 0; i < 100; i++) {
+          calls.push({
+            address: polylendAddress as `0x${string}`,
+            abi: polylendConfig.abi,
+            functionName: "requests",
+            args: [i],
+          });
+        }
+
+        const requestsData = await publicClient.multicall({
+          contracts: calls,
+        });
+        const requests = requestsData
+          .filter((request) => request.status === "success")
+          .map(
+            (request) =>
+              request.result as unknown as [
+                `0x${string}`,
+                bigint,
+                bigint,
+                bigint
+              ]
+          )
+          .filter(
+            (request) =>
+              request[0].toLowerCase() === proxyAddress?.toLocaleLowerCase()
+          );
+
+        console.log(requests);
+      }
+    };
+    fetchRequests();
+  }, [publicClient, address, proxyAddress]);
 
   const requestLoan = async () => {
     if (!walletClient || !publicClient) return;
