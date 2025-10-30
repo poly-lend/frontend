@@ -1,3 +1,11 @@
 polylend.com {
     reverse_proxy web:3000
 }
+
+www.polylend.cc {
+    redir https://polylend.com
+}
+
+polylend.cc {
+    redir https://polylend.com
+}
