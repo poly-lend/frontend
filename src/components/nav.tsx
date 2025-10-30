@@ -16,7 +16,7 @@ export default function Nav() {
     <nav className="sticky top-0 w-full bg-gray-900 text-white flex justify-between items-center px-4 h-16">
       <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
         <div className="flex">
-          <img src="/logo.svg" alt="logo" className="h-8 w-auto mr-12" />
+          <img src="logo.png" alt="logo" className="h-12 w-auto mr-12" />
 
           {links.map((link) => (
             <Link
@@ -24,7 +24,7 @@ export default function Nav() {
               key={link.id}
               className={`${
                 selected === link.id ? "text-violet-500" : ""
-              } mr-8 font-bold`}
+              } mr-8 mt-3 font-bold`}
               onClick={() => setSelected(link.id)}
             >
               {link.label}

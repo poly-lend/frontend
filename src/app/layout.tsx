@@ -9,6 +9,10 @@ import { theme } from "./theme";
 export const metadata: Metadata = {
   title: "PolyLend",
   description: "Lend and borrow against your Polymarket positions",
+  icons: {
+    icon: "favicon.ico",
+    shortcut: "favicon.ico",
+  },
 };
 
 export default function RootLayout({
