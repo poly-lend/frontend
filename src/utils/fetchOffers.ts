@@ -1,7 +1,7 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 
-import { LoanOffer, LoanRequest } from "@/types/polyLend";
+import { LoanOffer } from "@/types/polyLend";
 
 export const fetchOffers = async (params: {
   publicClient: any;
@@ -30,8 +30,8 @@ export const fetchOffers = async (params: {
     }))
 
     .filter(
-      (request: LoanRequest) =>
-        request.borrower !== `0x0000000000000000000000000000000000000000`
+      (offer: LoanOffer) =>
+        offer.lender !== `0x0000000000000000000000000000000000000000`
     );
   if (params.address) {
     offers = offers.filter(
