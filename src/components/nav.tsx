@@ -1,5 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Balance from "./balance";
 
@@ -18,18 +19,19 @@ export default function Nav() {
         <div className="flex">
           <img src="logo.png" alt="logo" className="h-12 w-auto mr-12" />
 
-          {links.map((link) => (
-            <Link
-              href={link.href}
-              key={link.id}
-              className={`${
-                selected === link.id ? "text-violet-500" : ""
-              } mr-8 mt-3 font-bold`}
-              onClick={() => setSelected(link.id)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const isSelected = usePathname() === link.href;
+            return (
+              <Link
+                href={link.href}
+                key={link.id}
+                className="mr-8 mt-3 font-bold"
+                style={{ color: isSelected ? "#d7ad4d" : "#ededed" }}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="flex items-center h-16 px-4">
