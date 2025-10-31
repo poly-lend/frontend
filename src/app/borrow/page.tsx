@@ -77,16 +77,14 @@ export default function Borrow() {
         >
           Borrow
         </h1>
-        if (proxyAddress){" "}
-        {
-          <PositionSelect
-            address={proxyAddress!}
-            selectedPosition={selectedPosition}
-            selectPosition={selectPosition}
-          />
-        }
+
+        <PositionSelect
+          address={proxyAddress!}
+          selectedPosition={selectedPosition}
+          selectPosition={selectPosition}
+        />
+
         <h2>Selected Position: {selectedPosition?.title}</h2>
-        <h2>Selected Asset: {selectedPosition?.asset.toString()}</h2>
         <TextField
           type="number"
           label="Shares"
