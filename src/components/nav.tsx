@@ -17,7 +17,9 @@ export default function Nav() {
     <nav className="sticky top-0 w-full bg-gray-900 text-white flex justify-between items-center px-4 h-16">
       <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
         <div className="flex">
-          <img src="logo.png" alt="logo" className="h-12 w-auto mr-12" />
+          <Link href="/">
+            <img src="logo.png" alt="logo" className="h-12 w-auto mr-12" />
+          </Link>
 
           {links.map((link) => (
             <Link

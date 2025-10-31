@@ -3,7 +3,7 @@
 import { BalanceRefreshContext } from "@/app/context";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
-import { Input } from "@mui/material";
+import { Input, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -40,19 +40,17 @@ export default function Faucet() {
   }, [isConfirmed, setBalanceRefresh]);
 
   return (
-    <>
-      <div className="flex pitems-center justify-center">
-        <h1
-          style={{
-            fontSize: 48,
-            fontWeight: 800,
-            paddingTop: 50,
-            paddingBottom: 50,
-          }}
-        >
-          Faucet
-        </h1>
-      </div>
+    <Stack spacing={2}>
+      <h1
+        style={{
+          fontSize: 48,
+          fontWeight: 800,
+          paddingTop: 50,
+          paddingBottom: 50,
+        }}
+      >
+        Faucet
+      </h1>
       <div style={{ padding: "50px" }}>
         <Input
           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
@@ -86,6 +84,6 @@ export default function Faucet() {
           <div>Error: {(error as BaseError).shortMessage || error.message}</div>
         )}
       </div>
-    </>
+    </Stack>
   );
 }
