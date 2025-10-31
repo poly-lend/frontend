@@ -21,9 +21,7 @@ export default function RequestsTable({
   const [openOfferDialog, setOpenOfferDialog] = useState<boolean>(false);
   return (
     <>
-      <h2 className="text-2xl font-bold w-full text-center mt-8">
-        RequestsTable
-      </h2>
+      <h2 className="text-2xl font-bold w-full text-center mt-8">Requests</h2>
       <table className="w-full">
         <thead>
           <tr>
