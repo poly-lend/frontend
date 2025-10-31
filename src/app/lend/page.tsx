@@ -1,5 +1,6 @@
 "use client";
 
+import LoansTable from "@/components/loansTable";
 import OffersTable from "@/components/offersTable";
 import RequestsTable from "@/components/requestsTable";
 import { Stack } from "@mui/material";
@@ -19,6 +20,7 @@ export default function Lend() {
       </h1>
       <RequestsTable />
       <OffersTable />
+      <LoansTable />
     </Stack>
   );
 }

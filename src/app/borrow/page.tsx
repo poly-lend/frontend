@@ -1,5 +1,6 @@
 "use client";
 
+import LoansTable from "@/components/loansTable";
 import PositionSelect from "@/components/positionSelect";
 import RequestsTable from "@/components/requestsTable";
 import { polylendAddress, polymarketTokensAddress } from "@/configs";
@@ -63,48 +64,51 @@ export default function Borrow() {
   };
 
   return (
-    <Stack spacing={2}>
-      <h1
-        style={{
-          fontSize: 48,
-          fontWeight: 800,
-          paddingTop: 50,
-          paddingBottom: 50,
-        }}
-      >
-        Borrow
-      </h1>
-      if (proxyAddress){" "}
-      {
-        <PositionSelect
-          address={proxyAddress!}
-          selectedPosition={selectedPosition}
-          selectPosition={selectPosition}
+    <>
+      <Stack spacing={2}>
+        <h1
+          style={{
+            fontSize: 48,
+            fontWeight: 800,
+            paddingTop: 50,
+            paddingBottom: 50,
+          }}
+        >
+          Borrow
+        </h1>
+        if (proxyAddress){" "}
+        {
+          <PositionSelect
+            address={proxyAddress!}
+            selectedPosition={selectedPosition}
+            selectPosition={selectPosition}
+          />
+        }
+        <h2>Selected Position: {selectedPosition?.title}</h2>
+        <h2>Selected Asset: {selectedPosition?.asset.toString()}</h2>
+        <TextField
+          type="number"
+          label="Shares"
+          placeholder="Shares"
+          value={amount.toString()}
+          onChange={(e) => setAmount(BigInt(e.target.value))}
         />
-      }
-      <h2>Selected Position: {selectedPosition?.title}</h2>
-      <h2>Selected Asset: {selectedPosition?.asset.toString()}</h2>
-      <TextField
-        type="number"
-        label="Shares"
-        placeholder="Shares"
-        value={amount.toString()}
-        onChange={(e) => setAmount(BigInt(e.target.value))}
-      />
-      <TextField
-        type="number"
-        label="Minimum Duration days"
-        placeholder="Minimum Duration days"
-        value={minimumDuration}
-        onChange={(e) => setMinimumDuration(Number(e.target.value))}
-      />
-      <Button variant="contained" color="primary" onClick={giveApproval}>
-        Give approval
-      </Button>
-      <Button variant="contained" color="primary" onClick={requestLoan}>
-        Request a loan
-      </Button>
-      {address && <RequestsTable address={address} />}
-    </Stack>
+        <TextField
+          type="number"
+          label="Minimum Duration days"
+          placeholder="Minimum Duration days"
+          value={minimumDuration}
+          onChange={(e) => setMinimumDuration(Number(e.target.value))}
+        />
+        <Button variant="contained" color="primary" onClick={giveApproval}>
+          Give approval
+        </Button>
+        <Button variant="contained" color="primary" onClick={requestLoan}>
+          Request a loan
+        </Button>
+        {address && <RequestsTable address={address} />}
+      </Stack>
+      <LoansTable />
+    </>
   );
 }
