@@ -28,7 +28,7 @@ export default function Home() {
             style={{ color: "violet" }}
             href="https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh"
           >
-            https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh
+            9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump
           </Link>
         </p>
         <p>
