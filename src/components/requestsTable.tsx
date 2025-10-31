@@ -25,9 +25,9 @@ export default function RequestsTable({
         <tr>
           <th>Request ID</th>
           <th>Borrower</th>
-
           <th>Collateral Amount</th>
           <th>Minimum Duration</th>
+          <th>Offers</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -48,6 +48,7 @@ export default function RequestsTable({
             <td>{request.borrower}</td>
             <td>{request.collateralAmount.toString()}</td>
             <td>{request.minimumDuration.toString()}</td>
+            <td>{request.offers.length.toString()}</td>
             <td>
               <Button
                 variant="contained"
