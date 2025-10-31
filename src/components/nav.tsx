@@ -32,7 +32,7 @@ export default function Nav() {
           ))}
         </div>
 
-        <div className="flex items-center  h-16 px-4">
+        <div className="flex items-center h-16 px-4">
           <Balance />
           <ConnectButton showBalance={false} />
         </div>

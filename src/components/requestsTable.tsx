@@ -20,50 +20,55 @@ export default function RequestsTable({
 
   const [openOfferDialog, setOpenOfferDialog] = useState<boolean>(false);
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Request ID</th>
-          <th>Borrower</th>
-          <th>Collateral Amount</th>
-          <th>Minimum Duration</th>
-          <th>Offers</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {selectedRequest && (
-          <OfferDialog
-            requestId={selectedRequest.requestId}
-            open={openOfferDialog}
-            handleOffer={() => {
-              setOpenOfferDialog(false);
-              selectRequest(null);
-            }}
-          />
-        )}
-        {requests.map((request) => (
-          <tr key={request.requestId.toString()}>
-            <td>{request.requestId.toString()}</td>
-            <td>{request.borrower}</td>
-            <td>{request.collateralAmount.toString()}</td>
-            <td>{request.minimumDuration.toString()}</td>
-            <td>{request.offers.length.toString()}</td>
-            <td>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  selectRequest(request);
-                  setOpenOfferDialog(true);
-                }}
-              >
-                Offer
-              </Button>
-            </td>
+    <>
+      <h2 className="text-2xl font-bold w-full text-center mt-8">
+        RequestsTable
+      </h2>
+      <table className="w-full">
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Borrower</th>
+            <th>Collateral Amount</th>
+            <th>Minimum Duration</th>
+            <th>Offers</th>
+            <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {selectedRequest && (
+            <OfferDialog
+              requestId={selectedRequest.requestId}
+              open={openOfferDialog}
+              handleOffer={() => {
+                setOpenOfferDialog(false);
+                selectRequest(null);
+              }}
+            />
+          )}
+          {requests.map((request) => (
+            <tr key={request.requestId.toString()}>
+              <td>{request.requestId.toString()}</td>
+              <td>{request.borrower}</td>
+              <td>{request.collateralAmount.toString()}</td>
+              <td>{request.minimumDuration.toString()}</td>
+              <td>{request.offers.length.toString()}</td>
+              <td>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    selectRequest(request);
+                    setOpenOfferDialog(true);
+                  }}
+                >
+                  Offer
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 }

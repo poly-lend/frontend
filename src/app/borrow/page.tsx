@@ -12,6 +12,7 @@ import { Position } from "@/types/polymarketPosition";
 import { fetchRequests } from "@/utils/fetchRequests";
 import { execSafeTransaction } from "@/utils/proxy";
 import { Button, Stack, TextField } from "@mui/material";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
@@ -106,9 +107,18 @@ export default function Borrow() {
         <Button variant="contained" color="primary" onClick={requestLoan}>
           Request a loan
         </Button>
-        {address && <RequestsTable address={address} />}
       </Stack>
-      <LoansTable />
+      {address ? (
+        <>
+          <RequestsTable address={address} />
+          <LoansTable address={address} />
+        </>
+      ) : (
+        <>
+          <div>Connect your wallet to see your loans and requests</div>
+          <ConnectButton showBalance={false} />
+        </>
+      )}
     </>
   );
 }

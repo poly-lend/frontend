@@ -1,19 +1,12 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount } from "wagmi";
-
-export default function OffersTable() {
-  const { address } = useAccount();
-
-  return address ? (
+export default function OffersTable({ address }: { address?: `0x${string}` }) {
+  return (
     <div>
       <div>
-        <h1>OffersTable</h1>
+        <h2 className="text-2xl font-bold w-full text-center mt-8">
+          OffersTable
+        </h2>
       </div>
-    </div>
-  ) : (
-    <div>
-      <div>Connect your wallet to see your offers</div>
-      <ConnectButton showBalance={false} />
+      <div>OffersTable for {address}</div>
     </div>
   );
 }

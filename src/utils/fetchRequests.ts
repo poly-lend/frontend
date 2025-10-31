@@ -28,6 +28,7 @@ export const fetchRequests = async (params: {
       positionId: BigInt(request.result[2]),
       collateralAmount: BigInt(request.result[3]),
       minimumDuration: BigInt(request.result[4]),
+      offers: [],
     }))
 
     .filter(
