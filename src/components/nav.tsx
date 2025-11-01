@@ -1,3 +1,4 @@
+import LaunchIcon from "@mui/icons-material/Launch";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,6 +12,12 @@ export default function Nav() {
     { href: "/lend", label: "Lend", id: "lend" },
     { href: "/borrow", label: "Borrow", id: "borrow" },
     { href: "/faucet", label: "Faucet", id: "faucet" },
+    {
+      href: "https://docs.polylend.com",
+      label: "Docs",
+      id: "docs",
+      external: true,
+    },
   ];
 
   return (
@@ -29,8 +36,10 @@ export default function Nav() {
               style={{
                 color: usePathname() === link.href ? "#d7ad4d" : "#ededed",
               }}
+              target={link.external ? "_blank" : undefined}
             >
-              {link.label}
+              {link.label}{" "}
+              {link.external && <LaunchIcon sx={{ fontSize: 16 }} />}
             </Link>
           ))}
         </div>
