@@ -19,6 +19,16 @@ export const usdcConfig = {
     },
     {
       type: "function",
+      name: "approve",
+      stateMutability: "nonpayable",
+      inputs: [
+        { name: "spender", type: "address" },
+        { name: "amount", type: "uint256" },
+      ],
+      outputs: [],
+    },
+    {
+      type: "function",
       name: "mint",
       stateMutability: "nonpayable",
       inputs: [
