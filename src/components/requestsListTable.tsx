@@ -20,6 +20,16 @@ export default function RequestsListTable() {
       <h2 className="text-2xl font-bold w-full text-center mt-8">
         All Requests
       </h2>
+      {selectedRequest && (
+        <OfferDialog
+          requestId={selectedRequest.requestId}
+          open={openOfferDialog}
+          handleOffer={() => {
+            setOpenOfferDialog(false);
+            selectRequest(null);
+          }}
+        />
+      )}
       <table className="w-full">
         <thead>
           <tr>
@@ -32,16 +42,6 @@ export default function RequestsListTable() {
           </tr>
         </thead>
         <tbody>
-          {selectedRequest && (
-            <OfferDialog
-              requestId={selectedRequest.requestId}
-              open={openOfferDialog}
-              handleOffer={() => {
-                setOpenOfferDialog(false);
-                selectRequest(null);
-              }}
-            />
-          )}
           {requests.map((request) => (
             <tr key={request.requestId.toString()}>
               <td>{request.requestId.toString()}</td>
