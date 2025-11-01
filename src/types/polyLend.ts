@@ -12,6 +12,8 @@ export type LoanOffer = {
   offerId: bigint;
   requestId: bigint;
   lender: `0x${string}`;
+  loanAmount: bigint;
+  rate: bigint;
 };
 
 export type Loan = {
