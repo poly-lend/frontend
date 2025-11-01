@@ -1,9 +1,9 @@
 import LaunchIcon from "@mui/icons-material/Launch";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Balance from "./balance";
+import ConnectWallet from "./connectWallet";
 
 export default function Nav() {
   const [selected, setSelected] = useState("home");
@@ -46,7 +46,7 @@ export default function Nav() {
 
         <div className="flex items-center h-16 px-4">
           <Balance />
-          <ConnectButton showBalance={false} />
+          <ConnectWallet />
         </div>
       </div>
     </nav>

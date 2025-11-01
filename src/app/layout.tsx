@@ -24,7 +24,7 @@ export default function RootLayout({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <html lang="en">
-        <body className="min-h-screen">
+        <body className="min-h-screen flex flex-col">
           <Children>{children}</Children>
         </body>
       </html>

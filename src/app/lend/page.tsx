@@ -1,10 +1,10 @@
 "use client";
 
+import ConnectWallet from "@/components/connectWallet";
 import LoansTable from "@/components/loansTable";
 import OffersTable from "@/components/offersTable";
 import RequestsListTable from "@/components/requestsListTable";
 import { Stack } from "@mui/material";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
 export default function Lend() {
@@ -30,7 +30,7 @@ export default function Lend() {
       ) : (
         <>
           <div>Connect your wallet to see your offers and loans</div>
-          <ConnectButton showBalance={false} />
+          <ConnectWallet />
         </>
       )}
     </Stack>
