@@ -1,4 +1,3 @@
-//import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { QueryClient } from "@tanstack/react-query";
 import { createConfig, http } from "wagmi";
 import { polygon } from "wagmi/chains";
