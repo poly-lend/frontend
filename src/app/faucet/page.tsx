@@ -43,15 +43,16 @@ export default function Faucet() {
     <Stack spacing={2}>
       <h1
         style={{
-          fontSize: 48,
+          fontSize: 36,
           fontWeight: 800,
           paddingTop: 50,
-          paddingBottom: 50,
+          paddingBottom: 20,
+          textAlign: "center",
         }}
       >
         Faucet
       </h1>
-      <div style={{ padding: "50px" }}>
+      <div>
         <Input
           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           placeholder="Amount"

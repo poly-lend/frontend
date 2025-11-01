@@ -15,10 +15,11 @@ export default function Borrow() {
       <Stack spacing={2}>
         <h1
           style={{
-            fontSize: 48,
+            fontSize: 36,
             fontWeight: 800,
             paddingTop: 50,
-            paddingBottom: 50,
+            paddingBottom: 20,
+            textAlign: "center",
           }}
         >
           Borrow
