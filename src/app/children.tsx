@@ -1,6 +1,7 @@
 "use client";
 
 import { BalanceRefreshContext } from "@/app/context";
+import Bottom from "@/components/bottom";
 import Nav from "@/components/nav";
 import Top from "@/components/top";
 import { queryClient, wagmiConfig } from "@/utils/wagmi";
@@ -20,9 +21,7 @@ export default function Children({ children }: { children: React.ReactNode }) {
           <Top />
           <Nav />
           <div className="w-full max-w-7xl mx-auto px-4 flex-1">{children}</div>
-          <footer className="border-t py-4 text-center text-sm">
-            © {new Date().getFullYear()} Your app
-          </footer>
+          <Bottom />
         </QueryClientProvider>
       </WagmiProvider>
     </BalanceRefreshContext.Provider>
