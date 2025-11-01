@@ -1,5 +1,5 @@
 import { LoanRequest } from "@/types/polyLend";
-import { fetchRequests } from "@/utils/fetchRequests";
+import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 
@@ -13,10 +13,9 @@ export default function RequestsTable({
   const publicClient = usePublicClient();
   useEffect(() => {
     if (!publicClient) return;
-    fetchRequests({ publicClient, address }).then(setRequests);
+    fetchRequestsWithOffers({ publicClient, address }).then(setRequests);
   }, [publicClient, address]);
 
-  const [openOfferDialog, setOpenOfferDialog] = useState<boolean>(false);
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center mt-8">Requests</h2>

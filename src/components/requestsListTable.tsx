@@ -7,7 +7,7 @@ import {
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { LoanRequest } from "@/types/polyLend";
-import { fetchRequests } from "@/utils/fetchRequests";
+import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
@@ -20,7 +20,7 @@ export default function RequestsListTable() {
   const { data: walletClient } = useWalletClient();
   useEffect(() => {
     if (!publicClient) return;
-    fetchRequests({ publicClient }).then(setRequests);
+    fetchRequestsWithOffers({ publicClient }).then(setRequests);
   }, [publicClient]);
 
   const handleApproval = async (amount: number) => {

@@ -2,6 +2,17 @@ import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 
 import { LoanRequest } from "@/types/polyLend";
+import { fetchOffers } from "./fetchOffers";
+import { hydrateRequests } from "./hydrateRequests";
+
+export const fetchRequestsWithOffers = async (params: {
+  publicClient: any;
+  address?: `0x${string}`;
+}): Promise<LoanRequest[]> => {
+  const requests = await fetchRequests(params);
+  const offers = await fetchOffers({ publicClient: params.publicClient });
+  return hydrateRequests(requests, offers);
+};
 
 export const fetchRequests = async (params: {
   publicClient: any;
