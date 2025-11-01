@@ -1,9 +1,7 @@
 import { LoanRequest } from "@/types/polyLend";
 import { fetchRequests } from "@/utils/fetchRequests";
-import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
-import OfferDialog from "./offerDialog";
 
 export default function RequestsTable({
   address,
@@ -25,44 +23,25 @@ export default function RequestsTable({
       <table className="w-full">
         <thead>
           <tr>
-            <th>Request ID</th>
-            <th>Borrower</th>
-            <th>Collateral Amount</th>
-            <th>Minimum Duration</th>
-            <th>Offers</th>
-            <th>Actions</th>
+            <th className="text-center">Request ID</th>
+            <th className="text-center">Borrower</th>
+            <th className="text-center">Collateral Amount</th>
+            <th className="text-center">Minimum Duration</th>
+            <th className="text-center">Offers</th>
           </tr>
         </thead>
         <tbody>
-          {selectedRequest && (
-            <OfferDialog
-              requestId={selectedRequest.requestId}
-              open={openOfferDialog}
-              handleOffer={() => {
-                setOpenOfferDialog(false);
-                selectRequest(null);
-              }}
-            />
-          )}
           {requests.map((request) => (
             <tr key={request.requestId.toString()}>
-              <td>{request.requestId.toString()}</td>
-              <td>{request.borrower}</td>
-              <td>{request.collateralAmount.toString()}</td>
-              <td>{request.minimumDuration.toString()}</td>
-              <td>{request.offers.length.toString()}</td>
-              <td>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    selectRequest(request);
-                    setOpenOfferDialog(true);
-                  }}
-                >
-                  Offer
-                </Button>
+              <td className="text-center">{request.requestId.toString()}</td>
+              <td className="text-center">{request.borrower}</td>
+              <td className="text-right">
+                {request.collateralAmount.toString()}
               </td>
+              <td className="text-right">
+                {request.minimumDuration.toString()}
+              </td>
+              <td className="text-right">{request.offers.length.toString()}</td>
             </tr>
           ))}
         </tbody>
