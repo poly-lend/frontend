@@ -1,7 +1,9 @@
-export default async function fetchMarkets() {
+export default async function fetchMarkets(tokenIds: string[]) {
+  const queryString = tokenIds
+    .map((tokenId) => `clob_token_ids=${tokenId}`)
+    .join("&");
   const response = await fetch(
-    "https://gamma-api.polymarket.com/markets?limit=1000&active=true&closed=false"
+    `https://gamma-api.polymarket.com/markets?${queryString}`
   );
-  const data = await response.json();
-  return data;
+  return await response.json();
 }
