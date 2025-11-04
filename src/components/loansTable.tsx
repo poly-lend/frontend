@@ -1,5 +1,5 @@
 import { Loan } from "@/types/polyLend";
-import { toSharesText } from "@/utils/convertors";
+import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import { fetchLoans } from "@/utils/fetchLoans";
 import {
   Table,
@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 import Address from "./address";
+import MarketEntry from "./marketEntry";
 
 export default function LoansTable({
   borrower,
@@ -41,9 +42,13 @@ export default function LoansTable({
           <TableHead>
             <TableRow>
               <TableCell align="center">Loan ID</TableCell>
-              <TableCell align="center">Borrower</TableCell>
               <TableCell align="center">Lender</TableCell>
-              <TableCell align="right">Shares</TableCell>
+              <TableCell align="center">Borrower</TableCell>
+              <TableCell align="center">Market</TableCell>
+              <TableCell align="center">Shares</TableCell>
+              <TableCell align="center">Value</TableCell>
+              <TableCell align="center">Duration</TableCell>
+              <TableCell align="center">Rate</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -51,14 +56,27 @@ export default function LoansTable({
               <TableRow key={loan.loanId}>
                 <TableCell align="center">{loan.loanId}</TableCell>
                 <TableCell align="center">
+                  <Address address={loan.lender} />
+                </TableCell>
+                <TableCell align="center">
                   <Address address={loan.borrower} />
                 </TableCell>
                 <TableCell align="center">
-                  <Address address={loan.lender} />
+                  <MarketEntry market={loan.market} />
                 </TableCell>
                 <TableCell align="right">
                   {toSharesText(loan.collateralAmount)}
                 </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(
+                    Number(loan.market.outcomePrice) *
+                      Number(loan.collateralAmount)
+                  )}
+                </TableCell>
+                <TableCell align="right">
+                  {toDuration(Number(loan.minimumDuration))}
+                </TableCell>
+                <TableCell align="right">{loan.rate.toString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>
