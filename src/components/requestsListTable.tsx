@@ -8,7 +8,14 @@ import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { LoanRequest } from "@/types/polyLend";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
 import OfferDialog from "./offerDialog";
@@ -71,26 +78,26 @@ export default function RequestsListTable() {
           }}
         />
       )}
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Borrower</th>
-            <th>Collateral Amount</th>
-            <th>Minimum Duration</th>
-            <th>Offers</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Request ID</TableCell>
+            <TableCell>Borrower</TableCell>
+            <TableCell>Collateral Amount</TableCell>
+            <TableCell>Minimum Duration</TableCell>
+            <TableCell>Offers</TableCell>
+            <TableCell>Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {requests.map((request) => (
-            <tr key={request.requestId.toString()}>
-              <td>{request.requestId.toString()}</td>
-              <td>{request.borrower}</td>
-              <td>{request.collateralAmount.toString()}</td>
-              <td>{request.minimumDuration.toString()}</td>
-              <td>{request.offers.length.toString()}</td>
-              <td>
+            <TableRow key={request.requestId.toString()}>
+              <TableCell>{request.requestId.toString()}</TableCell>
+              <TableCell>{request.borrower}</TableCell>
+              <TableCell>{request.collateralAmount.toString()}</TableCell>
+              <TableCell>{request.minimumDuration.toString()}</TableCell>
+              <TableCell>{request.offers.length.toString()}</TableCell>
+              <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
@@ -101,11 +108,11 @@ export default function RequestsListTable() {
                 >
                   Offer
                 </Button>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </>
   );
 }

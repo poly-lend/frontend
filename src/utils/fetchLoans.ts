@@ -2,7 +2,7 @@ import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { Loan } from "@/types/polyLend";
 
-export const fetchOffers = async (params: {
+export const fetchLoans = async (params: {
   publicClient: any;
   address?: `0x${string}`;
 }): Promise<Loan[]> => {
