@@ -13,9 +13,11 @@ import { usePublicClient } from "wagmi";
 export default function LoansTable({
   borrower,
   lender,
+  title,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
+  title?: string;
 }) {
   const publicClient = usePublicClient();
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -28,7 +30,9 @@ export default function LoansTable({
   return (
     <div>
       <div>
-        <h2 className="text-2xl font-bold w-full text-center mt-8">Loans</h2>
+        <h2 className="text-2xl font-bold w-full text-center mt-8">
+          {title ? title : "Loans"}
+        </h2>
       </div>
       <div>
         <Table>

@@ -26,8 +26,8 @@ export default function Borrow() {
 
       <BorrowForm />
 
-      {address && <RequestsTable address={address} />}
-      {address && <LoansTable borrower={address} />}
+      {address && <RequestsTable address={address} title="Borrower Requests" />}
+      {address && <LoansTable borrower={address} title="Borrower Loans" />}
       {!address && (
         <>
           <div>Connect your wallet to see your requests and loans data</div>

@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
 import OfferDialog from "./offerDialog";
 
-export default function RequestsListTable() {
+export default function RequestsListTable({ title }: { title?: string }) {
   const [requests, setRequests] = useState<LoanRequest[]>([]);
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
   const publicClient = usePublicClient();
@@ -64,7 +64,7 @@ export default function RequestsListTable() {
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center mt-8">
-        All Requests
+        {title ? title : "All Requests"}
       </h2>
       {selectedRequest && (
         <OfferDialog

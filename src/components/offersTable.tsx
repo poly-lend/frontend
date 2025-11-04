@@ -10,7 +10,13 @@ import {
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 
-export default function OffersTable({ address }: { address?: `0x${string}` }) {
+export default function OffersTable({
+  address,
+  title,
+}: {
+  address?: `0x${string}`;
+  title?: string;
+}) {
   const [offers, setOffers] = useState<LoanOffer[]>([]);
   const publicClient = usePublicClient();
   useEffect(() => {
@@ -21,7 +27,9 @@ export default function OffersTable({ address }: { address?: `0x${string}` }) {
   return (
     <div>
       <div>
-        <h2 className="text-2xl font-bold w-full text-center mt-8">Offers</h2>
+        <h2 className="text-2xl font-bold w-full text-center mt-8">
+          {title ? title : "Offers"}
+        </h2>
       </div>
       <Table size="small">
         <TableHead>

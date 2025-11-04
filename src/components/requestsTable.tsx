@@ -15,8 +15,10 @@ import { usePublicClient, useWalletClient } from "wagmi";
 
 export default function RequestsTable({
   address,
+  title,
 }: {
   address?: `0x${string}`;
+  title?: string;
 }) {
   const [requests, setRequests] = useState<LoanRequest[]>([]);
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
@@ -38,7 +40,9 @@ export default function RequestsTable({
   };
   return (
     <>
-      <h2 className="text-2xl font-bold w-full text-center mt-8">Requests</h2>
+      <h2 className="text-2xl font-bold w-full text-center mt-8">
+        {title ? title : "Requests"}
+      </h2>
       <Table size="small">
         <TableHead>
           <TableRow>
