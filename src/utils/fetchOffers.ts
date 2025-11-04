@@ -39,6 +39,5 @@ export const fetchOffers = async (params: {
         request.borrower.toLowerCase() === params.address?.toLocaleLowerCase()
     );
   }
-  console.log(offers);
   return offers;
 };

@@ -44,6 +44,5 @@ export const fetchOffers = async (params: {
         loan.borrower.toLowerCase() === params.address?.toLocaleLowerCase()
     );
   }
-  console.log(loans);
   return loans;
 };

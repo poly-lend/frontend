@@ -52,6 +52,5 @@ export const fetchRequests = async (params: {
         request.borrower.toLowerCase() === params.address?.toLocaleLowerCase()
     );
   }
-  console.log(requests);
   return requests;
 };
