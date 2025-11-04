@@ -1,4 +1,4 @@
-import { polylendAddress } from "@/configs";
+import { polylendAddress, polylendDecimals, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { LoanRequest } from "@/types/polyLend";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { formatUnits } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
 
 export default function RequestsTable({
@@ -56,87 +57,91 @@ export default function RequestsTable({
         </TableHead>
         <TableBody>
           {requests.map((request) => (
-            <TableRow key={request.requestId.toString()}>
-              <TableCell className="text-center">
-                {request.requestId.toString()}
-              </TableCell>
-              <TableCell className="text-center">{request.borrower}</TableCell>
-              <TableCell className="text-right">
-                {request.collateralAmount.toString()}
-              </TableCell>
-              <TableCell className="text-right">
-                {request.minimumDuration.toString()}
-              </TableCell>
-              <TableCell className="text-right">
-                {request.offers.length.toString()}
-              </TableCell>
-              <TableCell className="text-right">
-                <Button
-                  disabled={request.offers.length === 0}
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    if (
-                      selectedRequest &&
-                      selectedRequest.requestId === request.requestId
-                    ) {
-                      selectRequest(null);
-                    } else {
-                      selectRequest(request);
-                    }
-                  }}
-                >
-                  Offers
-                </Button>
-              </TableCell>
-            </TableRow>
-            //   {selectedRequest &&
-            //     selectedRequest.requestId === request.requestId && (
-            //       <tr>
-            //         <td colSpan={6}>
-            //           <table className="w-full">
-            //             <thead>
-            //               <tr>
-            //                 <th>Offer ID</th>
-            //                 <th>Lender</th>
-            //                 <th>Loan Amount</th>
-            //                 <th>Rate</th>
-            //               </tr>
-            //             </thead>
-            //             <tbody>
-            //               {request.offers.map((offer) => (
-            //                 <tr key={offer.offerId.toString()}>
-            //                   <td className="text-center">
-            //                     {offer.offerId.toString()}
-            //                   </td>
-            //                   <td>{offer.lender}</td>
-            //                   <td className="text-right">
-            //                     {formatUnits(offer.loanAmount, usdcDecimals)}{" "}
-            //                     USDC
-            //                   </td>
-            //                   <td className="text-right">
-            //                     {(
-            //                       offer.rate - BigInt(10 ** polylendDecimals)
-            //                     ).toString()}
-            //                     %
-            //                   </td>
-            //                   <td className="text-right">
-            //                     <Button
-            //                       variant="outlined"
-            //                       color="primary"
-            //                       onClick={() => acceptOffer(offer.offerId)}
-            //                     >
-            //                       Accept
-            //                     </Button>
-            //                   </td>
-            //                 </tr>
-            //               ))}
-            //             </tbody>
-            //           </table>
-            //         </td>
-            //       </tr>
-            //     )}
-            // </>
+            <>
+              <TableRow key={request.requestId.toString()}>
+                <TableCell className="text-center">
+                  {request.requestId.toString()}
+                </TableCell>
+                <TableCell className="text-center">
+                  {request.borrower}
+                </TableCell>
+                <TableCell className="text-right">
+                  {request.collateralAmount.toString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  {request.minimumDuration.toString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  {request.offers.length.toString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    disabled={request.offers.length === 0}
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      if (
+                        selectedRequest &&
+                        selectedRequest.requestId === request.requestId
+                      ) {
+                        selectRequest(null);
+                      } else {
+                        selectRequest(request);
+                      }
+                    }}
+                  >
+                    Offers
+                  </Button>
+                </TableCell>
+              </TableRow>
+              {selectedRequest &&
+                selectedRequest.requestId === request.requestId && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="border-1">
+                      <Table size="small">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Offer ID</TableCell>
+                            <TableCell>Lender</TableCell>
+                            <TableCell>Loan Amount</TableCell>
+                            <TableCell>Rate</TableCell>
+                            <TableCell>Actions</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {request.offers.map((offer) => (
+                            <TableRow key={offer.offerId.toString()}>
+                              <TableCell className="text-center">
+                                {offer.offerId.toString()}
+                              </TableCell>
+                              <TableCell>{offer.lender}</TableCell>
+                              <TableCell className="text-right">
+                                {formatUnits(offer.loanAmount, usdcDecimals)}{" "}
+                                USDC
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {(
+                                  offer.rate - BigInt(10 ** polylendDecimals)
+                                ).toString()}
+                                %
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={() => acceptOffer(offer.offerId)}
+                                >
+                                  Accept
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableCell>
+                  </TableRow>
+                )}
+            </>
           ))}
         </TableBody>
       </Table>

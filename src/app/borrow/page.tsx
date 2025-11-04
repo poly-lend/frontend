@@ -24,8 +24,7 @@ export default function Borrow() {
         Borrow
       </h1>
 
-      <BorrowForm />
-
+      {address && <BorrowForm />}
       {address && <RequestsTable address={address} title="Borrower Requests" />}
       {address && <LoansTable borrower={address} title="Borrower Loans" />}
       {!address && (
