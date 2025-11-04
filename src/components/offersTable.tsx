@@ -27,57 +27,64 @@ export default function OffersTable({
           {title ? title : "Offers"}
         </h2>
       </div>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Offer ID</TableCell>
-            <TableCell align="center">Request ID</TableCell>
-            <TableCell align="center">Lender</TableCell>
-            <TableCell align="center">Market</TableCell>
-            <TableCell align="center">Shares</TableCell>
-            <TableCell align="center">Collateral</TableCell>
-            <TableCell align="center">Amount</TableCell>
-            <TableCell align="center">Duration</TableCell>
-            <TableCell align="center">Rate</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {offers.map((offer) => (
-            <TableRow key={offer.offerId.toString()}>
-              <TableCell align="center">{offer.offerId.toString()}</TableCell>
-              <TableCell align="center">{offer.requestId.toString()}</TableCell>
-              <TableCell align="center">
-                <Address address={offer.lender} />
-              </TableCell>
-              <TableCell align="center">
-                <MarketEntry market={offer.market} />
-              </TableCell>
-              <TableCell align="right">
-                {toSharesText(offer.request!.collateralAmount)}
-              </TableCell>
-              <TableCell align="right">
-                {toUSDCString(
-                  Number(offer.market.outcomePrice) *
-                    Number(offer.request!.collateralAmount)
-                )}
-              </TableCell>
-              <TableCell align="right">
-                {toUSDCString(offer.loanAmount)}
-              </TableCell>
-              <TableCell align="right">
-                {toDuration(Number(offer.request!.minimumDuration))}
-              </TableCell>
-              <TableCell align="right">{"10%"}</TableCell>
-              <TableCell align="right">
-                <Button variant="outlined" color="primary">
-                  Cancel
-                </Button>
-              </TableCell>
+      {offers.length === 0 && (
+        <div className="text-center">No offers found</div>
+      )}
+      {offers.length > 0 && (
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Offer ID</TableCell>
+              <TableCell align="center">Request ID</TableCell>
+              <TableCell align="center">Lender</TableCell>
+              <TableCell align="center">Market</TableCell>
+              <TableCell align="center">Shares</TableCell>
+              <TableCell align="center">Collateral</TableCell>
+              <TableCell align="center">Amount</TableCell>
+              <TableCell align="center">Duration</TableCell>
+              <TableCell align="center">Rate</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {offers.map((offer) => (
+              <TableRow key={offer.offerId.toString()}>
+                <TableCell align="center">{offer.offerId.toString()}</TableCell>
+                <TableCell align="center">
+                  {offer.requestId.toString()}
+                </TableCell>
+                <TableCell align="center">
+                  <Address address={offer.lender} />
+                </TableCell>
+                <TableCell align="center">
+                  <MarketEntry market={offer.market} />
+                </TableCell>
+                <TableCell align="right">
+                  {toSharesText(offer.request!.collateralAmount)}
+                </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(
+                    Number(offer.market.outcomePrice) *
+                      Number(offer.request!.collateralAmount)
+                  )}
+                </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(offer.loanAmount)}
+                </TableCell>
+                <TableCell align="right">
+                  {toDuration(Number(offer.request!.minimumDuration))}
+                </TableCell>
+                <TableCell align="right">{"10%"}</TableCell>
+                <TableCell align="right">
+                  <Button variant="outlined" color="primary">
+                    Cancel
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }

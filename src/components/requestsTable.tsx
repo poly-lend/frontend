@@ -43,116 +43,121 @@ export default function RequestsTable({
       <h2 className="text-2xl font-bold w-full text-center mt-8">
         {title ? title : "Requests"}
       </h2>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Request ID</TableCell>
-            <TableCell align="center">Borrower</TableCell>
-            <TableCell align="center">Market</TableCell>
-            <TableCell align="center">Shares</TableCell>
-            <TableCell align="center">Collateral</TableCell>
-            <TableCell align="center">Duration</TableCell>
-            <TableCell align="center">Offers</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {requests.map((request) => (
-            <>
-              <TableRow key={request.requestId.toString()}>
-                <TableCell align="center">
-                  {request.requestId.toString()}
-                </TableCell>
-                <TableCell align="center">
-                  <Address address={request.borrower} />
-                </TableCell>
-                <TableCell align="center">
-                  <MarketEntry market={request.market} />
-                </TableCell>
-                <TableCell align="right">
-                  {toSharesText(request.collateralAmount)}
-                </TableCell>
-                <TableCell align="right">
-                  {toUSDCString(
-                    Number(request.market.outcomePrice) *
-                      Number(request.collateralAmount)
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {toDuration(request.minimumDuration)}
-                </TableCell>
-                <TableCell align="right">
-                  {request.offers.length.toString()}
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    disabled={request.offers.length === 0}
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => {
-                      if (
-                        selectedRequest &&
-                        selectedRequest.requestId === request.requestId
-                      ) {
-                        selectRequest(null);
-                      } else {
-                        selectRequest(request);
-                      }
-                    }}
-                  >
-                    Offers
-                  </Button>
-                </TableCell>
-              </TableRow>
-              {selectedRequest &&
-                selectedRequest.requestId === request.requestId && (
-                  <TableRow>
-                    <TableCell colSpan={8} className="border-1">
-                      <Table size="small">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="center">Offer ID</TableCell>
-                            <TableCell align="center">Lender</TableCell>
-                            <TableCell align="center">Amount</TableCell>
-                            <TableCell align="center">Rate</TableCell>
-                            <TableCell align="center">Actions</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {request.offers.map((offer) => (
-                            <TableRow key={offer.offerId}>
-                              <TableCell className="text-center">
-                                {offer.offerId}
-                              </TableCell>
-                              <TableCell align="center">
-                                <Address address={offer.lender} />
-                              </TableCell>
-                              <TableCell align="right">
-                                {toUSDCString(offer.loanAmount)} USDC
-                              </TableCell>
-                              <TableCell align="right">
-                                {offer.rate.toString()}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  variant="outlined"
-                                  color="primary"
-                                  onClick={() => acceptOffer(offer.offerId)}
-                                >
-                                  Accept
-                                </Button>
-                              </TableCell>
+      {requests.length === 0 && (
+        <div className="text-center">No requests found</div>
+      )}
+      {requests.length > 0 && (
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Request ID</TableCell>
+              <TableCell align="center">Borrower</TableCell>
+              <TableCell align="center">Market</TableCell>
+              <TableCell align="center">Shares</TableCell>
+              <TableCell align="center">Collateral</TableCell>
+              <TableCell align="center">Duration</TableCell>
+              <TableCell align="center">Offers</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {requests.map((request) => (
+              <>
+                <TableRow key={request.requestId.toString()}>
+                  <TableCell align="center">
+                    {request.requestId.toString()}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Address address={request.borrower} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <MarketEntry market={request.market} />
+                  </TableCell>
+                  <TableCell align="right">
+                    {toSharesText(request.collateralAmount)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toUSDCString(
+                      Number(request.market.outcomePrice) *
+                        Number(request.collateralAmount)
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toDuration(request.minimumDuration)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {request.offers.length.toString()}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      disabled={request.offers.length === 0}
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        if (
+                          selectedRequest &&
+                          selectedRequest.requestId === request.requestId
+                        ) {
+                          selectRequest(null);
+                        } else {
+                          selectRequest(request);
+                        }
+                      }}
+                    >
+                      Offers
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                {selectedRequest &&
+                  selectedRequest.requestId === request.requestId && (
+                    <TableRow>
+                      <TableCell colSpan={8} className="border-1">
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align="center">Offer ID</TableCell>
+                              <TableCell align="center">Lender</TableCell>
+                              <TableCell align="center">Amount</TableCell>
+                              <TableCell align="center">Rate</TableCell>
+                              <TableCell align="center">Actions</TableCell>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableCell>
-                  </TableRow>
-                )}
-            </>
-          ))}
-        </TableBody>
-      </Table>
+                          </TableHead>
+                          <TableBody>
+                            {request.offers.map((offer) => (
+                              <TableRow key={offer.offerId}>
+                                <TableCell className="text-center">
+                                  {offer.offerId}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Address address={offer.lender} />
+                                </TableCell>
+                                <TableCell align="right">
+                                  {toUSDCString(offer.loanAmount)} USDC
+                                </TableCell>
+                                <TableCell align="right">
+                                  {offer.rate.toString()}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={() => acceptOffer(offer.offerId)}
+                                  >
+                                    Accept
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableCell>
+                    </TableRow>
+                  )}
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </>
   );
 }

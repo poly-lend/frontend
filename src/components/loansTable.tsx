@@ -28,55 +28,58 @@ export default function LoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
-      <div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Loan ID</TableCell>
-              <TableCell align="center">Lender</TableCell>
-              <TableCell align="center">Borrower</TableCell>
-              <TableCell align="center">Market</TableCell>
-              <TableCell align="center">Shares</TableCell>
-              <TableCell align="center">Collateral</TableCell>
-              <TableCell align="center">Amount</TableCell>
-              <TableCell align="center">Duration</TableCell>
-              <TableCell align="center">Rate</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loans.map((loan) => (
-              <TableRow key={loan.loanId}>
-                <TableCell align="center">{loan.loanId}</TableCell>
-                <TableCell align="center">
-                  <Address address={loan.lender} />
-                </TableCell>
-                <TableCell align="center">
-                  <Address address={loan.borrower} />
-                </TableCell>
-                <TableCell align="center">
-                  <MarketEntry market={loan.market} />
-                </TableCell>
-                <TableCell align="right">
-                  {toSharesText(loan.collateralAmount)}
-                </TableCell>
-                <TableCell align="right">
-                  {toUSDCString(
-                    Number(loan.market.outcomePrice) *
-                      Number(loan.collateralAmount)
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {toUSDCString(loan.loanAmount)}
-                </TableCell>
-                <TableCell align="right">
-                  {toDuration(Number(loan.minimumDuration))}
-                </TableCell>
-                <TableCell align="right">{"10%"}</TableCell>
+      {loans.length === 0 && <div className="text-center">No loans found</div>}
+      {loans.length > 0 && (
+        <div>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Loan ID</TableCell>
+                <TableCell align="center">Lender</TableCell>
+                <TableCell align="center">Borrower</TableCell>
+                <TableCell align="center">Market</TableCell>
+                <TableCell align="center">Shares</TableCell>
+                <TableCell align="center">Collateral</TableCell>
+                <TableCell align="center">Amount</TableCell>
+                <TableCell align="center">Duration</TableCell>
+                <TableCell align="center">Rate</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHead>
+            <TableBody>
+              {loans.map((loan) => (
+                <TableRow key={loan.loanId}>
+                  <TableCell align="center">{loan.loanId}</TableCell>
+                  <TableCell align="center">
+                    <Address address={loan.lender} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Address address={loan.borrower} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <MarketEntry market={loan.market} />
+                  </TableCell>
+                  <TableCell align="right">
+                    {toSharesText(loan.collateralAmount)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toUSDCString(
+                      Number(loan.market.outcomePrice) *
+                        Number(loan.collateralAmount)
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toUSDCString(loan.loanAmount)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toDuration(Number(loan.minimumDuration))}
+                  </TableCell>
+                  <TableCell align="right">{"10%"}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 }
