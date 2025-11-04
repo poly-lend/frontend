@@ -7,7 +7,7 @@ import {
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { LoanRequest } from "@/types/polyLend";
-import { toDuration, toSharesText } from "@/utils/convertors";
+import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
+import MarketEntry from "./marketEntry";
 import OfferDialog from "./offerDialog";
 
 export default function RequestsListTable({ title }: { title?: string }) {
@@ -85,7 +86,9 @@ export default function RequestsListTable({ title }: { title?: string }) {
           <TableRow>
             <TableCell align="center">Request ID</TableCell>
             <TableCell align="center">Borrower</TableCell>
+            <TableCell align="center">Market</TableCell>
             <TableCell align="center">Shares</TableCell>
+            <TableCell align="center">Value</TableCell>
             <TableCell align="center">Duration</TableCell>
             <TableCell align="center">Offers</TableCell>
             <TableCell align="center">Actions</TableCell>
@@ -98,8 +101,17 @@ export default function RequestsListTable({ title }: { title?: string }) {
               <TableCell align="center">
                 <Address address={request.borrower} />
               </TableCell>
+              <TableCell align="center">
+                <MarketEntry market={request.market} />
+              </TableCell>
               <TableCell align="right">
                 {toSharesText(request.collateralAmount)}
+              </TableCell>
+              <TableCell align="right">
+                {toUSDCString(
+                  Number(request.market.outcomePrice) *
+                    Number(request.collateralAmount)
+                )}
               </TableCell>
               <TableCell align="right">
                 {toDuration(Number(request.minimumDuration))}
