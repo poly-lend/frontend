@@ -1,6 +1,6 @@
 "use client";
 
-import ConnectWallet from "@/components/connectWallet";
+import ConnectWidget from "@/components/connectWidget";
 import LoansTable from "@/components/loansTable";
 import BorrowForm from "@/components/requestForm";
 import RequestsTable from "@/components/requestsTable";
@@ -46,12 +46,7 @@ export default function Borrow() {
       {address && data && (
         <LoansTable borrower={address} title="Borrower Loans" data={data} />
       )}
-      {!address && (
-        <>
-          <div>Connect your wallet to see your requests and loans data</div>
-          <ConnectWallet />
-        </>
-      )}
+      {!address && <ConnectWidget />}
     </Stack>
   );
 }

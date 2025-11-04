@@ -1,6 +1,6 @@
 "use client";
 
-import ConnectWallet from "@/components/connectWallet";
+import ConnectWidget from "@/components/connectWidget";
 import LoansTable from "@/components/loansTable";
 import OffersTable from "@/components/offersTable";
 import RequestsListTable from "@/components/requestsListTable";
@@ -40,10 +40,7 @@ export default function Lend() {
           <LoansTable title="Lender Loans" data={data} />
         </>
       ) : (
-        <>
-          <div>Connect your wallet to see your offers and loans</div>
-          <ConnectWallet />
-        </>
+        <ConnectWidget />
       )}
     </Stack>
   );
