@@ -1,4 +1,5 @@
 import { LoanOffer } from "@/types/polyLend";
+import { convertToUSDCString } from "@/utils/convertors";
 import { fetchOffers } from "@/utils/fetchOffers";
 import {
   Table,
@@ -35,23 +36,25 @@ export default function OffersTable({
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Offer ID</TableCell>
-            <TableCell>Request ID</TableCell>
-            <TableCell>Lender</TableCell>
-            <TableCell>Loan Amount</TableCell>
-            <TableCell>Rate</TableCell>
+            <TableCell align="center">Offer ID</TableCell>
+            <TableCell align="center">Request ID</TableCell>
+            <TableCell align="center">Lender</TableCell>
+            <TableCell align="center">Loan Amount</TableCell>
+            <TableCell align="center">Rate</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {offers.map((offer) => (
             <TableRow key={offer.offerId.toString()}>
-              <TableCell>{offer.offerId.toString()}</TableCell>
-              <TableCell>{offer.requestId.toString()}</TableCell>
-              <TableCell>
+              <TableCell align="center">{offer.offerId.toString()}</TableCell>
+              <TableCell align="center">{offer.requestId.toString()}</TableCell>
+              <TableCell align="center">
                 <Address address={offer.lender} />
               </TableCell>
-              <TableCell>{offer.loanAmount.toString()}</TableCell>
-              <TableCell>{offer.rate.toString()}</TableCell>
+              <TableCell align="right">
+                {convertToUSDCString(offer.loanAmount)} USDC
+              </TableCell>
+              <TableCell align="right">{offer.rate}</TableCell>
             </TableRow>
           ))}
         </TableBody>

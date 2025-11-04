@@ -1,5 +1,19 @@
 polylend.com {
     reverse_proxy web:3000
+
+    handle_path /api/polymarket/hamma-api* {
+        reverse_proxy gamma-api.polymarket.com:443
+    }
+
+    header {
+        -Server
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+    }
+    log {
+        output stdout
+        format console
+    }
 }
 
 www.polylend.com {

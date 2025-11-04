@@ -127,7 +127,7 @@ export default function RequestsTable({
                                 <Address address={offer.lender} />
                               </TableCell>
                               <TableCell align="right">
-                                {convertToUSDCString(offer.loanAmount)}
+                                {convertToUSDCString(offer.loanAmount)} USDC
                               </TableCell>
                               <TableCell align="right">
                                 {offer.rate.toString()}

@@ -6,6 +6,7 @@ export type LoanRequest = {
   collateralAmount: bigint;
   minimumDuration: bigint;
   offers: LoanOffer[];
+  market: any;
 };
 
 export type LoanOffer = {
