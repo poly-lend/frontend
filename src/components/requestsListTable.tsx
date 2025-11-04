@@ -69,7 +69,7 @@ export default function RequestsListTable({
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center mt-8">
-        {title ? title : "All Requests"}
+        {title ? title : "All Borrow Requests"}
       </h2>
       {selectedRequest && (
         <OfferDialog
@@ -90,7 +90,7 @@ export default function RequestsListTable({
             <TableCell align="center">Borrower</TableCell>
             <TableCell align="center">Market</TableCell>
             <TableCell align="center">Shares</TableCell>
-            <TableCell align="center">Value</TableCell>
+            <TableCell align="center">Collateral</TableCell>
             <TableCell align="center">Duration</TableCell>
             <TableCell align="center">Offers</TableCell>
             <TableCell align="center">Actions</TableCell>
@@ -121,7 +121,7 @@ export default function RequestsListTable({
               <TableCell align="right">{request.offers.length}</TableCell>
               <TableCell align="right">
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                   onClick={() => {
                     selectRequest(request);

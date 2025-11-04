@@ -50,7 +50,7 @@ export default function RequestsTable({
             <TableCell align="center">Borrower</TableCell>
             <TableCell align="center">Market</TableCell>
             <TableCell align="center">Shares</TableCell>
-            <TableCell align="center">Value</TableCell>
+            <TableCell align="center">Collateral</TableCell>
             <TableCell align="center">Duration</TableCell>
             <TableCell align="center">Offers</TableCell>
             <TableCell align="center">Actions</TableCell>
@@ -107,7 +107,7 @@ export default function RequestsTable({
               {selectedRequest &&
                 selectedRequest.requestId === request.requestId && (
                   <TableRow>
-                    <TableCell colSpan={7} className="border-1">
+                    <TableCell colSpan={8} className="border-1">
                       <Table size="small">
                         <TableHead>
                           <TableRow>

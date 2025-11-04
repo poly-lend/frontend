@@ -1,7 +1,7 @@
 import { polymarketSharesDecimals, usdcDecimals } from "@/configs";
 
 export const toUSDCString = (amount: bigint | string | number) => {
-  return (Number(amount) / 10 ** usdcDecimals).toFixed(2);
+  return (Number(amount) / 10 ** usdcDecimals).toFixed(2) + " USDC";
 };
 
 export const toDuration = (seconds: number | bigint | string) => {

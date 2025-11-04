@@ -1,6 +1,7 @@
 import { AllLoanData } from "@/types/polyLend";
-import { toUSDCString } from "@/utils/convertors";
+import { toSharesText, toUSDCString } from "@/utils/convertors";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -33,8 +34,11 @@ export default function OffersTable({
             <TableCell align="center">Request ID</TableCell>
             <TableCell align="center">Lender</TableCell>
             <TableCell align="center">Market</TableCell>
-            <TableCell align="center">Loan Amount</TableCell>
+            <TableCell align="center">Shares</TableCell>
+            <TableCell align="center">Collateral</TableCell>
+            <TableCell align="center">Amount</TableCell>
             <TableCell align="center">Rate</TableCell>
+            <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -49,9 +53,23 @@ export default function OffersTable({
                 <MarketEntry market={offer.market} />
               </TableCell>
               <TableCell align="right">
-                {toUSDCString(offer.loanAmount)} USDC
+                {toSharesText(offer.request!.collateralAmount)}
               </TableCell>
-              <TableCell align="right">{offer.rate}</TableCell>
+              <TableCell align="right">
+                {toUSDCString(
+                  Number(offer.market.outcomePrice) *
+                    Number(offer.request!.collateralAmount)
+                )}
+              </TableCell>
+              <TableCell align="right">
+                {toUSDCString(offer.loanAmount)}
+              </TableCell>
+              <TableCell align="right">{"10%"}</TableCell>
+              <TableCell align="right">
+                <Button variant="outlined" color="primary">
+                  Cancel
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

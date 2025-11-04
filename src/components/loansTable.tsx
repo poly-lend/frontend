@@ -37,7 +37,8 @@ export default function LoansTable({
               <TableCell align="center">Borrower</TableCell>
               <TableCell align="center">Market</TableCell>
               <TableCell align="center">Shares</TableCell>
-              <TableCell align="center">Value</TableCell>
+              <TableCell align="center">Collateral</TableCell>
+              <TableCell align="center">Amount</TableCell>
               <TableCell align="center">Duration</TableCell>
               <TableCell align="center">Rate</TableCell>
             </TableRow>
@@ -65,9 +66,12 @@ export default function LoansTable({
                   )}
                 </TableCell>
                 <TableCell align="right">
+                  {toUSDCString(loan.loanAmount)}
+                </TableCell>
+                <TableCell align="right">
                   {toDuration(Number(loan.minimumDuration))}
                 </TableCell>
-                <TableCell align="right">{loan.rate.toString()}</TableCell>
+                <TableCell align="right">{"10%"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
