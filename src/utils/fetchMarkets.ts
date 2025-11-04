@@ -7,9 +7,15 @@ export default async function fetchMarkets(
   markets.forEach((market) => {
     JSON.parse(market.clobTokenIds).forEach(
       (tokenId: string, index: number) => {
-        const answers = JSON.parse(market.outcomes);
-        const outcome = answers[index];
-        result.set(tokenId, { market, outcome, outcomeIndex: index });
+        const outcome = JSON.parse(market.outcomes)[index];
+        const outcomePrice = JSON.parse(market.outcomePrices)[index];
+        result.set(tokenId, {
+          market,
+          outcome,
+          outcomePrice,
+          outcomeIndex: index,
+          event: market.events[0],
+        });
       }
     );
   });

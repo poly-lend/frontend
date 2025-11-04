@@ -7,10 +7,7 @@ import {
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { LoanRequest } from "@/types/polyLend";
-import {
-  SecondsToDuration,
-  toPolymarketSharesString,
-} from "@/utils/convertors";
+import { toDuration, toSharesText } from "@/utils/convertors";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
@@ -102,10 +99,10 @@ export default function RequestsListTable({ title }: { title?: string }) {
                 <Address address={request.borrower} />
               </TableCell>
               <TableCell align="right">
-                {toPolymarketSharesString(request.collateralAmount)}
+                {toSharesText(request.collateralAmount)}
               </TableCell>
               <TableCell align="right">
-                {SecondsToDuration(Number(request.minimumDuration))}
+                {toDuration(Number(request.minimumDuration))}
               </TableCell>
               <TableCell align="right">{request.offers.length}</TableCell>
               <TableCell align="right">

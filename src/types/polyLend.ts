@@ -28,4 +28,7 @@ export type Loan = {
   rate: bigint;
   startTime: bigint;
   minimumDuration: bigint;
+  request: LoanRequest;
+  offer: LoanOffer;
+  market: any;
 };

@@ -1,5 +1,5 @@
 import { Loan } from "@/types/polyLend";
-import { toPolymarketSharesString } from "@/utils/convertors";
+import { toSharesText } from "@/utils/convertors";
 import { fetchLoans } from "@/utils/fetchLoans";
 import {
   Table,
@@ -57,7 +57,7 @@ export default function LoansTable({
                   <Address address={loan.lender} />
                 </TableCell>
                 <TableCell align="right">
-                  {toPolymarketSharesString(loan.collateralAmount)}
+                  {toSharesText(loan.collateralAmount)}
                 </TableCell>
               </TableRow>
             ))}

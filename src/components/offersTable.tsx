@@ -1,5 +1,5 @@
 import { LoanOffer } from "@/types/polyLend";
-import { convertToUSDCString } from "@/utils/convertors";
+import { toUSDCString } from "@/utils/convertors";
 import { fetchOffers } from "@/utils/fetchOffers";
 import {
   Table,
@@ -52,7 +52,7 @@ export default function OffersTable({
                 <Address address={offer.lender} />
               </TableCell>
               <TableCell align="right">
-                {convertToUSDCString(offer.loanAmount)} USDC
+                {toUSDCString(offer.loanAmount)} USDC
               </TableCell>
               <TableCell align="right">{offer.rate}</TableCell>
             </TableRow>

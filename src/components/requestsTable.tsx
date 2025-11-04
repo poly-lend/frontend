@@ -1,11 +1,7 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { LoanRequest } from "@/types/polyLend";
-import {
-  convertToUSDCString,
-  SecondsToDuration,
-  toPolymarketSharesString,
-} from "@/utils/convertors";
+import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
@@ -18,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
+import MarketEntry from "./marketEntry";
 
 export default function RequestsTable({
   address,
@@ -34,7 +31,7 @@ export default function RequestsTable({
     if (!publicClient) return;
     fetchRequestsWithOffers({ publicClient, address }).then(setRequests);
   }, [publicClient, address]);
-
+  console.log(requests);
   const acceptOffer = async (offerId: bigint) => {
     if (!publicClient || !walletClient) return;
     await walletClient.writeContract({
@@ -54,6 +51,7 @@ export default function RequestsTable({
           <TableRow>
             <TableCell align="center">Request ID</TableCell>
             <TableCell align="center">Borrower</TableCell>
+            <TableCell align="center">Market</TableCell>
             <TableCell align="center">Shares</TableCell>
             <TableCell align="center">Value</TableCell>
             <TableCell align="center">Duration</TableCell>
@@ -71,14 +69,20 @@ export default function RequestsTable({
                 <TableCell align="center">
                   <Address address={request.borrower} />
                 </TableCell>
-                <TableCell align="right">
-                  {toPolymarketSharesString(request.collateralAmount)}
+                <TableCell align="center">
+                  <MarketEntry market={request.market} />
                 </TableCell>
                 <TableCell align="right">
-                  {convertToUSDCString(request.collateralAmount)} USDC
+                  {toSharesText(request.collateralAmount)}
                 </TableCell>
                 <TableCell align="right">
-                  {SecondsToDuration(request.minimumDuration)}
+                  {toUSDCString(
+                    Number(request.market.outcomePrice) *
+                      Number(request.collateralAmount)
+                  )}
+                </TableCell>
+                <TableCell align="right">
+                  {toDuration(request.minimumDuration)}
                 </TableCell>
                 <TableCell align="right">
                   {request.offers.length.toString()}
@@ -120,14 +124,14 @@ export default function RequestsTable({
                         <TableBody>
                           {request.offers.map((offer) => (
                             <TableRow key={offer.offerId}>
-                              <TableCell align="center">
+                              <TableCell className="text-center">
                                 {offer.offerId}
                               </TableCell>
                               <TableCell align="center">
                                 <Address address={offer.lender} />
                               </TableCell>
                               <TableCell align="right">
-                                {convertToUSDCString(offer.loanAmount)} USDC
+                                {toUSDCString(offer.loanAmount)} USDC
                               </TableCell>
                               <TableCell align="right">
                                 {offer.rate.toString()}
