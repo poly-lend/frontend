@@ -26,7 +26,7 @@ export default function Lend() {
       {address ? (
         <>
           <OffersTable address={address} />
-          <LoansTable address={address} />
+          <LoansTable lenderAddress={address} />
         </>
       ) : (
         <>

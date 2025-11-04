@@ -4,7 +4,8 @@ import { Loan } from "@/types/polyLend";
 
 export const fetchLoans = async (params: {
   publicClient: any;
-  address?: `0x${string}`;
+  borrowerAddress?: `0x${string}`;
+  lenderAddress?: `0x${string}`;
 }): Promise<Loan[]> => {
   const calls = [];
   for (var i = 0; i < 100; i++) {
@@ -38,10 +39,17 @@ export const fetchLoans = async (params: {
       (loan: Loan) =>
         loan.borrower !== `0x0000000000000000000000000000000000000000`
     );
-  if (params.address) {
+  if (params.borrowerAddress) {
     loans = loans.filter(
       (loan: Loan) =>
         loan.borrower.toLowerCase() === params.address?.toLocaleLowerCase()
+    );
+  }
+
+  if (params.lenderAddress) {
+    loans = loans.filter(
+      (loan: Loan) =>
+        loan.lender.toLowerCase() === params.lenderAddress?.toLocaleLowerCase()
     );
   }
   return loans;
