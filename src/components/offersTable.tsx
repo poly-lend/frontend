@@ -1,5 +1,5 @@
 import { AllLoanData } from "@/types/polyLend";
-import { toSharesText, toUSDCString } from "@/utils/convertors";
+import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import {
   Button,
   Table,
@@ -37,6 +37,7 @@ export default function OffersTable({
             <TableCell align="center">Shares</TableCell>
             <TableCell align="center">Collateral</TableCell>
             <TableCell align="center">Amount</TableCell>
+            <TableCell align="center">Duration</TableCell>
             <TableCell align="center">Rate</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
@@ -63,6 +64,9 @@ export default function OffersTable({
               </TableCell>
               <TableCell align="right">
                 {toUSDCString(offer.loanAmount)}
+              </TableCell>
+              <TableCell align="right">
+                {toDuration(Number(offer.request!.minimumDuration))}
               </TableCell>
               <TableCell align="right">{"10%"}</TableCell>
               <TableCell align="right">
