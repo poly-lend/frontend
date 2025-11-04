@@ -11,7 +11,7 @@ export const wagmiConfig = createConfig({
   transports: {
     [chain.id]: http(),
   },
-  ssr: true, // If your dApp uses server side rendering (SSR)
+  //ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
 export const queryClient = new QueryClient();

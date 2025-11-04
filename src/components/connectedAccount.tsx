@@ -1,6 +1,7 @@
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Button } from "@mui/material";
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from "wagmi";
+
 export function ConnectedAccount() {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
@@ -21,6 +22,7 @@ export function ConnectedAccount() {
             : truncateAddress(address)}
         </div>
       )}
+
       <Button variant="contained" color="primary" onClick={() => disconnect()}>
         <LogoutIcon />
       </Button>

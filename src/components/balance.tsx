@@ -1,11 +1,12 @@
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
+import { chain } from "@/utils/wagmi";
 import { useContext, useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi";
 import { BalanceRefreshContext } from "../app/context";
 
 export default function Balance() {
-  const { address } = useAccount();
+  const { address, chain: currentChain } = useAccount();
   const { balanceRefresh, setBalanceRefresh } = useContext(
     BalanceRefreshContext
   );
@@ -21,8 +22,11 @@ export default function Balance() {
     setBalanceRefresh(false);
   }, [balanceRefresh, refetch, setBalanceRefresh]);
 
+  const isPolygon = currentChain?.id === chain.id;
+
   return (
-    address && (
+    address &&
+    isPolygon && (
       <div className="mr-4 font-bold">
         {balance ? Number(balance) / 10 ** usdcDecimals : 0} pfUSDC
       </div>

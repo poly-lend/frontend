@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Balance from "./balance";
 import ConnectWallet from "./connectWallet";
+import SwitchChain from "./switchChain";
 
 export default function Nav() {
   const [selected, setSelected] = useState("home");
@@ -45,6 +46,7 @@ export default function Nav() {
         </div>
 
         <div className="flex items-center h-16 px-4">
+          <SwitchChain />
           <Balance />
           <ConnectWallet />
         </div>
