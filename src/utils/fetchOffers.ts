@@ -2,6 +2,9 @@ import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 
 import { LoanOffer } from "@/types/polyLend";
+import fetchMarkets from "./fetchMarkets";
+import { fetchRequests } from "./fetchRequests";
+import { hydrateOffers } from "./hydrateOffers";
 
 export const fetchOffers = async (params: {
   publicClient: any;
@@ -39,5 +42,13 @@ export const fetchOffers = async (params: {
         offer.lender.toLowerCase() === params.address?.toLocaleLowerCase()
     );
   }
-  return offers;
+  const requests = await fetchRequests({ publicClient: params.publicClient });
+  const requestsMap = new Map(
+    requests.map((request) => [request.requestId.toString(), request])
+  );
+  const markets = await fetchMarkets(
+    requests.map((request) => request.positionId.toString())
+  );
+
+  return hydrateOffers(offers, requestsMap, markets);
 };
