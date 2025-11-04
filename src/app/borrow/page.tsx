@@ -11,22 +11,21 @@ export default function Borrow() {
   const { address } = useAccount();
 
   return (
-    <>
-      <Stack spacing={2}>
-        <h1
-          style={{
-            fontSize: 36,
-            fontWeight: 800,
-            paddingTop: 50,
-            paddingBottom: 20,
-            textAlign: "center",
-          }}
-        >
-          Borrow
-        </h1>
+    <Stack spacing={2}>
+      <h1
+        style={{
+          fontSize: 36,
+          fontWeight: 800,
+          paddingTop: 50,
+          paddingBottom: 20,
+          textAlign: "center",
+        }}
+      >
+        Borrow
+      </h1>
 
-        <BorrowForm />
-      </Stack>
+      <BorrowForm />
+
       {address ? (
         <>
           <RequestsTable address={address} />
@@ -38,6 +37,6 @@ export default function Borrow() {
           <ConnectWallet />
         </>
       )}
-    </>
+    </Stack>
   );
 }
