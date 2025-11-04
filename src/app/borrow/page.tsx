@@ -26,14 +26,11 @@ export default function Borrow() {
 
       <BorrowForm />
 
-      {address ? (
+      {address && <RequestsTable address={address} />}
+      {address && <LoansTable address={address} />}
+      {!address && (
         <>
-          <RequestsTable address={address} />
-          <LoansTable address={address} />
-        </>
-      ) : (
-        <>
-          <div>Connect your wallet to see your loans and requests</div>
+          <div>Connect your wallet to see your requests and loans data</div>
           <ConnectWallet />
         </>
       )}
