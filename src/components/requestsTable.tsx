@@ -31,7 +31,7 @@ export default function RequestsTable({
     if (!publicClient) return;
     fetchRequestsWithOffers({ publicClient, address }).then(setRequests);
   }, [publicClient, address]);
-  console.log(requests);
+
   const acceptOffer = async (offerId: bigint) => {
     if (!publicClient || !walletClient) return;
     await walletClient.writeContract({

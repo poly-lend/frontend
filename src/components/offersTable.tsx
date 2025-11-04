@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 import Address from "./address";
+import MarketEntry from "./marketEntry";
 
 export default function OffersTable({
   address,
@@ -39,6 +40,7 @@ export default function OffersTable({
             <TableCell align="center">Offer ID</TableCell>
             <TableCell align="center">Request ID</TableCell>
             <TableCell align="center">Lender</TableCell>
+            <TableCell align="center">Market</TableCell>
             <TableCell align="center">Loan Amount</TableCell>
             <TableCell align="center">Rate</TableCell>
           </TableRow>
@@ -50,6 +52,9 @@ export default function OffersTable({
               <TableCell align="center">{offer.requestId.toString()}</TableCell>
               <TableCell align="center">
                 <Address address={offer.lender} />
+              </TableCell>
+              <TableCell align="center">
+                <MarketEntry market={offer.market} />
               </TableCell>
               <TableCell align="right">
                 {toUSDCString(offer.loanAmount)} USDC
