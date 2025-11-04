@@ -1,8 +1,8 @@
 polylend.com {
     reverse_proxy web:3000
 
-    handle_path /api/polymarket/hamma-api* {
-        reverse_proxy gamma-api.polymarket.com:443
+    handle_path /api/polymarket/gamma-api* {
+        reverse_proxy https://gamma-api.polymarket.com
     }
 
     header {
