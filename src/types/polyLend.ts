@@ -15,6 +15,8 @@ export type LoanOffer = {
   lender: `0x${string}`;
   loanAmount: bigint;
   rate: bigint;
+  market: any;
+  request?: LoanRequest;
 };
 
 export type Loan = {
@@ -31,4 +33,11 @@ export type Loan = {
   request: LoanRequest;
   offer: LoanOffer;
   market: any;
+};
+
+export type AllLoanData = {
+  requests: LoanRequest[];
+  offers: LoanOffer[];
+  markets: Map<string, any>;
+  loans: Loan[];
 };

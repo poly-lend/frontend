@@ -1,8 +1,7 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
-import { LoanRequest } from "@/types/polyLend";
+import { AllLoanData, LoanRequest } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
-import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
   Table,
@@ -11,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
 import MarketEntry from "./marketEntry";
@@ -19,18 +18,16 @@ import MarketEntry from "./marketEntry";
 export default function RequestsTable({
   address,
   title,
+  data,
 }: {
   address?: `0x${string}`;
   title?: string;
+  data: AllLoanData;
 }) {
-  const [requests, setRequests] = useState<LoanRequest[]>([]);
+  const requests = data.requests;
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
-  useEffect(() => {
-    if (!publicClient) return;
-    fetchRequestsWithOffers({ publicClient, address }).then(setRequests);
-  }, [publicClient, address]);
 
   const acceptOffer = async (offerId: bigint) => {
     if (!publicClient || !walletClient) return;

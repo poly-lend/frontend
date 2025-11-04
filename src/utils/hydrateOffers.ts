@@ -4,7 +4,7 @@ export const hydrateOffers = (
   offers: LoanOffer[],
   requests: LoanRequest[],
   markets: Map<string, any>
-) => {
+): LoanOffer[] => {
   return offers.map((offer) => {
     const request = requests.find(
       (request) => request.requestId === offer.requestId

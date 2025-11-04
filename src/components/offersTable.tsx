@@ -1,6 +1,5 @@
-import { LoanOffer } from "@/types/polyLend";
+import { AllLoanData } from "@/types/polyLend";
 import { toUSDCString } from "@/utils/convertors";
-import { fetchOffers } from "@/utils/fetchOffers";
 import {
   Table,
   TableBody,
@@ -8,24 +7,17 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { usePublicClient } from "wagmi";
 import Address from "./address";
 import MarketEntry from "./marketEntry";
 
 export default function OffersTable({
-  address,
   title,
+  data,
 }: {
-  address?: `0x${string}`;
   title?: string;
+  data: AllLoanData;
 }) {
-  const [offers, setOffers] = useState<LoanOffer[]>([]);
-  const publicClient = usePublicClient();
-  useEffect(() => {
-    if (!publicClient) return;
-    fetchOffers({ publicClient, address }).then(setOffers);
-  }, [publicClient, address]);
+  const offers = data.offers;
 
   return (
     <div>

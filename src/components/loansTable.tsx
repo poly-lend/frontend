@@ -1,6 +1,5 @@
-import { Loan } from "@/types/polyLend";
+import { AllLoanData } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
-import { fetchLoans } from "@/utils/fetchLoans";
 import {
   Table,
   TableBody,
@@ -8,27 +7,19 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { usePublicClient } from "wagmi";
 import Address from "./address";
 import MarketEntry from "./marketEntry";
 
 export default function LoansTable({
-  borrower,
-  lender,
   title,
+  data,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
   title?: string;
+  data: AllLoanData;
 }) {
-  const publicClient = usePublicClient();
-  const [loans, setLoans] = useState<Loan[]>([]);
-
-  useEffect(() => {
-    if (!publicClient) return;
-    fetchLoans({ publicClient, borrower, lender }).then(setLoans);
-  }, [publicClient, borrower, lender]);
+  const loans = data.loans;
 
   return (
     <div>

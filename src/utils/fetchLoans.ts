@@ -1,8 +1,6 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { Loan } from "@/types/polyLend";
-import fetchMarkets from "./fetchMarkets";
-import { hydrateLoans } from "./hydrateLoans";
 
 export const fetchLoans = async (params: {
   publicClient: any;
@@ -55,8 +53,5 @@ export const fetchLoans = async (params: {
     );
   }
 
-  const positionIds = loans.map((loan) => loan.positionId.toString());
-  const uniquePositionIds = [...new Set(positionIds)];
-  const markets = await fetchMarkets(uniquePositionIds);
-  return hydrateLoans(loans, markets);
+  return loans;
 };

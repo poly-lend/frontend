@@ -5,7 +5,6 @@ export const hydrateRequests = (
   offers: LoanOffer[],
   markets: Map<string, any>
 ) => {
-  console.log(markets);
   return requests.map((request) => {
     return {
       ...request,

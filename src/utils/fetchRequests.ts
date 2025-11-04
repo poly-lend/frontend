@@ -2,21 +2,6 @@ import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 
 import { LoanRequest } from "@/types/polyLend";
-import fetchMarkets from "./fetchMarkets";
-import { fetchOffers } from "./fetchOffers";
-import { hydrateRequests } from "./hydrateRequests";
-
-export const fetchRequestsWithOffers = async (params: {
-  publicClient: any;
-  address?: `0x${string}`;
-}): Promise<LoanRequest[]> => {
-  const requests = await fetchRequests(params);
-  const offers = await fetchOffers({ publicClient: params.publicClient });
-  const positionIds = requests.map((request) => request.positionId.toString());
-  const uniquePositionIds = [...new Set(positionIds)];
-  const markets = await fetchMarkets(uniquePositionIds);
-  return hydrateRequests(requests, offers, markets);
-};
 
 export const fetchRequests = async (params: {
   publicClient: any;
@@ -50,11 +35,13 @@ export const fetchRequests = async (params: {
       (request: LoanRequest) =>
         request.borrower !== `0x0000000000000000000000000000000000000000`
     );
+
   if (params.address) {
     requests = requests.filter(
       (request: any) =>
         request.borrower.toLowerCase() === params.address?.toLocaleLowerCase()
     );
   }
+
   return requests;
 };

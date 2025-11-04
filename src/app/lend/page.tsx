@@ -4,11 +4,22 @@ import ConnectWallet from "@/components/connectWallet";
 import LoansTable from "@/components/loansTable";
 import OffersTable from "@/components/offersTable";
 import RequestsListTable from "@/components/requestsListTable";
+import { AllLoanData } from "@/types/polyLend";
+import { fetchData } from "@/utils/fetchData";
 import { Stack } from "@mui/material";
-import { useAccount } from "wagmi";
+import { useEffect, useState } from "react";
+import { useAccount, usePublicClient } from "wagmi";
 
 export default function Lend() {
   const { address } = useAccount();
+  const publicClient = usePublicClient();
+  const [data, setData] = useState<AllLoanData | null>(null);
+  useEffect(() => {
+    if (!publicClient) return;
+    fetchData({ publicClient, lender: address }).then(setData);
+    console.log(data);
+  }, [publicClient, address]);
+
   return (
     <Stack spacing={2}>
       <h1
@@ -22,11 +33,11 @@ export default function Lend() {
       >
         Lend
       </h1>
-      <RequestsListTable />
-      {address ? (
+      {data && <RequestsListTable title="All Requests" data={data} />}
+      {address && data ? (
         <>
-          <OffersTable address={address} title="Lender Offers" />
-          <LoansTable lender={address} title="Lender Loans" />
+          <OffersTable title="Lender Offers" data={data} />
+          <LoansTable title="Lender Loans" data={data} />
         </>
       ) : (
         <>

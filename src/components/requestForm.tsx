@@ -93,7 +93,7 @@ export default function BorrowForm() {
         type="number"
         label="Value"
         placeholder="Value"
-        value={value}
+        value={value.toFixed(2)}
         disabled
       />
       <TextField
