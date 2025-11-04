@@ -1,4 +1,5 @@
 import { Loan } from "@/types/polyLend";
+import { toPolymarketSharesString } from "@/utils/convertors";
 import { fetchLoans } from "@/utils/fetchLoans";
 import {
   Table,
@@ -39,23 +40,25 @@ export default function LoansTable({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Loan#</TableCell>
-              <TableCell>Borrower</TableCell>
-              <TableCell>Lender</TableCell>
-              <TableCell>Shares</TableCell>
+              <TableCell align="center">Loan ID</TableCell>
+              <TableCell align="center">Borrower</TableCell>
+              <TableCell align="center">Lender</TableCell>
+              <TableCell align="right">Shares</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loans.map((loan) => (
               <TableRow key={loan.loanId}>
-                <TableCell>{loan.loanId}</TableCell>
-                <TableCell>
+                <TableCell align="center">{loan.loanId}</TableCell>
+                <TableCell align="center">
                   <Address address={loan.borrower} />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <Address address={loan.lender} />
                 </TableCell>
-                <TableCell>{loan.collateralAmount}</TableCell>
+                <TableCell align="right">
+                  {toPolymarketSharesString(loan.collateralAmount)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -7,6 +7,10 @@ import {
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { LoanRequest } from "@/types/polyLend";
+import {
+  SecondsToDuration,
+  toPolymarketSharesString,
+} from "@/utils/convertors";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
@@ -82,25 +86,29 @@ export default function RequestsListTable({ title }: { title?: string }) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Request ID</TableCell>
-            <TableCell>Borrower</TableCell>
-            <TableCell>Collateral Amount</TableCell>
-            <TableCell>Minimum Duration</TableCell>
-            <TableCell>Offers</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell align="center">Request ID</TableCell>
+            <TableCell align="center">Borrower</TableCell>
+            <TableCell align="center">Shares</TableCell>
+            <TableCell align="center">Duration</TableCell>
+            <TableCell align="center">Offers</TableCell>
+            <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {requests.map((request) => (
-            <TableRow key={request.requestId.toString()}>
-              <TableCell>{request.requestId.toString()}</TableCell>
-              <TableCell>
+            <TableRow key={request.requestId}>
+              <TableCell align="center">{request.requestId}</TableCell>
+              <TableCell align="center">
                 <Address address={request.borrower} />
               </TableCell>
-              <TableCell>{request.collateralAmount.toString()}</TableCell>
-              <TableCell>{request.minimumDuration.toString()}</TableCell>
-              <TableCell>{request.offers.length.toString()}</TableCell>
-              <TableCell>
+              <TableCell align="right">
+                {toPolymarketSharesString(request.collateralAmount)}
+              </TableCell>
+              <TableCell align="right">
+                {SecondsToDuration(Number(request.minimumDuration))}
+              </TableCell>
+              <TableCell align="right">{request.offers.length}</TableCell>
+              <TableCell align="right">
                 <Button
                   variant="contained"
                   color="primary"

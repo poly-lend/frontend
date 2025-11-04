@@ -1,7 +1,11 @@
-import { polylendAddress, polylendDecimals, usdcDecimals } from "@/configs";
+import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { LoanRequest } from "@/types/polyLend";
-import { convertToUSDCString, SecondsToDays } from "@/utils/convertors";
+import {
+  convertToUSDCString,
+  SecondsToDuration,
+  toPolymarketSharesString,
+} from "@/utils/convertors";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
@@ -12,7 +16,6 @@ import {
   TableRow,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { formatUnits } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
 
@@ -53,7 +56,7 @@ export default function RequestsTable({
             <TableCell align="center">Borrower</TableCell>
             <TableCell align="center">Shares</TableCell>
             <TableCell align="center">Value</TableCell>
-            <TableCell align="center">Min. Duration (days)</TableCell>
+            <TableCell align="center">Duration</TableCell>
             <TableCell align="center">Offers</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
@@ -69,13 +72,13 @@ export default function RequestsTable({
                   <Address address={request.borrower} />
                 </TableCell>
                 <TableCell align="right">
-                  {Number(formatUnits(request.collateralAmount, 6)).toFixed(6)}
+                  {toPolymarketSharesString(request.collateralAmount)}
                 </TableCell>
                 <TableCell align="right">
                   {convertToUSDCString(request.collateralAmount)} USDC
                 </TableCell>
                 <TableCell align="right">
-                  {SecondsToDays(Number(request.minimumDuration))}
+                  {SecondsToDuration(request.minimumDuration)}
                 </TableCell>
                 <TableCell align="right">
                   {request.offers.length.toString()}
@@ -103,35 +106,33 @@ export default function RequestsTable({
               {selectedRequest &&
                 selectedRequest.requestId === request.requestId && (
                   <TableRow>
-                    <TableCell colSpan={6} className="border-1">
+                    <TableCell colSpan={7} className="border-1">
                       <Table size="small">
                         <TableHead>
                           <TableRow>
-                            <TableCell>Offer ID</TableCell>
-                            <TableCell>Lender</TableCell>
-                            <TableCell>Loan Amount</TableCell>
-                            <TableCell>Rate</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell align="center">Offer ID</TableCell>
+                            <TableCell align="center">Lender</TableCell>
+                            <TableCell align="center">Amount</TableCell>
+                            <TableCell align="center">Rate</TableCell>
+                            <TableCell align="center">Actions</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {request.offers.map((offer) => (
-                            <TableRow key={offer.offerId.toString()}>
-                              <TableCell className="text-center">
-                                {offer.offerId.toString()}
+                            <TableRow key={offer.offerId}>
+                              <TableCell align="center">
+                                {offer.offerId}
                               </TableCell>
-                              <TableCell>{offer.lender}</TableCell>
-                              <TableCell className="text-right">
-                                {formatUnits(offer.loanAmount, usdcDecimals)}{" "}
-                                USDC
+                              <TableCell align="center">
+                                <Address address={offer.lender} />
                               </TableCell>
-                              <TableCell className="text-right">
-                                {(
-                                  offer.rate - BigInt(10 ** polylendDecimals)
-                                ).toString()}
-                                %
+                              <TableCell align="right">
+                                {convertToUSDCString(offer.loanAmount)}
                               </TableCell>
-                              <TableCell className="text-right">
+                              <TableCell align="right">
+                                {offer.rate.toString()}
+                              </TableCell>
+                              <TableCell align="right">
                                 <Button
                                   variant="outlined"
                                   color="primary"
