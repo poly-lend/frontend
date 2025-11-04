@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
+import Address from "./address";
 
 export default function OffersTable({
   address,
@@ -46,7 +47,9 @@ export default function OffersTable({
             <TableRow key={offer.offerId.toString()}>
               <TableCell>{offer.offerId.toString()}</TableCell>
               <TableCell>{offer.requestId.toString()}</TableCell>
-              <TableCell>{offer.lender}</TableCell>
+              <TableCell>
+                <Address address={offer.lender} />
+              </TableCell>
               <TableCell>{offer.loanAmount.toString()}</TableCell>
               <TableCell>{offer.rate.toString()}</TableCell>
             </TableRow>

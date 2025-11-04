@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
+import Address from "./address";
 
 export default function LoansTable({
   borrower,
@@ -48,8 +49,12 @@ export default function LoansTable({
             {loans.map((loan) => (
               <TableRow key={loan.loanId}>
                 <TableCell>{loan.loanId}</TableCell>
-                <TableCell>{loan.borrower}</TableCell>
-                <TableCell>{loan.lender}</TableCell>
+                <TableCell>
+                  <Address address={loan.borrower} />
+                </TableCell>
+                <TableCell>
+                  <Address address={loan.lender} />
+                </TableCell>
                 <TableCell>{loan.collateralAmount}</TableCell>
               </TableRow>
             ))}

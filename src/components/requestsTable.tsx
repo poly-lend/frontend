@@ -1,6 +1,7 @@
 import { polylendAddress, polylendDecimals, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { LoanRequest } from "@/types/polyLend";
+import { convertToUSDCString, SecondsToDays } from "@/utils/convertors";
 import { fetchRequestsWithOffers } from "@/utils/fetchRequests";
 import {
   Button,
@@ -13,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { formatUnits } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
+import Address from "./address";
 
 export default function RequestsTable({
   address,
@@ -47,34 +49,38 @@ export default function RequestsTable({
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell className="text-center">Request ID</TableCell>
-            <TableCell className="text-center">Borrower</TableCell>
-            <TableCell className="text-center">Collateral Amount</TableCell>
-            <TableCell className="text-center">Minimum Duration</TableCell>
-            <TableCell className="text-center">Offers</TableCell>
-            <TableCell className="text-center">Actions</TableCell>
+            <TableCell align="center">Request ID</TableCell>
+            <TableCell align="center">Borrower</TableCell>
+            <TableCell align="center">Shares</TableCell>
+            <TableCell align="center">Value</TableCell>
+            <TableCell align="center">Min. Duration (days)</TableCell>
+            <TableCell align="center">Offers</TableCell>
+            <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {requests.map((request) => (
             <>
               <TableRow key={request.requestId.toString()}>
-                <TableCell className="text-center">
+                <TableCell align="center">
                   {request.requestId.toString()}
                 </TableCell>
-                <TableCell className="text-center">
-                  {request.borrower}
+                <TableCell align="center">
+                  <Address address={request.borrower} />
                 </TableCell>
-                <TableCell className="text-right">
-                  {request.collateralAmount.toString()}
+                <TableCell align="right">
+                  {Number(formatUnits(request.collateralAmount, 6)).toFixed(6)}
                 </TableCell>
-                <TableCell className="text-right">
-                  {request.minimumDuration.toString()}
+                <TableCell align="right">
+                  {convertToUSDCString(request.collateralAmount)} USDC
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell align="right">
+                  {SecondsToDays(Number(request.minimumDuration))}
+                </TableCell>
+                <TableCell align="right">
                   {request.offers.length.toString()}
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell align="right">
                   <Button
                     disabled={request.offers.length === 0}
                     variant="outlined"

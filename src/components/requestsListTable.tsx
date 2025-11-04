@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
+import Address from "./address";
 import OfferDialog from "./offerDialog";
 
 export default function RequestsListTable({ title }: { title?: string }) {
@@ -93,7 +94,9 @@ export default function RequestsListTable({ title }: { title?: string }) {
           {requests.map((request) => (
             <TableRow key={request.requestId.toString()}>
               <TableCell>{request.requestId.toString()}</TableCell>
-              <TableCell>{request.borrower}</TableCell>
+              <TableCell>
+                <Address address={request.borrower} />
+              </TableCell>
               <TableCell>{request.collateralAmount.toString()}</TableCell>
               <TableCell>{request.minimumDuration.toString()}</TableCell>
               <TableCell>{request.offers.length.toString()}</TableCell>
