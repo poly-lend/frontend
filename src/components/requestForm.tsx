@@ -5,7 +5,7 @@ import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
 import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
 import PositionSelect from "./positionSelect";
@@ -13,7 +13,8 @@ import PositionSelect from "./positionSelect";
 export default function BorrowForm() {
   const { data: proxyAddress } = useProxyAddress();
   const [selectedPosition, selectPosition] = useState<Position | null>(null);
-  const [amount, setAmount] = useState<bigint>(BigInt(0));
+  const [shares, setShares] = useState(0.0);
+  const [value, setValue] = useState(0.0);
   const [minimumDuration, setMinimumDuration] = useState(10);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
@@ -26,11 +27,16 @@ export default function BorrowForm() {
       args: [
         proxyAddress as `0x${string}`,
         selectedPosition!.asset,
-        BigInt(amount),
+        BigInt(shares * 10 ** 6),
         BigInt(minimumDuration * 24 * 60 * 60),
       ],
     });
   };
+
+  useEffect(() => {
+    if (!selectedPosition) return;
+    setShares(selectedPosition.totalBought);
+  }, [selectedPosition]);
 
   const giveApproval = async () => {
     if (!walletClient || !publicClient) return;
@@ -64,13 +70,13 @@ export default function BorrowForm() {
         type="number"
         label="Shares"
         placeholder="Shares"
-        value={amount.toString()}
-        onChange={(e) => setAmount(BigInt(e.target.value))}
+        value={shares}
+        onChange={(e) => setShares(Number(e.target.value))}
       />
       <TextField
         type="number"
-        label="Minimum Duration days"
-        placeholder="Minimum Duration days"
+        label="Minimum Duration Days"
+        placeholder="Minimum Duration Days"
         value={minimumDuration}
         onChange={(e) => setMinimumDuration(Number(e.target.value))}
       />
