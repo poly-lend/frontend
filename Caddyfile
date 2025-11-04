@@ -1,19 +1,5 @@
 polylend.com {
     reverse_proxy web:3000
-
-    handle_path /api/polymarket/gamma-api* {
-        reverse_proxy https://gamma-api.polymarket.com
-    }
-
-    header {
-        -Server
-        X-Content-Type-Options nosniff
-        X-Frame-Options DENY
-    }
-    log {
-        output stdout
-        format console
-    }
 }
 
 www.polylend.com {
