@@ -11,19 +11,19 @@ import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 
 export default function LoansTable({
-  borrowerAddress,
-  lenderAddress,
+  borrower,
+  lender,
 }: {
-  borrowerAddress?: `0x${string}`;
-  lenderAddress?: `0x${string}`;
+  borrower?: `0x${string}`;
+  lender?: `0x${string}`;
 }) {
   const publicClient = usePublicClient();
   const [loans, setLoans] = useState<Loan[]>([]);
 
   useEffect(() => {
     if (!publicClient) return;
-    fetchLoans({ publicClient, borrowerAddress, lenderAddress }).then(setLoans);
-  }, [publicClient, borrowerAddress, lenderAddress]);
+    fetchLoans({ publicClient, borrower, lender }).then(setLoans);
+  }, [publicClient, borrower, lender]);
 
   return (
     <div>
