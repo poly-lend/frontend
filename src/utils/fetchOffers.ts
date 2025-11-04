@@ -35,8 +35,8 @@ export const fetchOffers = async (params: {
     );
   if (params.address) {
     offers = offers.filter(
-      (request: any) =>
-        request.borrower.toLowerCase() === params.address?.toLocaleLowerCase()
+      (offer: LoanOffer) =>
+        offer.lender.toLowerCase() === params.address?.toLocaleLowerCase()
     );
   }
   return offers;
