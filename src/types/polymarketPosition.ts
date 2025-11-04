@@ -6,6 +6,7 @@ export type Position = {
   avgPrice: number;
   initialValue: number;
   currentValue: number;
+  curPrice: number;
   cashPnl: number;
   percentPnl: number;
   totalBought: number;

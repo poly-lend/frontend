@@ -38,6 +38,11 @@ export default function BorrowForm() {
     setShares(selectedPosition.totalBought);
   }, [selectedPosition]);
 
+  useEffect(() => {
+    if (!selectedPosition) return;
+    setValue(shares * selectedPosition.curPrice);
+  }, [shares]);
+
   const giveApproval = async () => {
     if (!walletClient || !publicClient) return;
     await execSafeTransaction({
@@ -71,7 +76,25 @@ export default function BorrowForm() {
         label="Shares"
         placeholder="Shares"
         value={shares}
-        onChange={(e) => setShares(Number(e.target.value))}
+        onChange={(e) => {
+          const maxShares = selectedPosition?.totalBought ?? 0;
+          const currentShares = Number(e.target.value);
+          if (currentShares > maxShares) {
+            setShares(maxShares);
+          } else {
+            setShares(currentShares);
+          }
+          if (currentShares < 0) {
+            setShares(0.0);
+          }
+        }}
+      />
+      <TextField
+        type="number"
+        label="Value"
+        placeholder="Value"
+        value={value}
+        disabled
       />
       <TextField
         type="number"
