@@ -1,9 +1,9 @@
 "use client";
 
-import ConnectWidget from "@/components/connectWidget";
-import LenderLoansTable from "@/components/lenderLoansTable";
-import BorrowerOffersTable from "@/components/lenderOffersTable";
-import LenderRequestsTable from "@/components/lenderRequestsTable";
+import LenderLoansTable from "@/components/lender/lenderLoansTable";
+import BorrowerOffersTable from "@/components/lender/lenderOffersTable";
+import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
+import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
 import { Stack } from "@mui/material";

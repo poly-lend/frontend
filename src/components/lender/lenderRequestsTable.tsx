@@ -19,9 +19,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
-import Address from "./address";
-import MarketEntry from "./marketEntry";
-import OfferDialog from "./offerDialog";
+import OfferDialog from "../dialogs/offerDialog";
+import Address from "../widgets/address";
+import Market from "../widgets/market";
 
 export default function RequestsListTable({
   title,
@@ -104,7 +104,7 @@ export default function RequestsListTable({
                 <Address address={request.borrower} />
               </TableCell>
               <TableCell align="center">
-                <MarketEntry market={request.market} />
+                <Market market={request.market} />
               </TableCell>
               <TableCell align="right">
                 {toSharesText(request.collateralAmount)}

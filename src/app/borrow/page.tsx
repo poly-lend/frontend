@@ -1,9 +1,9 @@
 "use client";
 
-import BorrowerLoansTable from "@/components/borrowerLoansTable";
-import BorrowerRequestsTable from "@/components/borrowerRequestsTable";
-import ConnectWidget from "@/components/connectWidget";
-import BorrowForm from "@/components/requestForm";
+import BorrowerLoansTable from "@/components/borrower/borrowerLoansTable";
+import BorrowerRequestsTable from "@/components/borrower/borrowerRequestsTable";
+import RequestDialog from "@/components/dialogs/requestDialog";
+import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
 import { Stack } from "@mui/material";
@@ -35,7 +35,7 @@ export default function Borrow() {
         Borrow
       </h1>
 
-      {address && <BorrowForm />}
+      {address && <RequestDialog />}
       {address && data && (
         <BorrowerRequestsTable
           address={address}

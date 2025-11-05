@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
-import Address from "./address";
-import MarketEntry from "./marketEntry";
+import Address from "../widgets/address";
+import Market from "../widgets/market";
 
 export default function BorrowerRequestsTable({
   address,
@@ -61,7 +61,6 @@ export default function BorrowerRequestsTable({
           <TableHead>
             <TableRow>
               <TableCell align="center">Request ID</TableCell>
-
               <TableCell align="center">Market</TableCell>
               <TableCell align="center">Shares</TableCell>
               <TableCell align="center">Collateral</TableCell>
@@ -78,7 +77,7 @@ export default function BorrowerRequestsTable({
                     {request.requestId.toString()}
                   </TableCell>
                   <TableCell align="center">
-                    <MarketEntry market={request.market} />
+                    <Market market={request.market} />
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(request.collateralAmount)}

@@ -1,4 +1,4 @@
-import ConnectWallet from "./connectWallet";
+import ConnectWallet from "../web3/connectWallet";
 
 export default function ConnectWidget() {
   return (

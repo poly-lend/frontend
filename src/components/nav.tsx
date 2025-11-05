@@ -2,9 +2,9 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import Balance from "./balance";
-import ConnectWallet from "./connectWallet";
-import SwitchChain from "./switchChain";
+import ConnectWallet from "./web3/connectWallet";
+import SwitchChain from "./web3/switchChain";
+import Balance from "./widgets/balance";
 
 export default function Nav() {
   const [selected, setSelected] = useState("home");

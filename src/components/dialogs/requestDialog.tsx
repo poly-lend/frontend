@@ -8,9 +8,9 @@ import { Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
-import PositionSelect from "./positionSelect";
+import PositionSelect from "../widgets/positionSelect";
 
-export default function BorrowForm() {
+export default function RequestDialog() {
   const { data: proxyAddress } = useProxyAddress();
   const [selectedPosition, selectPosition] = useState<Position | null>(null);
   const [shares, setShares] = useState(0.0);

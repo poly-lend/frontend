@@ -3,7 +3,7 @@ import { usdcConfig } from "@/contracts/usdc";
 import { chain } from "@/utils/wagmi";
 import { useContext, useEffect } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import { BalanceRefreshContext } from "../app/context";
+import { BalanceRefreshContext } from "../../app/context";
 
 export default function Balance() {
   const { address, chain: currentChain } = useAccount();

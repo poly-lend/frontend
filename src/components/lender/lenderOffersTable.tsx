@@ -11,8 +11,8 @@ import {
   TableRow,
 } from "@mui/material";
 import { usePublicClient, useWalletClient } from "wagmi";
-import Address from "./address";
-import MarketEntry from "./marketEntry";
+import Address from "../widgets/address";
+import Market from "../widgets/market";
 
 export default function LenderOffersTable({
   title,
@@ -71,7 +71,7 @@ export default function LenderOffersTable({
                   <Address address={offer.lender} />
                 </TableCell>
                 <TableCell align="center">
-                  <MarketEntry market={offer.market} />
+                  <Market market={offer.market} />
                 </TableCell>
                 <TableCell align="right">
                   {toSharesText(offer.request!.collateralAmount)}

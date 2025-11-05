@@ -2,7 +2,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Chip } from "@mui/material";
 import Link from "next/link";
 
-const MarketEntry = ({ market }: { market: any }) => {
+const Market = ({ market }: { market: any }) => {
   return (
     <Link
       href={`https://polymarket.com/event/${market.event.slug}`}
@@ -29,4 +29,4 @@ const MarketEntry = ({ market }: { market: any }) => {
   );
 };
 
-export default MarketEntry;
+export default Market;

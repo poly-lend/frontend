@@ -8,10 +8,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import Address from "./address";
-import MarketEntry from "./marketEntry";
+import Address from "../widgets/address";
+import Market from "../widgets/market";
 
-export default function LenderLoansTable({
+export default function BorrowerLoansTable({
   title,
   data,
 }: {
@@ -37,7 +37,6 @@ export default function LenderLoansTable({
               <TableRow>
                 <TableCell align="center">Loan ID</TableCell>
                 <TableCell align="center">Lender</TableCell>
-                <TableCell align="center">Borrower</TableCell>
                 <TableCell align="center">Market</TableCell>
                 <TableCell align="center">Shares</TableCell>
                 <TableCell align="center">Collateral</TableCell>
@@ -55,10 +54,7 @@ export default function LenderLoansTable({
                     <Address address={loan.lender} />
                   </TableCell>
                   <TableCell align="center">
-                    <Address address={loan.borrower} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <MarketEntry market={loan.market} />
+                    <Market market={loan.market} />
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(loan.collateralAmount)}
