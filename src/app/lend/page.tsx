@@ -36,8 +36,8 @@ export default function Lend() {
       {data && <LenderRequestsTable title="All Requests" data={data} />}
       {address && data ? (
         <>
-          <LenderOffersTable title="Lender Offers" data={data} />
           <LenderLoansTable title="Lender Loans" data={data} />
+          <LenderOffersTable title="Lender Offers" data={data} />
         </>
       ) : (
         <ConnectWidget />

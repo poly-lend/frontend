@@ -6,7 +6,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
+import { useState } from "react";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 
@@ -20,7 +23,7 @@ export default function LenderLoansTable({
   data: AllLoanData;
 }) {
   const loans = data.loans;
-
+  const [dataType, setDataType] = useState<"my" | "all">("my");
   return (
     <div>
       <div>
@@ -31,6 +34,18 @@ export default function LenderLoansTable({
       {loans.length === 0 && <div className="text-center">No loans found</div>}
       {loans.length > 0 && (
         <div>
+          <ToggleButtonGroup
+            className="w-full flex justify-center mt-4"
+            color="primary"
+            size="small"
+            value={dataType}
+            exclusive
+            onChange={(_, value) => setDataType(value)}
+            aria-label="text alignment"
+          >
+            <ToggleButton value="my">My Loans</ToggleButton>
+            <ToggleButton value="all">All Loans</ToggleButton>
+          </ToggleButtonGroup>
           <Table>
             <TableHead>
               <TableRow>
