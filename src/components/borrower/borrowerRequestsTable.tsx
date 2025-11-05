@@ -2,6 +2,7 @@ import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData, LoanRequest } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
+import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import {
   Button,
   Table,
@@ -96,13 +97,6 @@ export default function BorrowerRequestsTable({
                   </TableCell>
                   <TableCell align="right">
                     <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => cancelRequest(request.requestId)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
                       disabled={request.offers.length === 0}
                       variant="outlined"
                       color="primary"
@@ -117,7 +111,19 @@ export default function BorrowerRequestsTable({
                         }
                       }}
                     >
-                      Offers
+                      Offers{" "}
+                      {selectedRequest?.requestId === request.requestId ? (
+                        <ArrowDropUp />
+                      ) : (
+                        <ArrowDropDown />
+                      )}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => cancelRequest(request.requestId)}
+                    >
+                      Cancel
                     </Button>
                   </TableCell>
                 </TableRow>
