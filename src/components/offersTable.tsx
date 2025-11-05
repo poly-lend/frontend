@@ -1,3 +1,5 @@
+import { polylendAddress } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import {
@@ -8,6 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
 import MarketEntry from "./marketEntry";
 
@@ -19,6 +22,17 @@ export default function OffersTable({
   data: AllLoanData;
 }) {
   const offers = data.offers;
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const cancelOffer = async (offerId: bigint) => {
+    if (!publicClient || !walletClient) return;
+    await walletClient.writeContract({
+      address: polylendAddress as `0x${string}`,
+      abi: polylendConfig.abi,
+      functionName: "cancelOffer",
+      args: [offerId],
+    });
+  };
 
   return (
     <div>
@@ -76,7 +90,11 @@ export default function OffersTable({
                 </TableCell>
                 <TableCell align="right">{"10%"}</TableCell>
                 <TableCell align="right">
-                  <Button variant="outlined" color="primary">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => cancelOffer(offer.offerId)}
+                  >
                     Cancel
                   </Button>
                 </TableCell>
