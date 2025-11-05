@@ -29,6 +29,16 @@ export default function RequestsTable({
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
+  const cancelRequest = async (requestId: bigint) => {
+    if (!publicClient || !walletClient) return;
+    await walletClient.writeContract({
+      address: polylendAddress as `0x${string}`,
+      abi: polylendConfig.abi,
+      functionName: "cancelRequest",
+      args: [requestId],
+    });
+  };
+
   const acceptOffer = async (offerId: bigint) => {
     if (!publicClient || !walletClient) return;
     await walletClient.writeContract({
@@ -90,6 +100,13 @@ export default function RequestsTable({
                   </TableCell>
                   <TableCell align="right">
                     <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => cancelRequest(request.requestId)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
                       disabled={request.offers.length === 0}
                       variant="outlined"
                       color="primary"
@@ -134,9 +151,7 @@ export default function RequestsTable({
                                 <TableCell align="right">
                                   {toUSDCString(offer.loanAmount)} USDC
                                 </TableCell>
-                                <TableCell align="right">
-                                  {offer.rate.toString()}
-                                </TableCell>
+                                <TableCell align="right">{"10%"}</TableCell>
                                 <TableCell align="right">
                                   <Button
                                     variant="outlined"

@@ -1,3 +1,4 @@
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Chip } from "@mui/material";
 import Link from "next/link";
 
@@ -16,7 +17,7 @@ const MarketEntry = ({ market }: { market: any }) => {
         className="rounded-full"
       />
       <p className="text-sm text-left max-w-[300px] line-clamp-2">
-        {market.market.question}
+        {market.market.question} <OpenInNewIcon fontSize="small" />
       </p>
       <Chip
         className="mt-2"
