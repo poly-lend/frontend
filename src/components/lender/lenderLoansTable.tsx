@@ -1,7 +1,6 @@
 import { AllLoanData } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -77,9 +76,9 @@ export default function LenderLoansTable({
                   </TableCell>
                   <TableCell align="right">{"10%"}</TableCell>
                   <TableCell align="right">
-                    <Button variant="outlined" color="primary">
+                    {/* <Button variant="outlined" color="primary">
                       Repay
-                    </Button>
+                    </Button> */}
                   </TableCell>
                 </TableRow>
               ))}
