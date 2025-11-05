@@ -1,7 +1,7 @@
 "use client";
 
 import LenderLoansTable from "@/components/lender/lenderLoansTable";
-import BorrowerOffersTable from "@/components/lender/lenderOffersTable";
+import LenderOffersTable from "@/components/lender/lenderOffersTable";
 import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
 import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
@@ -36,7 +36,7 @@ export default function Lend() {
       {data && <LenderRequestsTable title="All Requests" data={data} />}
       {address && data ? (
         <>
-          <BorrowerOffersTable title="Lender Offers" data={data} />
+          <LenderOffersTable title="Lender Offers" data={data} />
           <LenderLoansTable title="Lender Loans" data={data} />
         </>
       ) : (

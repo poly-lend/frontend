@@ -92,7 +92,7 @@ export default function LenderOffersTable({
                 <TableCell align="right">
                   <Button
                     variant="outlined"
-                    color="primary"
+                    color="error"
                     onClick={() => cancelOffer(offer.offerId)}
                   >
                     Cancel
