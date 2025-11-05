@@ -61,7 +61,6 @@ export default function BorrowerRequestsTable({
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Request ID</TableCell>
               <TableCell align="center">Market</TableCell>
               <TableCell align="center">Shares</TableCell>
               <TableCell align="center">Collateral</TableCell>
@@ -74,9 +73,6 @@ export default function BorrowerRequestsTable({
             {requests.map((request) => (
               <>
                 <TableRow key={request.requestId.toString()}>
-                  <TableCell align="center">
-                    {request.requestId.toString()}
-                  </TableCell>
                   <TableCell align="center">
                     <Market market={request.market} />
                   </TableCell>
@@ -130,7 +126,7 @@ export default function BorrowerRequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={7} className="border-1">
+                      <TableCell colSpan={6} className="border-1">
                         <Table size="small">
                           <TableHead>
                             <TableRow>

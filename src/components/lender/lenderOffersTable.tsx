@@ -48,8 +48,6 @@ export default function LenderOffersTable({
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Offer ID</TableCell>
-              <TableCell align="center">Request ID</TableCell>
               <TableCell align="center">Lender</TableCell>
               <TableCell align="center">Market</TableCell>
               <TableCell align="center">Shares</TableCell>
@@ -63,10 +61,6 @@ export default function LenderOffersTable({
           <TableBody>
             {offers.map((offer) => (
               <TableRow key={offer.offerId.toString()}>
-                <TableCell align="center">{offer.offerId.toString()}</TableCell>
-                <TableCell align="center">
-                  {offer.requestId.toString()}
-                </TableCell>
                 <TableCell align="center">
                   <Address address={offer.lender} />
                 </TableCell>

@@ -6,8 +6,8 @@ const Market = ({ market }: { market: any }) => {
   return (
     <Link
       href={`https://polymarket.com/event/${market.event.slug}`}
-      className="flex items-start gap-2"
       target="_blank"
+      className="flex items-start gap-1"
     >
       <img
         width={40}
@@ -16,9 +16,11 @@ const Market = ({ market }: { market: any }) => {
         alt={market.market.question}
         className="rounded-full"
       />
-      <p className="text-sm text-left max-w-[300px] line-clamp-2">
-        {market.market.question} <OpenInNewIcon fontSize="small" />
-      </p>
+
+      <div className="text-sm text-left max-w-[300px] line-clamp-2">
+        {market.market.question} <OpenInNewIcon sx={{ fontSize: 16 }} />
+      </div>
+
       <Chip
         className="mt-2"
         label={market.outcome}

@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className="min-h-screen flex flex-col">
           <Children>{children}</Children>
         </body>

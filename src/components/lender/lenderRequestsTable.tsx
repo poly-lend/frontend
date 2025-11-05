@@ -86,7 +86,6 @@ export default function RequestsListTable({
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell align="center">Request ID</TableCell>
             <TableCell align="center">Borrower</TableCell>
             <TableCell align="center">Market</TableCell>
             <TableCell align="center">Shares</TableCell>
@@ -99,7 +98,6 @@ export default function RequestsListTable({
         <TableBody>
           {requests.map((request) => (
             <TableRow key={request.requestId}>
-              <TableCell align="center">{request.requestId}</TableCell>
               <TableCell align="center">
                 <Address address={request.borrower} />
               </TableCell>

@@ -35,7 +35,6 @@ export default function BorrowerLoansTable({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Loan ID</TableCell>
                 <TableCell align="center">Lender</TableCell>
                 <TableCell align="center">Market</TableCell>
                 <TableCell align="center">Shares</TableCell>
@@ -49,7 +48,6 @@ export default function BorrowerLoansTable({
             <TableBody>
               {loans.map((loan) => (
                 <TableRow key={loan.loanId}>
-                  <TableCell align="center">{loan.loanId}</TableCell>
                   <TableCell align="center">
                     <Address address={loan.lender} />
                   </TableCell>
