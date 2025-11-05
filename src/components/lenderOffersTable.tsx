@@ -14,7 +14,7 @@ import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
 import MarketEntry from "./marketEntry";
 
-export default function OffersTable({
+export default function LenderOffersTable({
   title,
   data,
 }: {

@@ -1,6 +1,7 @@
 import { AllLoanData } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -10,7 +11,7 @@ import {
 import Address from "./address";
 import MarketEntry from "./marketEntry";
 
-export default function LoansTable({
+export default function LenderLoansTable({
   title,
   data,
 }: {
@@ -43,6 +44,7 @@ export default function LoansTable({
                 <TableCell align="center">Amount</TableCell>
                 <TableCell align="center">Duration</TableCell>
                 <TableCell align="center">Rate</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -74,6 +76,11 @@ export default function LoansTable({
                     {toDuration(Number(loan.minimumDuration))}
                   </TableCell>
                   <TableCell align="right">{"10%"}</TableCell>
+                  <TableCell align="right">
+                    <Button variant="outlined" color="primary">
+                      Repay
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

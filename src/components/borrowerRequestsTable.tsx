@@ -15,7 +15,7 @@ import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "./address";
 import MarketEntry from "./marketEntry";
 
-export default function RequestsTable({
+export default function BorrowerRequestsTable({
   address,
   title,
   data,
@@ -61,7 +61,7 @@ export default function RequestsTable({
           <TableHead>
             <TableRow>
               <TableCell align="center">Request ID</TableCell>
-              <TableCell align="center">Borrower</TableCell>
+
               <TableCell align="center">Market</TableCell>
               <TableCell align="center">Shares</TableCell>
               <TableCell align="center">Collateral</TableCell>
@@ -76,9 +76,6 @@ export default function RequestsTable({
                 <TableRow key={request.requestId.toString()}>
                   <TableCell align="center">
                     {request.requestId.toString()}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Address address={request.borrower} />
                   </TableCell>
                   <TableCell align="center">
                     <MarketEntry market={request.market} />
@@ -128,7 +125,7 @@ export default function RequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={8} className="border-1">
+                      <TableCell colSpan={7} className="border-1">
                         <Table size="small">
                           <TableHead>
                             <TableRow>

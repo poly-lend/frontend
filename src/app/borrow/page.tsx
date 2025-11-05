@@ -1,9 +1,9 @@
 "use client";
 
+import BorrowerLoansTable from "@/components/borrowerLoansTable";
+import BorrowerRequestsTable from "@/components/borrowerRequestsTable";
 import ConnectWidget from "@/components/connectWidget";
-import LoansTable from "@/components/loansTable";
 import BorrowForm from "@/components/requestForm";
-import RequestsTable from "@/components/requestsTable";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
 import { Stack } from "@mui/material";
@@ -37,14 +37,18 @@ export default function Borrow() {
 
       {address && <BorrowForm />}
       {address && data && (
-        <RequestsTable
+        <BorrowerRequestsTable
           address={address}
           title="Borrower Requests"
           data={data}
         />
       )}
       {address && data && (
-        <LoansTable borrower={address} title="Borrower Loans" data={data} />
+        <BorrowerLoansTable
+          borrower={address}
+          title="Borrower Loans"
+          data={data}
+        />
       )}
       {!address && <ConnectWidget />}
     </Stack>

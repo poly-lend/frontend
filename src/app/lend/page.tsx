@@ -1,9 +1,9 @@
 "use client";
 
 import ConnectWidget from "@/components/connectWidget";
-import LoansTable from "@/components/loansTable";
-import OffersTable from "@/components/offersTable";
-import RequestsListTable from "@/components/requestsListTable";
+import LenderLoansTable from "@/components/lenderLoansTable";
+import BorrowerOffersTable from "@/components/lenderOffersTable";
+import LenderRequestsTable from "@/components/lenderRequestsTable";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
 import { Stack } from "@mui/material";
@@ -33,11 +33,11 @@ export default function Lend() {
       >
         Lend
       </h1>
-      {data && <RequestsListTable title="All Requests" data={data} />}
+      {data && <LenderRequestsTable title="All Requests" data={data} />}
       {address && data ? (
         <>
-          <OffersTable title="Lender Offers" data={data} />
-          <LoansTable title="Lender Loans" data={data} />
+          <BorrowerOffersTable title="Lender Offers" data={data} />
+          <LenderLoansTable title="Lender Loans" data={data} />
         </>
       ) : (
         <ConnectWidget />
