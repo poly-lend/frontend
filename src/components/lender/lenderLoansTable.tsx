@@ -98,7 +98,7 @@ export default function LenderLoansTable({
                     <Button variant="outlined" color="primary">
                       Call
                     </Button> */}
-                    <Button variant="outlined" color="primary">
+                    <Button variant="outlined" color="primary" disabled>
                       Reclaim
                     </Button>
                   </TableCell>

@@ -73,7 +73,7 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">{"10%"}</TableCell>
                   <TableCell align="right">
-                    <Button variant="outlined" color="primary">
+                    <Button variant="outlined" color="primary" disabled>
                       Repay
                     </Button>
                   </TableCell>
