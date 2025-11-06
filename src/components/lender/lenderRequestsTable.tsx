@@ -1,13 +1,13 @@
-import {
-  polylendAddress,
-  polylendDecimals,
-  usdcAddress,
-  usdcDecimals,
-} from "@/configs";
+import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { AllLoanData, LoanRequest } from "@/types/polyLend";
-import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
+import {
+  toDuration,
+  toSharesText,
+  toSPYWAI,
+  toUSDCString,
+} from "@/utils/convertors";
 
 import {
   Button,
@@ -58,7 +58,7 @@ export default function RequestsListTable({
       args: [
         requestId,
         BigInt(loanAmount * 10 ** usdcDecimals),
-        BigInt(rate * 10 ** polylendDecimals),
+        toSPYWAI(rate),
       ],
     });
     setOpenOfferDialog(false);
