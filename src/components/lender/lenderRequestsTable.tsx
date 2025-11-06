@@ -58,7 +58,7 @@ export default function RequestsListTable({
       args: [
         requestId,
         BigInt(loanAmount * 10 ** usdcDecimals),
-        toSPYWAI(rate),
+        toSPYWAI(rate / 100),
       ],
     });
     setOpenOfferDialog(false);
