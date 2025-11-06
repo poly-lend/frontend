@@ -35,7 +35,7 @@ export default function OfferDialog({
             onChange={(e) => setLoanAmount(Number(e.target.value))}
           />
           <TextField
-            label="Rate"
+            label="Rate (APY)"
             type="number"
             value={rate.toString()}
             onChange={(e) => setRate(Number(e.target.value))}

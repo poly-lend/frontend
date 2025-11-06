@@ -1,5 +1,10 @@
 import { AllLoanData } from "@/types/polyLend";
-import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
+import {
+  toAPYText,
+  toDuration,
+  toSharesText,
+  toUSDCString,
+} from "@/utils/convertors";
 import {
   Button,
   Table,
@@ -69,7 +74,7 @@ export default function BorrowerLoansTable({
                   <TableCell align="right">
                     {toDuration(Number(loan.minimumDuration))}
                   </TableCell>
-                  <TableCell align="right">{"10%"}</TableCell>
+                  <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
                     <Button variant="outlined" color="primary" disabled>
                       Repay

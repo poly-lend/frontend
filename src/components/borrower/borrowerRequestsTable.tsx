@@ -1,7 +1,12 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData, LoanRequest } from "@/types/polyLend";
-import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
+import {
+  toAPYText,
+  toDuration,
+  toSharesText,
+  toUSDCString,
+} from "@/utils/convertors";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import {
   Button,
@@ -149,7 +154,9 @@ export default function BorrowerRequestsTable({
                                 <TableCell align="right">
                                   {toUSDCString(offer.loanAmount)} USDC
                                 </TableCell>
-                                <TableCell align="right">{"10%"}</TableCell>
+                                <TableCell align="right">
+                                  {toAPYText(offer.rate)}
+                                </TableCell>
                                 <TableCell align="right">
                                   <Button
                                     variant="outlined"

@@ -1,7 +1,12 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
-import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
+import {
+  toAPYText,
+  toDuration,
+  toSharesText,
+  toUSDCString,
+} from "@/utils/convertors";
 import {
   Button,
   Table,
@@ -82,7 +87,7 @@ export default function LenderOffersTable({
                 <TableCell align="right">
                   {toDuration(Number(offer.request!.minimumDuration))}
                 </TableCell>
-                <TableCell align="right">{"10%"}</TableCell>
+                <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                 <TableCell align="right">
                   <Button
                     variant="outlined"
