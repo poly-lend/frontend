@@ -41,7 +41,8 @@ export const fetchData = async (params: {
   );
 
   const hydratedLoans = hydrateLoans(loans, markets);
-  console.log(hydratedOffers);
+
+  console.log(hydratedRequests);
   return {
     markets,
     requests: hydratedRequests,

@@ -17,7 +17,6 @@ export default function Lend() {
   useEffect(() => {
     if (!publicClient) return;
     fetchData({ publicClient, lender: address }).then(setData);
-    console.log(data);
   }, [publicClient, address]);
 
   return (

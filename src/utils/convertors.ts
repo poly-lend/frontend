@@ -24,9 +24,7 @@ export const toSharesText = (amount: bigint | string) => {
 
 export const toSPYWAI = (apy: number): bigint => {
   const rate = 1 + apy;
-  console.log(rate);
   const value = rate ** (1 / SECONDS_PER_YEAR);
-  console.log(value);
   return parseEther(value.toString());
 };
 

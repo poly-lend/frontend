@@ -22,17 +22,17 @@ export const fetchLoans = async (params: {
 
   let loans: Loan[] = loansData
     .map((loan: any, index: number) => ({
-      loanId: BigInt(index),
-      borrower: loan.result[0] as `0x${string}`,
-      borrowerWallet: loan.result[1],
-      lender: loan.result[2] as `0x${string}`,
-      positionId: BigInt(loan.result[3]),
-      collateralAmount: BigInt(loan.result[4]),
-      loanAmount: BigInt(loan.result[5]),
-      rate: BigInt(loan.result[6]),
-      startTime: BigInt(loan.result[7]),
-      minimumDuration: BigInt(loan.result[8]),
-      callTime: BigInt(loan.result[9]),
+      loanId: BigInt(loan.result[0]),
+      borrower: loan.result[1] as `0x${string}`,
+      borrowerWallet: loan.result[2],
+      lender: loan.result[3] as `0x${string}`,
+      positionId: BigInt(loan.result[4]),
+      collateralAmount: BigInt(loan.result[5]),
+      loanAmount: BigInt(loan.result[6]),
+      rate: BigInt(loan.result[7]),
+      startTime: BigInt(loan.result[8]),
+      minimumDuration: BigInt(loan.result[9]),
+      callTime: BigInt(loan.result[10]),
     }))
 
     .filter(

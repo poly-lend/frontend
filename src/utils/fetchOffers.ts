@@ -22,11 +22,11 @@ export const fetchOffers = async (params: {
 
   let offers: LoanOffer[] = offersData
     .map((offer: any, index: number) => ({
-      offerId: BigInt(index),
-      requestId: BigInt(offer.result[0]),
-      lender: offer.result[1] as `0x${string}`,
-      loanAmount: BigInt(offer.result[2]),
-      rate: BigInt(offer.result[3]),
+      offerId: BigInt(offer.result[0]),
+      requestId: BigInt(offer.result[1]),
+      lender: offer.result[2] as `0x${string}`,
+      loanAmount: BigInt(offer.result[3]),
+      rate: BigInt(offer.result[4]),
     }))
 
     .filter(
