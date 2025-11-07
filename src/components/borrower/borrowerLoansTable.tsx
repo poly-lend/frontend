@@ -1,4 +1,5 @@
 import { AllLoanData } from "@/types/polyLend";
+import { calculateAmountOwed } from "@/utils/calculations";
 import {
   toAPYText,
   toDuration,
@@ -55,7 +56,8 @@ export default function BorrowerLoansTable({
                 <TableCell align="center">Market</TableCell>
                 <TableCell align="center">Shares</TableCell>
                 <TableCell align="center">Collateral</TableCell>
-                <TableCell align="center">Amount</TableCell>
+                <TableCell align="center">Borrowed</TableCell>
+                <TableCell align="center">Owed</TableCell>
                 <TableCell align="center">Duration</TableCell>
                 <TableCell align="center">Time Left</TableCell>
                 <TableCell align="center">Rate</TableCell>
@@ -82,6 +84,15 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">
                     {toUSDCString(loan.loanAmount)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toUSDCString(
+                      calculateAmountOwed(
+                        Number(loan.loanAmount),
+                        Number(loan.rate),
+                        Number(loan.startTime)
+                      )
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     {toDuration(Number(loan.minimumDuration))}
