@@ -11,6 +11,7 @@ export const polylendConfig = {
           type: "address",
         },
         { internalType: "address", name: "_usdc", type: "address" },
+        { internalType: "address", name: "_safeProxyFactory", type: "address" },
       ],
       stateMutability: "nonpayable",
       type: "constructor",
@@ -254,6 +255,7 @@ export const polylendConfig = {
       inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       name: "loans",
       outputs: [
+        { internalType: "uint256", name: "loanId", type: "uint256" },
         { internalType: "address", name: "borrower", type: "address" },
         { internalType: "address", name: "borrowerWallet", type: "address" },
         { internalType: "address", name: "lender", type: "address" },
@@ -304,6 +306,7 @@ export const polylendConfig = {
       inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       name: "offers",
       outputs: [
+        { internalType: "uint256", name: "offerId", type: "uint256" },
         { internalType: "uint256", name: "requestId", type: "uint256" },
         { internalType: "address", name: "lender", type: "address" },
         { internalType: "uint256", name: "loanAmount", type: "uint256" },
@@ -340,8 +343,8 @@ export const polylendConfig = {
     },
     {
       inputs: [
-        { internalType: "address", name: "_lenderWallet", type: "address" },
         { internalType: "uint256", name: "_loanId", type: "uint256" },
+        { internalType: "bool", name: "_useProxy", type: "bool" },
       ],
       name: "reclaim",
       outputs: [],
@@ -360,10 +363,10 @@ export const polylendConfig = {
     },
     {
       inputs: [
-        { internalType: "address", name: "_borrowerWallet", type: "address" },
         { internalType: "uint256", name: "_positionId", type: "uint256" },
         { internalType: "uint256", name: "_collateralAmount", type: "uint256" },
         { internalType: "uint256", name: "_minimumDuration", type: "uint256" },
+        { internalType: "bool", name: "_useProxy", type: "bool" },
       ],
       name: "request",
       outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -374,6 +377,7 @@ export const polylendConfig = {
       inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       name: "requests",
       outputs: [
+        { internalType: "uint256", name: "requestId", type: "uint256" },
         { internalType: "address", name: "borrower", type: "address" },
         { internalType: "address", name: "borrowerWallet", type: "address" },
         { internalType: "uint256", name: "positionId", type: "uint256" },
@@ -384,8 +388,20 @@ export const polylendConfig = {
       type: "function",
     },
     {
+      inputs: [],
+      name: "safeProxyFactory",
+      outputs: [
+        {
+          internalType: "contract ISafeProxyFactory",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
       inputs: [
-        { internalType: "address", name: "_borrowerWallet", type: "address" },
         { internalType: "uint256", name: "_loanId", type: "uint256" },
         { internalType: "uint256", name: "_newRate", type: "uint256" },
       ],
