@@ -38,7 +38,7 @@ export default function BorrowerLoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
-      {selectedLoan && (
+      {selectedLoan !== null && (
         <RepayDialog
           loanId={selectedLoan}
           open={selectLoan != null}

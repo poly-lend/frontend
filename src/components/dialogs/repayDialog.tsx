@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Stack,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -61,29 +62,31 @@ export default function RepayDialog({ loanId, open, close }: RepayDialogProps) {
     <Dialog open={open}>
       <DialogTitle>Repay Loan {loanId.toString()}</DialogTitle>
       <DialogContent>
-        <TextField
-          label="Loan ID"
-          type="number"
-          value={amount.toString()}
-          disabled
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleApproval(amount)}
-        >
-          Approve
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleRepay(loanId, timestamp)}
-        >
-          Offer
-        </Button>
-        <Button variant="contained" color="secondary" onClick={close}>
-          Cancel
-        </Button>
+        <Stack spacing={2}>
+          <TextField
+            label="Loan ID"
+            type="number"
+            value={amount.toString()}
+            disabled
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleApproval(amount)}
+          >
+            Approve
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleRepay(loanId, timestamp)}
+          >
+            Repay
+          </Button>
+          <Button variant="contained" color="secondary" onClick={close}>
+            Cancel
+          </Button>
+        </Stack>
       </DialogContent>
     </Dialog>
   );
