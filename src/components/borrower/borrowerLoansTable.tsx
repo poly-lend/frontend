@@ -13,6 +13,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useState } from "react";
+import RepayDialog from "../dialogs/repayDialog";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 
@@ -27,6 +29,8 @@ export default function BorrowerLoansTable({
 }) {
   const loans = data.loans;
 
+  const [selectedLoan, selectLoan] = useState<bigint | null>(null);
+
   return (
     <div>
       <div>
@@ -34,6 +38,13 @@ export default function BorrowerLoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
+      {selectedLoan && (
+        <RepayDialog
+          loanId={selectedLoan}
+          open={selectLoan != null}
+          close={() => selectLoan(null)}
+        />
+      )}
       {loans.length === 0 && <div className="text-center">No loans found</div>}
       {loans.length > 0 && (
         <div>
@@ -76,7 +87,11 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
-                    <Button variant="outlined" color="primary" disabled>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => selectLoan(loan.loanId)}
+                    >
                       Repay
                     </Button>
                   </TableCell>
