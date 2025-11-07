@@ -25,10 +25,10 @@ export default function RequestDialog() {
       abi: polylendConfig.abi,
       functionName: "request",
       args: [
-        proxyAddress as `0x${string}`,
         selectedPosition!.asset,
         BigInt(shares * 10 ** 6),
         BigInt(minimumDuration * 24 * 60 * 60),
+        proxyAddress ? true : false,
       ],
     });
   };
