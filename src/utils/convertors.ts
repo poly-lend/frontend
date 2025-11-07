@@ -9,7 +9,17 @@ export const toUSDCString = (amount: bigint | string | number) => {
 };
 
 export const toDuration = (seconds: number | bigint | string) => {
-  return `${Math.floor(Number(seconds) / 24 / 60 / 60)} Days`;
+  const totalSeconds = Number(seconds);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`);
+
+  return parts.join(" ");
 };
 
 export const truncateAddress = (address: `0x${string}`) => {
