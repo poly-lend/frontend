@@ -2,6 +2,7 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ClientOnly from "../utils/clientOnly";
 import ConnectWallet from "./web3/connectWallet";
 import SwitchChain from "./web3/switchChain";
 import Balance from "./widgets/balance";
@@ -46,9 +47,15 @@ export default function Nav() {
         </div>
 
         <div className="flex items-center h-16 px-4">
-          <SwitchChain />
-          <Balance />
-          <ConnectWallet />
+          <ClientOnly>
+            <SwitchChain />
+          </ClientOnly>
+          <ClientOnly>
+            <Balance />
+          </ClientOnly>
+          <ClientOnly>
+            <ConnectWallet />
+          </ClientOnly>
         </div>
       </div>
     </nav>

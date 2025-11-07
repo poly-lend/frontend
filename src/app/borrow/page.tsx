@@ -5,6 +5,7 @@ import BorrowerRequestsTable from "@/components/borrower/borrowerRequestsTable";
 import RequestDialog from "@/components/dialogs/requestDialog";
 import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
+import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
 import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -34,23 +35,29 @@ export default function Borrow() {
       >
         Borrow
       </h1>
-
-      {address && <RequestDialog />}
-      {address && data && (
-        <BorrowerRequestsTable
-          address={address}
-          title="Borrower Requests"
-          data={data}
-        />
-      )}
-      {address && data && (
-        <BorrowerLoansTable
-          borrower={address}
-          title="Borrower Loans"
-          data={data}
-        />
-      )}
-      {!address && <ConnectWidget />}
+      <ClientOnly>
+        {address ? (
+          <>
+            <RequestDialog />
+            {data && (
+              <>
+                <BorrowerRequestsTable
+                  address={address}
+                  title="Borrower Requests"
+                  data={data}
+                />
+                <BorrowerLoansTable
+                  borrower={address}
+                  title="Borrower Loans"
+                  data={data}
+                />
+              </>
+            )}
+          </>
+        ) : (
+          <ConnectWidget />
+        )}
+      </ClientOnly>
     </Stack>
   );
 }
