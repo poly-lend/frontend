@@ -17,7 +17,8 @@ export const toDuration = (seconds: number | bigint | string) => {
   const parts: string[] = [];
   if (days > 0) parts.push(`${days}d`);
   if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`);
+  if ((minutes > 0 && days < 1) || parts.length === 0)
+    parts.push(`${minutes}m`);
 
   return parts.join(" ");
 };
