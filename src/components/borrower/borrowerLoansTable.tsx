@@ -57,6 +57,7 @@ export default function BorrowerLoansTable({
                 <TableCell align="center">Collateral</TableCell>
                 <TableCell align="center">Amount</TableCell>
                 <TableCell align="center">Duration</TableCell>
+                <TableCell align="center">Time Left</TableCell>
                 <TableCell align="center">Rate</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
@@ -84,6 +85,12 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">
                     {toDuration(Number(loan.minimumDuration))}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toDuration(
+                      Number(loan.minimumDuration) -
+                        (Date.now() / 1000 - Number(loan.startTime))
+                    )}
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
