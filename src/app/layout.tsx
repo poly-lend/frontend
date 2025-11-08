@@ -1,9 +1,7 @@
 import "@fontsource/roboto/700.css";
-import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { Metadata } from "next";
 import Children from "./children";
 import "./globals.css";
-import { theme } from "./theme";
 
 export const metadata: Metadata = {
   title: "PolyLend",
@@ -20,13 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <html lang="en" suppressHydrationWarning>
-        <body className="min-h-screen flex flex-col">
-          <Children>{children}</Children>
-        </body>
-      </html>
-    </ThemeProvider>
+    <html lang="en">
+      <body className="min-h-screen flex flex-col">
+        <Children>{children}</Children>
+      </body>
+    </html>
   );
 }
