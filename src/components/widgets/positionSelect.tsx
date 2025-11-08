@@ -30,14 +30,19 @@ export default function PositionSelect({
     <Select
       label="Select a position"
       style={{ width: "100%" }}
-      value={selectedPosition?.asset}
+      value={selectedPosition ? selectedPosition.asset.toString() : ""}
       onChange={(e) => {
+        const selectedAsset = String(e.target.value);
         const position =
-          positions?.find((position) => position.asset === e.target.value) ||
-          null;
+          positions?.find(
+            (position) => position.asset.toString() === selectedAsset
+          ) ?? null;
         selectPosition(position);
       }}
     >
+      <MenuItem value="" disabled>
+        Select a position
+      </MenuItem>
       {positions?.map((position) => (
         <MenuItem
           key={position.asset.toString()}
