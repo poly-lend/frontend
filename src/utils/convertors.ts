@@ -9,6 +9,8 @@ export const toUSDCString = (amount: bigint | string | number) => {
 };
 
 export const toDuration = (seconds: number | bigint | string) => {
+  if (Number(seconds) <= 0) return "0m";
+
   const totalSeconds = Number(seconds);
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
