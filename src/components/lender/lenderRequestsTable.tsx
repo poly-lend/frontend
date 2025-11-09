@@ -51,15 +51,13 @@ export default function RequestsListTable({
     loanAmount: number
   ) => {
     if (!publicClient || !walletClient) return;
+    const rateInSPY = toSPYWAI(rate / 100);
+    const loanAmountInUSDC = loanAmount * 10 ** usdcDecimals;
     await walletClient.writeContract({
       address: polylendAddress as `0x${string}`,
       abi: polylendConfig.abi,
       functionName: "offer",
-      args: [
-        requestId,
-        BigInt(loanAmount * 10 ** usdcDecimals),
-        toSPYWAI(rate / 100),
-      ],
+      args: [requestId, BigInt(loanAmountInUSDC), rateInSPY],
     });
     setOpenOfferDialog(false);
     selectRequest(null);
