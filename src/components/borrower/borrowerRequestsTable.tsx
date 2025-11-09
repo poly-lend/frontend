@@ -16,7 +16,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
@@ -76,8 +76,8 @@ export default function BorrowerRequestsTable({
           </TableHead>
           <TableBody>
             {requests.map((request) => (
-              <>
-                <TableRow key={request.requestId.toString()}>
+              <Fragment key={request.requestId.toString()}>
+                <TableRow>
                   <TableCell align="center">
                     <Market market={request.market} />
                   </TableCell>
@@ -131,7 +131,7 @@ export default function BorrowerRequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={6} className="border-1">
+                      <TableCell colSpan={6} className="border">
                         <Table size="small">
                           <TableHead>
                             <TableRow>
@@ -173,7 +173,7 @@ export default function BorrowerRequestsTable({
                       </TableCell>
                     </TableRow>
                   )}
-              </>
+              </Fragment>
             ))}
           </TableBody>
         </Table>

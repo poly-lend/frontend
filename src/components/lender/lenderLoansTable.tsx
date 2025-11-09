@@ -1,3 +1,5 @@
+import { polylendAddress } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
 import { calculateAmountOwed } from "@/utils/calculations";
 import {
@@ -17,6 +19,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { useState } from "react";
+import { usePublicClient, useWalletClient } from "wagmi";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 
@@ -31,6 +34,20 @@ export default function LenderLoansTable({
 }) {
   const loans = data.loans;
   const [dataType, setDataType] = useState<"my" | "all">("my");
+
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+
+  const handleCall = async (loanId: bigint) => {
+    if (!walletClient || !publicClient) return;
+    await walletClient.writeContract({
+      address: polylendAddress as `0x${string}`,
+      abi: polylendConfig.abi,
+      functionName: "call",
+      args: [loanId],
+    });
+  };
+
   return (
     <div>
       <div>
@@ -109,15 +126,23 @@ export default function LenderLoansTable({
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
-                    {/* <Button variant="outlined" color="primary">
-                      Transfer
-                    </Button>
-                    <Button variant="outlined" color="primary">
-                      Call
-                    </Button> */}
-                    <Button variant="outlined" color="primary" disabled>
-                      Reclaim
-                    </Button>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        disabled={
+                          Number(loan.minimumDuration) -
+                            (Date.now() / 1000 - Number(loan.startTime)) >=
+                          0
+                        }
+                        onClick={() => handleCall(loan.loanId)}
+                      >
+                        Call
+                      </Button>
+                      <Button variant="outlined" color="primary" disabled>
+                        Reclaim
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

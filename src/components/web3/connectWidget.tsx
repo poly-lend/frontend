@@ -1,3 +1,4 @@
+import ClientOnly from "@/utils/clientOnly";
 import ConnectWallet from "../web3/connectWallet";
 
 export default function ConnectWidget() {
@@ -6,7 +7,9 @@ export default function ConnectWidget() {
       <div className="text-lg mb-5 mt-10">
         Connect your wallet to interact with the platform and see your data
       </div>
-      <ConnectWallet />
+      <ClientOnly>
+        <ConnectWallet />
+      </ClientOnly>
     </div>
   );
 }
