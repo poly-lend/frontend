@@ -62,6 +62,16 @@ export default function LenderLoansTable({
     });
   };
 
+  const handleReclaim = async (loanId: bigint) => {
+    if (!walletClient || !publicClient) return;
+    await walletClient.writeContract({
+      address: polylendAddress as `0x${string}`,
+      abi: polylendConfig.abi,
+      functionName: "reclaim",
+      args: [loanId, false],
+    });
+  };
+
   return (
     <div>
       <div>
@@ -176,7 +186,16 @@ export default function LenderLoansTable({
                         >
                           Call
                         </Button>
-                        <Button variant="outlined" color="primary" disabled>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          disabled={
+                            Number(loan.callTime) === 0 ||
+                            Number(loan.callTime) + 24 * 60 * 60 >
+                              Number(Date.now() / 1000)
+                          }
+                          onClick={() => handleReclaim(loan.loanId)}
+                        >
                           Reclaim
                         </Button>
                       </>
