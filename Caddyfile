@@ -2,10 +2,6 @@ polylend.com {
     reverse_proxy web:3000
 }
 
-api.polylend.com {
-    reverse_proxy api:3001
-}
-
 www.polylend.com {
     redir https://polylend.com
 }
