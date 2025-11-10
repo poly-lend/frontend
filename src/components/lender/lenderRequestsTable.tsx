@@ -69,68 +69,74 @@ export default function RequestsListTable({
       <h2 className="text-2xl font-bold w-full text-center mt-8">
         {title ? title : "All Borrow Requests"}
       </h2>
-      {selectedRequest && (
-        <OfferDialog
-          requestId={selectedRequest.requestId}
-          open={openOfferDialog}
-          handleOffer={handleOffer}
-          handleApproval={handleApproval}
-          handleCancel={() => {
-            setOpenOfferDialog(false);
-            selectRequest(null);
-          }}
-        />
+      {requests.length === 0 ? (
+        <div className="text-center mt-4">No requests found</div>
+      ) : (
+        <>
+          {selectedRequest && (
+            <OfferDialog
+              requestId={selectedRequest.requestId}
+              open={openOfferDialog}
+              handleOffer={handleOffer}
+              handleApproval={handleApproval}
+              handleCancel={() => {
+                setOpenOfferDialog(false);
+                selectRequest(null);
+              }}
+            />
+          )}
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Borrower</TableCell>
+                <TableCell align="center">Market</TableCell>
+                <TableCell align="center">Shares</TableCell>
+                <TableCell align="center">Collateral</TableCell>
+                <TableCell align="center">Duration</TableCell>
+                <TableCell align="center">Offers</TableCell>
+                <TableCell align="center">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {requests.map((request) => (
+                <TableRow key={request.requestId}>
+                  <TableCell align="center">
+                    <Address address={request.borrower} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Market market={request.market} />
+                  </TableCell>
+                  <TableCell align="right">
+                    {toSharesText(request.collateralAmount)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toUSDCString(
+                      Number(request.market.outcomePrice) *
+                        Number(request.collateralAmount)
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {toDuration(Number(request.minimumDuration))}
+                  </TableCell>
+                  <TableCell align="right">{request.offers.length}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        selectRequest(request);
+                        setOpenOfferDialog(true);
+                      }}
+                    >
+                      Offer
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </>
       )}
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">Borrower</TableCell>
-            <TableCell align="center">Market</TableCell>
-            <TableCell align="center">Shares</TableCell>
-            <TableCell align="center">Collateral</TableCell>
-            <TableCell align="center">Duration</TableCell>
-            <TableCell align="center">Offers</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {requests.map((request) => (
-            <TableRow key={request.requestId}>
-              <TableCell align="center">
-                <Address address={request.borrower} />
-              </TableCell>
-              <TableCell align="center">
-                <Market market={request.market} />
-              </TableCell>
-              <TableCell align="right">
-                {toSharesText(request.collateralAmount)}
-              </TableCell>
-              <TableCell align="right">
-                {toUSDCString(
-                  Number(request.market.outcomePrice) *
-                    Number(request.collateralAmount)
-                )}
-              </TableCell>
-              <TableCell align="right">
-                {toDuration(Number(request.minimumDuration))}
-              </TableCell>
-              <TableCell align="right">{request.offers.length}</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    selectRequest(request);
-                    setOpenOfferDialog(true);
-                  }}
-                >
-                  Offer
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
     </>
   );
 }

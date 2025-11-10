@@ -64,118 +64,119 @@ export default function LenderLoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
-      {loans.length === 0 && <div className="text-center">No loans found</div>}
+
+      <ToggleButtonGroup
+        className="w-full flex justify-center mt-4"
+        color="primary"
+        size="small"
+        value={dataType}
+        exclusive
+        onChange={(_, value) => setDataType(value)}
+        aria-label="text alignment"
+      >
+        <ToggleButton value="my">My Loans</ToggleButton>
+        <ToggleButton value="others">Other's Loans</ToggleButton>
+      </ToggleButtonGroup>
+      {loans.length === 0 && (
+        <div className="text-center mt-4">No loans found</div>
+      )}
       {loans.length > 0 && (
-        <div>
-          <ToggleButtonGroup
-            className="w-full flex justify-center mt-4"
-            color="primary"
-            size="small"
-            value={dataType}
-            exclusive
-            onChange={(_, value) => setDataType(value)}
-            aria-label="text alignment"
-          >
-            <ToggleButton value="my">My Loans</ToggleButton>
-            <ToggleButton value="others">Other's Loans</ToggleButton>
-          </ToggleButtonGroup>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Borrower</TableCell>
-                <TableCell align="center">Market</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Shares</TableCell>
-                <TableCell align="center">Collateral</TableCell>
-                <TableCell align="center">Lent</TableCell>
-                <TableCell align="center">Owed</TableCell>
-                <TableCell align="center">Duration</TableCell>
-                <TableCell align="center">Time Left</TableCell>
-                <TableCell align="center">Rate</TableCell>
-                <TableCell align="center">Actions</TableCell>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Borrower</TableCell>
+              <TableCell align="center">Market</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Shares</TableCell>
+              <TableCell align="center">Collateral</TableCell>
+              <TableCell align="center">Lent</TableCell>
+              <TableCell align="center">Owed</TableCell>
+              <TableCell align="center">Duration</TableCell>
+              <TableCell align="center">Time Left</TableCell>
+              <TableCell align="center">Rate</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loans.map((loan) => (
+              <TableRow key={loan.loanId}>
+                <TableCell align="center">
+                  <Address address={loan.borrower} />
+                </TableCell>
+                <TableCell align="center">
+                  <Market market={loan.market} />
+                </TableCell>
+                <TableCell align="center">
+                  {loan.callTime > 0 ? "Called" : "Active"}
+                </TableCell>
+                <TableCell align="right">
+                  {toSharesText(loan.collateralAmount)}
+                </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(
+                    Number(loan.market.outcomePrice) *
+                      Number(loan.collateralAmount)
+                  )}
+                </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(loan.loanAmount)}
+                </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(
+                    calculateAmountOwed(
+                      Number(loan.loanAmount),
+                      Number(loan.rate),
+                      Number(loan.startTime)
+                    )
+                  )}
+                </TableCell>
+                <TableCell align="right">
+                  {toDuration(Number(loan.minimumDuration))}
+                </TableCell>
+                <TableCell align="right">
+                  {toDuration(
+                    Number(loan.minimumDuration) -
+                      (Date.now() / 1000 - Number(loan.startTime))
+                  )}
+                </TableCell>
+                <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
+                <TableCell align="right">
+                  <div className="flex justify-end gap-2">
+                    {dataType === "my" ? (
+                      <>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          disabled={
+                            Number(loan.minimumDuration) -
+                              (Date.now() / 1000 - Number(loan.startTime)) >=
+                              0 || Number(loan.callTime) > 0
+                          }
+                          onClick={() => handleCall(loan.loanId)}
+                        >
+                          Call
+                        </Button>
+                        <Button variant="outlined" color="primary" disabled>
+                          Reclaim
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          disabled={Number(loan.callTime) == 0}
+                        >
+                          Transfer
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {loans.map((loan) => (
-                <TableRow key={loan.loanId}>
-                  <TableCell align="center">
-                    <Address address={loan.borrower} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <Market market={loan.market} />
-                  </TableCell>
-                  <TableCell align="center">
-                    {loan.callTime > 0 ? "Called" : "Active"}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toSharesText(loan.collateralAmount)}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toUSDCString(
-                      Number(loan.market.outcomePrice) *
-                        Number(loan.collateralAmount)
-                    )}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toUSDCString(loan.loanAmount)}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toUSDCString(
-                      calculateAmountOwed(
-                        Number(loan.loanAmount),
-                        Number(loan.rate),
-                        Number(loan.startTime)
-                      )
-                    )}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toDuration(Number(loan.minimumDuration))}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toDuration(
-                      Number(loan.minimumDuration) -
-                        (Date.now() / 1000 - Number(loan.startTime))
-                    )}
-                  </TableCell>
-                  <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
-                  <TableCell align="right">
-                    <div className="flex justify-end gap-2">
-                      {dataType === "my" ? (
-                        <>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            disabled={
-                              Number(loan.minimumDuration) -
-                                (Date.now() / 1000 - Number(loan.startTime)) >=
-                                0 || Number(loan.callTime) > 0
-                            }
-                            onClick={() => handleCall(loan.loanId)}
-                          >
-                            Call
-                          </Button>
-                          <Button variant="outlined" color="primary" disabled>
-                            Reclaim
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            disabled={Number(loan.callTime) == 0}
-                          >
-                            Transfer
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </div>
   );

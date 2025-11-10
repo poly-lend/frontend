@@ -47,7 +47,7 @@ export default function LenderOffersTable({
         </h2>
       </div>
       {offers.length === 0 && (
-        <div className="text-center">No offers found</div>
+        <div className="text-center mt-4">No offers found</div>
       )}
       {offers.length > 0 && (
         <Table size="small">
