@@ -33,11 +33,13 @@ export default function LenderLoansTable({
   title?: string;
   borrower?: `0x${string}`;
 }) {
-  const [dataType, setDataType] = useState<"my" | "all">("my");
+  const [dataType, setDataType] = useState<"my" | "others">("my");
   let loans = data.loans;
 
   if (dataType === "my") {
     loans = loans.filter((loan: Loan) => loan.lender === lender);
+  } else {
+    loans = loans.filter((loan: Loan) => loan.lender !== lender);
   }
 
   const publicClient = usePublicClient();
@@ -73,7 +75,7 @@ export default function LenderLoansTable({
             aria-label="text alignment"
           >
             <ToggleButton value="my">My Loans</ToggleButton>
-            <ToggleButton value="all">All Loans</ToggleButton>
+            <ToggleButton value="others">Other's Loans</ToggleButton>
           </ToggleButtonGroup>
           <Table>
             <TableHead>
@@ -132,21 +134,31 @@ export default function LenderLoansTable({
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
                     <div className="flex justify-end gap-2">
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        disabled={
-                          Number(loan.minimumDuration) -
-                            (Date.now() / 1000 - Number(loan.startTime)) >=
-                          0
-                        }
-                        onClick={() => handleCall(loan.loanId)}
-                      >
-                        Call
-                      </Button>
-                      <Button variant="outlined" color="primary" disabled>
-                        Reclaim
-                      </Button>
+                      {dataType === "my" ? (
+                        <>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            disabled={
+                              Number(loan.minimumDuration) -
+                                (Date.now() / 1000 - Number(loan.startTime)) >=
+                              0
+                            }
+                            onClick={() => handleCall(loan.loanId)}
+                          >
+                            Call
+                          </Button>
+                          <Button variant="outlined" color="primary" disabled>
+                            Reclaim
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button variant="outlined" color="primary" disabled>
+                            Transfer
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
