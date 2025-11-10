@@ -16,7 +16,7 @@ export default function Lend() {
   const [data, setData] = useState<AllLoanData | null>(null);
   useEffect(() => {
     if (!publicClient) return;
-    fetchData({ publicClient, lender: address }).then(setData);
+    fetchData({ publicClient }).then(setData);
   }, [publicClient, address]);
 
   return (
@@ -35,7 +35,7 @@ export default function Lend() {
       {data && <LenderRequestsTable title="All Requests" data={data} />}
       {address && data ? (
         <>
-          <LenderLoansTable title="Lender Loans" data={data} />
+          <LenderLoansTable lender={address} title="Lender Loans" data={data} />
           <LenderOffersTable title="Lender Offers" data={data} />
         </>
       ) : (

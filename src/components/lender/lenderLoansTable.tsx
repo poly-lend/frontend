@@ -1,6 +1,6 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
-import { AllLoanData } from "@/types/polyLend";
+import { AllLoanData, Loan } from "@/types/polyLend";
 import { calculateAmountOwed } from "@/utils/calculations";
 import {
   toAPYText,
@@ -24,16 +24,21 @@ import Address from "../widgets/address";
 import Market from "../widgets/market";
 
 export default function LenderLoansTable({
+  lender,
   title,
   data,
 }: {
-  borrower?: `0x${string}`;
-  lender?: `0x${string}`;
-  title?: string;
+  lender: `0x${string}`;
   data: AllLoanData;
+  title?: string;
+  borrower?: `0x${string}`;
 }) {
-  const loans = data.loans;
   const [dataType, setDataType] = useState<"my" | "all">("my");
+  let loans = data.loans;
+
+  if (dataType === "my") {
+    loans = loans.filter((loan: Loan) => loan.lender === lender);
+  }
 
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
