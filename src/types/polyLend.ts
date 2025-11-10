@@ -29,6 +29,7 @@ export type Loan = {
   loanAmount: bigint;
   rate: bigint;
   startTime: bigint;
+  callTime: bigint;
   minimumDuration: bigint;
   request: LoanRequest;
   offer: LoanOffer;

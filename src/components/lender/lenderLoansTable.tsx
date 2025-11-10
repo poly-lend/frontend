@@ -36,6 +36,8 @@ export default function LenderLoansTable({
   const [dataType, setDataType] = useState<"my" | "others">("my");
   let loans = data.loans;
 
+  console.log("loans", loans);
+
   if (dataType === "my") {
     loans = loans.filter((loan: Loan) => loan.lender === lender);
   } else {
@@ -82,6 +84,7 @@ export default function LenderLoansTable({
               <TableRow>
                 <TableCell align="center">Borrower</TableCell>
                 <TableCell align="center">Market</TableCell>
+                <TableCell align="center">Status</TableCell>
                 <TableCell align="center">Shares</TableCell>
                 <TableCell align="center">Collateral</TableCell>
                 <TableCell align="center">Lent</TableCell>
@@ -100,6 +103,9 @@ export default function LenderLoansTable({
                   </TableCell>
                   <TableCell align="center">
                     <Market market={loan.market} />
+                  </TableCell>
+                  <TableCell align="center">
+                    {loan.callTime > 0 ? "Called" : "Active"}
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(loan.collateralAmount)}
@@ -142,7 +148,7 @@ export default function LenderLoansTable({
                             disabled={
                               Number(loan.minimumDuration) -
                                 (Date.now() / 1000 - Number(loan.startTime)) >=
-                              0
+                                0 || Number(loan.callTime) > 0
                             }
                             onClick={() => handleCall(loan.loanId)}
                           >
@@ -154,7 +160,11 @@ export default function LenderLoansTable({
                         </>
                       ) : (
                         <>
-                          <Button variant="outlined" color="primary" disabled>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            disabled={Number(loan.callTime) == 0}
+                          >
                             Transfer
                           </Button>
                         </>
