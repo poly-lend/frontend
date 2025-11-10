@@ -41,7 +41,7 @@ export default function LenderLoansTable({
   } | null>(null);
   let loans = data.loans;
 
-  console.log("loans", loans);
+  loans = loans.filter((loan: Loan) => loan.borrower !== lender);
 
   if (dataType === "my") {
     loans = loans.filter((loan: Loan) => loan.lender === lender);
