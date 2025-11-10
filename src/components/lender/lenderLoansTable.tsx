@@ -134,10 +134,16 @@ export default function LenderLoansTable({
                   {toDuration(Number(loan.minimumDuration))}
                 </TableCell>
                 <TableCell align="right">
-                  {toDuration(
-                    Number(loan.minimumDuration) -
-                      (Date.now() / 1000 - Number(loan.startTime))
-                  )}
+                  {loan.callTime > 0
+                    ? toDuration(
+                        Number(loan.callTime) +
+                          24 * 60 * 60 -
+                          Number(Date.now() / 1000)
+                      )
+                    : toDuration(
+                        Number(loan.minimumDuration) -
+                          (Date.now() / 1000 - Number(loan.startTime))
+                      )}
                 </TableCell>
                 <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                 <TableCell align="right">
