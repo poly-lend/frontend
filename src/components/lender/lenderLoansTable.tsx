@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { usePublicClient, useWalletClient } from "wagmi";
+import TransferDialog from "../dialogs/transferDialog";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 
@@ -34,6 +35,10 @@ export default function LenderLoansTable({
   borrower?: `0x${string}`;
 }) {
   const [dataType, setDataType] = useState<"my" | "others">("my");
+  const [transferringLoan, setTransferringLoan] = useState<{
+    loanId: bigint;
+    callTime: bigint;
+  } | null>(null);
   let loans = data.loans;
 
   console.log("loans", loans);
@@ -64,6 +69,15 @@ export default function LenderLoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
+
+      {transferringLoan !== null && (
+        <TransferDialog
+          loanId={transferringLoan.loanId}
+          callTime={transferringLoan.callTime}
+          open={transferringLoan !== null}
+          close={() => setTransferringLoan(null)}
+        />
+      )}
 
       <ToggleButtonGroup
         className="w-full flex justify-center mt-4"
@@ -172,6 +186,12 @@ export default function LenderLoansTable({
                           variant="outlined"
                           color="primary"
                           disabled={Number(loan.callTime) == 0}
+                          onClick={() =>
+                            setTransferringLoan({
+                              loanId: loan.loanId,
+                              callTime: loan.callTime,
+                            })
+                          }
                         >
                           Transfer
                         </Button>
