@@ -67,10 +67,10 @@ export default function BorrowerRequestsTable({
           <TableHead>
             <TableRow>
               <TableCell align="center">Market</TableCell>
-              <TableCell align="center">Shares</TableCell>
-              <TableCell align="center">Collateral</TableCell>
-              <TableCell align="center">Duration</TableCell>
-              <TableCell align="center">Offers</TableCell>
+              <TableCell align="right">Shares</TableCell>
+              <TableCell align="right">Collateral</TableCell>
+              <TableCell align="right">Duration</TableCell>
+              <TableCell align="right">Offers</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -97,35 +97,37 @@ export default function BorrowerRequestsTable({
                     {request.offers.length.toString()}
                   </TableCell>
                   <TableCell align="right">
-                    <Button
-                      disabled={request.offers.length === 0}
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        if (
-                          selectedRequest &&
-                          selectedRequest.requestId === request.requestId
-                        ) {
-                          selectRequest(null);
-                        } else {
-                          selectRequest(request);
-                        }
-                      }}
-                    >
-                      Offers{" "}
-                      {selectedRequest?.requestId === request.requestId ? (
-                        <ArrowDropUp />
-                      ) : (
-                        <ArrowDropDown />
-                      )}
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => cancelRequest(request.requestId)}
-                    >
-                      Cancel
-                    </Button>
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        disabled={request.offers.length === 0}
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                          if (
+                            selectedRequest &&
+                            selectedRequest.requestId === request.requestId
+                          ) {
+                            selectRequest(null);
+                          } else {
+                            selectRequest(request);
+                          }
+                        }}
+                      >
+                        Offers
+                        {selectedRequest?.requestId === request.requestId ? (
+                          <ArrowDropUp />
+                        ) : (
+                          <ArrowDropDown />
+                        )}
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => cancelRequest(request.requestId)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
                 {selectedRequest &&
@@ -135,20 +137,20 @@ export default function BorrowerRequestsTable({
                         <Table size="small">
                           <TableHead>
                             <TableRow>
-                              <TableCell align="center">Offer ID</TableCell>
-                              <TableCell align="center">Lender</TableCell>
-                              <TableCell align="center">Amount</TableCell>
-                              <TableCell align="center">Rate</TableCell>
-                              <TableCell align="center">Actions</TableCell>
+                              <TableCell align="right">Offer ID</TableCell>
+                              <TableCell align="right">Lender</TableCell>
+                              <TableCell align="right">Amount</TableCell>
+                              <TableCell align="right">Rate</TableCell>
+                              <TableCell align="right">Actions</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
                             {request.offers.map((offer) => (
                               <TableRow key={offer.offerId}>
-                                <TableCell className="text-center">
+                                <TableCell align="right">
                                   {offer.offerId}
                                 </TableCell>
-                                <TableCell align="center">
+                                <TableCell align="right">
                                   <Address address={offer.lender} />
                                 </TableCell>
                                 <TableCell align="right">

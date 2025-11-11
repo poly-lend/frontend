@@ -54,13 +54,13 @@ export default function BorrowerLoansTable({
               <TableRow>
                 <TableCell align="center">Lender</TableCell>
                 <TableCell align="center">Market</TableCell>
-                <TableCell align="center">Shares</TableCell>
-                <TableCell align="center">Collateral</TableCell>
-                <TableCell align="center">Borrowed</TableCell>
-                <TableCell align="center">Owed</TableCell>
-                <TableCell align="center">Duration</TableCell>
-                <TableCell align="center">Time Left</TableCell>
-                <TableCell align="center">Rate</TableCell>
+                <TableCell align="right">Shares</TableCell>
+                <TableCell align="right">Collateral</TableCell>
+                <TableCell align="right">Borrowed</TableCell>
+                <TableCell align="right">Owed</TableCell>
+                <TableCell align="right">Duration</TableCell>
+                <TableCell align="right">Time Left</TableCell>
+                <TableCell align="right">Rate</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -104,7 +104,7 @@ export default function BorrowerLoansTable({
                     )}
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <Button
                       variant="outlined"
                       color="primary"
