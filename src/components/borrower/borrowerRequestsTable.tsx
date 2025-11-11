@@ -133,45 +133,59 @@ export default function BorrowerRequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={6} className="border">
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell align="right">Offer ID</TableCell>
-                              <TableCell align="right">Lender</TableCell>
-                              <TableCell align="right">Amount</TableCell>
-                              <TableCell align="right">Rate</TableCell>
-                              <TableCell align="right">Actions</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {request.offers.map((offer) => (
-                              <TableRow key={offer.offerId}>
-                                <TableCell align="right">
-                                  {offer.offerId}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Address address={offer.lender} />
-                                </TableCell>
-                                <TableCell align="right">
-                                  {toUSDCString(offer.loanAmount)} USDC
-                                </TableCell>
-                                <TableCell align="right">
-                                  {toAPYText(offer.rate)}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => acceptOffer(offer.offerId)}
-                                  >
-                                    Accept
-                                  </Button>
-                                </TableCell>
+                      <TableCell colSpan={6} sx={{ p: 0.5 }}>
+                        <div style={{ width: "92%", margin: "0 auto" }}>
+                          <Table
+                            size="small"
+                            sx={{
+                              "& td, & th": { fontSize: "0.8rem", py: 0.5 },
+                            }}
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell align="right">Offer ID</TableCell>
+                                <TableCell align="right">Lender</TableCell>
+                                <TableCell align="right">Amount</TableCell>
+                                <TableCell align="right">Rate</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
+                            </TableHead>
+                            <TableBody>
+                              {request.offers.map((offer) => (
+                                <TableRow
+                                  key={offer.offerId}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                  }}
+                                >
+                                  <TableCell align="right">
+                                    {offer.offerId}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Address address={offer.lender} />
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {toUSDCString(offer.loanAmount)} USDC
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {toAPYText(offer.rate)}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      variant="outlined"
+                                      color="primary"
+                                      onClick={() => acceptOffer(offer.offerId)}
+                                    >
+                                      Accept
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
