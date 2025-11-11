@@ -79,7 +79,7 @@ export default function Borrow() {
         }}
         size="large"
       >
-        Request new loan
+        Request a loan
       </Button>
     </div>
   );

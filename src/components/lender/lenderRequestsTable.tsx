@@ -26,11 +26,16 @@ import Market from "../widgets/market";
 export default function RequestsListTable({
   title,
   data,
+  userAddress,
 }: {
   title?: string;
   data: AllLoanData;
+  userAddress: `0x${string}`;
 }) {
-  const requests = data.requests;
+  let requests = data.requests;
+  requests = requests.filter(
+    (request: LoanRequest) => request.borrower !== userAddress
+  );
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
