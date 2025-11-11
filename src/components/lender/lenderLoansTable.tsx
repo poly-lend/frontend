@@ -68,7 +68,7 @@ export default function LenderLoansTable({
       address: polylendAddress as `0x${string}`,
       abi: polylendConfig.abi,
       functionName: "reclaim",
-      args: [loanId, false],
+      args: [loanId, true],
     });
   };
 
