@@ -4,47 +4,61 @@ import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
-import { Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
 import { usePublicClient, useWalletClient } from "wagmi";
 import PositionSelect from "../widgets/positionSelect";
 
-export default function RequestDialog() {
+export default function RequestDialog({
+  open,
+  close,
+}: {
+  open: boolean;
+  close: () => void;
+}) {
   const { data: proxyAddress } = useProxyAddress();
   const [selectedPosition, selectPosition] = useState<Position | null>(null);
-  const [shares, setShares] = useState(0.0);
-  const [value, setValue] = useState(0.0);
+  const [shares, setShares] = useState(0);
   const [minimumDuration, setMinimumDuration] = useState(10);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+
+  const value = selectedPosition ? shares * selectedPosition.curPrice : 0;
+
+  useEffect(() => {
+    if (selectedPosition) {
+      setShares(selectedPosition.totalBought);
+    }
+  }, [selectedPosition]);
+
   const requestLoan = async () => {
-    if (!walletClient || !publicClient) return;
+    if (!walletClient || !publicClient || !selectedPosition) return;
     walletClient.writeContract({
       address: polylendAddress as `0x${string}`,
       abi: polylendConfig.abi,
       functionName: "request",
       args: [
-        selectedPosition!.asset,
+        selectedPosition.asset,
         BigInt(shares * 10 ** 6),
         BigInt(minimumDuration * 24 * 60 * 60),
-        proxyAddress ? true : false,
+        !!proxyAddress,
       ],
     });
   };
 
-  useEffect(() => {
-    if (!selectedPosition) return;
-    setShares(selectedPosition.totalBought);
-  }, [selectedPosition]);
-
-  useEffect(() => {
-    if (!selectedPosition) return;
-    setValue(shares * selectedPosition.curPrice);
-  }, [shares]);
-
   const giveApproval = async () => {
-    if (!walletClient || !publicClient) return;
+    if (!walletClient || !publicClient || !proxyAddress) return;
     await execSafeTransaction({
       safe: proxyAddress as `0x${string}`,
       tx: {
@@ -60,55 +74,86 @@ export default function RequestDialog() {
     });
   };
 
-  return (
-    <>
-      {proxyAddress && (
-        <PositionSelect
-          address={proxyAddress!}
-          selectedPosition={selectedPosition}
-          selectPosition={selectPosition}
-        />
-      )}
+  const handleSharesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const maxShares = selectedPosition?.totalBought ?? 0;
+    const newShares = Math.max(0, Math.min(maxShares, Number(e.target.value)));
+    setShares(newShares);
+  };
 
-      <h2>Selected Position: {selectedPosition?.title}</h2>
-      <TextField
-        type="number"
-        label="Shares"
-        placeholder="Shares"
-        value={shares}
-        onChange={(e) => {
-          const maxShares = selectedPosition?.totalBought ?? 0;
-          const currentShares = Number(e.target.value);
-          if (currentShares > maxShares) {
-            setShares(maxShares);
-          } else {
-            setShares(currentShares);
-          }
-          if (currentShares < 0) {
-            setShares(0.0);
-          }
-        }}
-      />
-      <TextField
-        type="number"
-        label="Value"
-        placeholder="Value"
-        value={value.toFixed(2)}
-        disabled
-      />
-      <TextField
-        type="number"
-        label="Minimum Duration Days"
-        placeholder="Minimum Duration Days"
-        value={minimumDuration}
-        onChange={(e) => setMinimumDuration(Number(e.target.value))}
-      />
-      <Button variant="contained" color="primary" onClick={giveApproval}>
-        Give approval
-      </Button>
-      <Button variant="contained" color="primary" onClick={requestLoan}>
-        Request a loan
-      </Button>
-    </>
+  return (
+    <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
+      <DialogTitle>Request a loan</DialogTitle>
+      <DialogContent>
+        <Stack spacing={3} sx={{ mt: 1 }}>
+          {proxyAddress && (
+            <PositionSelect
+              address={proxyAddress}
+              selectedPosition={selectedPosition}
+              selectPosition={selectPosition}
+            />
+          )}
+
+          {selectedPosition && (
+            <>
+              <Typography variant="subtitle2" color="text.secondary">
+                Selected Position: {selectedPosition.title}
+              </Typography>
+
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Shares"
+                  value={shares}
+                  onChange={handleSharesChange}
+                />
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Value"
+                  value={value.toFixed(2)}
+                  disabled
+                />
+              </Box>
+            </>
+          )}
+
+          <TextField
+            fullWidth
+            type="number"
+            label="Minimum Duration Days"
+            value={minimumDuration}
+            onChange={(e) => setMinimumDuration(Number(e.target.value))}
+            helperText="Minimum number of days for the loan duration"
+          />
+        </Stack>
+      </DialogContent>
+      <DialogActions sx={{ px: 3, pb: 3, pt: 2 }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={close}
+          sx={{ mr: "auto" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={giveApproval}
+          disabled={!selectedPosition}
+        >
+          Give Approval
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={requestLoan}
+          disabled={!selectedPosition || shares <= 0}
+        >
+          Request a Loan
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

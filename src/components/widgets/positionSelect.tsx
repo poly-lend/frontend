@@ -47,6 +47,7 @@ export default function PositionSelect({
         <MenuItem
           key={position.asset.toString()}
           value={position.asset.toString()}
+          className="flex items-center gap-2"
         >
           <img
             src={position.icon}
