@@ -1,5 +1,5 @@
 import { Position } from "@/types/polymarketPosition";
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 export default function PositionSelect({
@@ -28,8 +28,12 @@ export default function PositionSelect({
   });
   return (
     <FormControl fullWidth>
+      <InputLabel id="position-select-label">Select Position</InputLabel>
       <Select
-        value={selectedPosition ? selectedPosition.asset.toString() : ""}
+        labelId="position-select-label"
+        variant="outlined"
+        label="Select Position"
+        value={selectedPosition?.asset.toString() ?? ""}
         onChange={(e) => {
           const selectedAsset = String(e.target.value);
           const position =
@@ -38,11 +42,7 @@ export default function PositionSelect({
             ) ?? null;
           selectPosition(position);
         }}
-        displayEmpty
       >
-        <MenuItem value="" disabled>
-          Select a position
-        </MenuItem>
         {positions?.map((position) => (
           <MenuItem
             key={position.asset.toString()}

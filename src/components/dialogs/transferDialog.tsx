@@ -75,8 +75,8 @@ export default function TransferDialog({
       <DialogTitle>Transfer Loan {loanId.toString()}</DialogTitle>
 
       <DialogContent>
-        <Stack spacing={2}>
-          <div className="py-2">
+        <Stack spacing={2} className="py-1.5">
+          <div>
             <TextField
               label="New rate (APY)"
               type="number"

@@ -83,7 +83,7 @@ export default function RequestDialog({
     <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
       <DialogTitle>Request a loan</DialogTitle>
       <DialogContent>
-        <Stack spacing={3}>
+        <Stack spacing={3} className="py-1.5">
           {proxyAddress && (
             <PositionSelect
               address={proxyAddress}
