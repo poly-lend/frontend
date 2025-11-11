@@ -13,7 +13,6 @@ import {
   DialogTitle,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
@@ -84,7 +83,7 @@ export default function RequestDialog({
     <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
       <DialogTitle>Request a loan</DialogTitle>
       <DialogContent>
-        <Stack spacing={3} sx={{ mt: 1 }}>
+        <Stack spacing={3}>
           {proxyAddress && (
             <PositionSelect
               address={proxyAddress}
@@ -95,10 +94,6 @@ export default function RequestDialog({
 
           {selectedPosition && (
             <>
-              <Typography variant="subtitle2" color="text.secondary">
-                Selected Position: {selectedPosition.title}
-              </Typography>
-
               <Box sx={{ display: "flex", gap: 2 }}>
                 <TextField
                   fullWidth
@@ -124,7 +119,6 @@ export default function RequestDialog({
             label="Minimum Duration Days"
             value={minimumDuration}
             onChange={(e) => setMinimumDuration(Number(e.target.value))}
-            helperText="Minimum number of days for the loan duration"
           />
         </Stack>
       </DialogContent>
