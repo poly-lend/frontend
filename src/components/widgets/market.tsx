@@ -7,7 +7,7 @@ const Market = ({ market }: { market: any }) => {
     <Link
       href={`https://polymarket.com/event/${market.event.slug}`}
       target="_blank"
-      className="flex items-start gap-1"
+      className="flex items-center gap-2"
     >
       <img
         width={40}
@@ -22,7 +22,6 @@ const Market = ({ market }: { market: any }) => {
       </div>
 
       <Chip
-        className="mt-2"
         label={market.outcome}
         size="small"
         color={market.outcome === "Yes" ? "success" : "error"}
