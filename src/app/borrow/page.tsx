@@ -25,6 +25,13 @@ export default function Borrow() {
     fetchData({ publicClient, borrower: address }).then(setData);
   }, [publicClient, walletClient, address]);
 
+  const handleRequestSuccess = async () => {
+    setSnackbarOpen(true);
+    if (!publicClient || !walletClient) return;
+    const fresh = await fetchData({ publicClient, borrower: address });
+    setData(fresh);
+  };
+
   return (
     <>
       <Stack spacing={2}>
@@ -53,7 +60,7 @@ export default function Borrow() {
         <RequestDialog
           open={openRequestDialog}
           close={() => setOpenRequestDialog(false)}
-          onSuccess={() => setSnackbarOpen(true)}
+          onSuccess={handleRequestSuccess}
         />
         <Snackbar
           open={snackbarOpen}
