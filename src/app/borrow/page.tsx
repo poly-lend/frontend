@@ -93,6 +93,9 @@ export default function Borrow() {
                     borrower={address}
                     title="Borrower Loans"
                     data={data}
+                    onActionSuccess={(text: string) =>
+                      handleRequestSuccess(text)
+                    }
                   />
                 </>
               )}

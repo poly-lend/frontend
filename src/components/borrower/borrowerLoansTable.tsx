@@ -22,11 +22,13 @@ import Market from "../widgets/market";
 export default function BorrowerLoansTable({
   title,
   data,
+  onActionSuccess,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
   title?: string;
   data: AllLoanData;
+  onActionSuccess?: (successText: string) => void;
 }) {
   const loans = data.loans;
 
@@ -44,6 +46,7 @@ export default function BorrowerLoansTable({
           loanId={selectedLoan}
           open={selectLoan != null}
           close={() => selectLoan(null)}
+          onSuccess={(text: string) => onActionSuccess?.(text)}
         />
       )}
       {loans.length === 0 && <div className="text-center">No loans found</div>}
