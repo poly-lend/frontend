@@ -18,21 +18,28 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { useState } from "react";
-import { usePublicClient, useWalletClient } from "wagmi";
+import { useEffect, useState } from "react";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+} from "wagmi";
 import TransferDialog from "../dialogs/transferDialog";
 import Address from "../widgets/address";
+import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
 
 export default function LenderLoansTable({
   lender,
   title,
   data,
+  onActionSuccess,
 }: {
   lender: `0x${string}`;
   data: AllLoanData;
   title?: string;
   borrower?: `0x${string}`;
+  onActionSuccess?: (successText: string) => void;
 }) {
   const [dataType, setDataType] = useState<"my" | "all">("my");
   const [transferringLoan, setTransferringLoan] = useState<{
@@ -52,24 +59,70 @@ export default function LenderLoansTable({
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
+  const [callingLoanId, setCallingLoanId] = useState<bigint | null>(null);
+  const [isCalling, setIsCalling] = useState(false);
+  const [callTxHash, setCallTxHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
+  const { isLoading: isCallConfirming, isSuccess: isCallConfirmed } =
+    useWaitForTransactionReceipt({ hash: callTxHash });
+
+  const [reclaimingLoanId, setReclaimingLoanId] = useState<bigint | null>(null);
+  const [isReclaiming, setIsReclaiming] = useState(false);
+  const [reclaimTxHash, setReclaimTxHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
+  const { isLoading: isReclaimConfirming, isSuccess: isReclaimConfirmed } =
+    useWaitForTransactionReceipt({ hash: reclaimTxHash });
+
+  useEffect(() => {
+    if (isCallConfirmed) {
+      onActionSuccess?.("Loan called successfully");
+      setCallingLoanId(null);
+      setCallTxHash(undefined);
+    }
+  }, [isCallConfirmed]);
+
+  useEffect(() => {
+    if (isReclaimConfirmed) {
+      onActionSuccess?.("Collateral reclaimed successfully");
+      setReclaimingLoanId(null);
+      setReclaimTxHash(undefined);
+    }
+  }, [isReclaimConfirmed]);
+
   const handleCall = async (loanId: bigint) => {
     if (!walletClient || !publicClient) return;
-    await walletClient.writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "call",
-      args: [loanId],
-    });
+    try {
+      setCallingLoanId(loanId);
+      setIsCalling(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "call",
+        args: [loanId],
+      });
+      setCallTxHash(hash);
+    } finally {
+      setIsCalling(false);
+    }
   };
 
   const handleReclaim = async (loanId: bigint) => {
     if (!walletClient || !publicClient) return;
-    await walletClient.writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "reclaim",
-      args: [loanId, true],
-    });
+    try {
+      setReclaimingLoanId(loanId);
+      setIsReclaiming(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "reclaim",
+        args: [loanId, true],
+      });
+      setReclaimTxHash(hash);
+    } finally {
+      setIsReclaiming(false);
+    }
   };
 
   return (
@@ -86,6 +139,7 @@ export default function LenderLoansTable({
           callTime={transferringLoan.callTime}
           open={transferringLoan !== null}
           close={() => setTransferringLoan(null)}
+          onSuccess={(text: string) => onActionSuccess?.(text)}
         />
       )}
 
@@ -174,30 +228,43 @@ export default function LenderLoansTable({
                   <div className="flex justify-end gap-2">
                     {dataType === "my" ? (
                       <>
-                        <Button
+                        <LoadingActionButton
                           variant="outlined"
                           color="primary"
                           disabled={
                             Number(loan.minimumDuration) -
                               (Date.now() / 1000 - Number(loan.startTime)) >=
-                              0 || Number(loan.callTime) > 0
+                              0 ||
+                            Number(loan.callTime) > 0 ||
+                            (callingLoanId === loan.loanId &&
+                              (isCalling || isCallConfirming))
                           }
                           onClick={() => handleCall(loan.loanId)}
+                          loading={
+                            callingLoanId === loan.loanId &&
+                            (isCalling || isCallConfirming)
+                          }
                         >
                           Call
-                        </Button>
-                        <Button
+                        </LoadingActionButton>
+                        <LoadingActionButton
                           variant="outlined"
                           color="primary"
                           disabled={
                             Number(loan.callTime) === 0 ||
                             Number(loan.callTime) + 24 * 60 * 60 >
-                              Number(Date.now() / 1000)
+                              Number(Date.now() / 1000) ||
+                            (reclaimingLoanId === loan.loanId &&
+                              (isReclaiming || isReclaimConfirming))
                           }
                           onClick={() => handleReclaim(loan.loanId)}
+                          loading={
+                            reclaimingLoanId === loan.loanId &&
+                            (isReclaiming || isReclaimConfirming)
+                          }
                         >
                           Reclaim
-                        </Button>
+                        </LoadingActionButton>
                       </>
                     ) : (
                       <>

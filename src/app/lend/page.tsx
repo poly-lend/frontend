@@ -75,7 +75,12 @@ export default function Lend() {
               handleRequestSuccess(successText)
             }
           />
-          <LenderLoansTable lender={address} title="Lender Loans" data={data} />
+          <LenderLoansTable
+            lender={address}
+            title="Lender Loans"
+            data={data}
+            onActionSuccess={(text: string) => handleRequestSuccess(text)}
+          />
         </>
       ) : (
         <ConnectWidget />
