@@ -1,38 +1,23 @@
-import { polylendAddress } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
-
 import { LoanOffer } from "@/types/polyLend";
 
 export const fetchOffers = async (params: {
   publicClient: any;
   address?: `0x${string}`;
 }): Promise<LoanOffer[]> => {
-  const calls = [];
-  for (var i = 0; i < 100; i++) {
-    calls.push({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "offers",
-      args: [i],
-    });
+  const url = `https://api.polylend.com/offers`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch offers: ${response.statusText}`);
   }
-  const offersData = await params.publicClient.multicall({
-    contracts: calls,
-  });
+  const offersData = await response.json();
 
-  let offers: LoanOffer[] = offersData
-    .map((offer: any, index: number) => ({
-      offerId: BigInt(offer.result[0]),
-      requestId: BigInt(offer.result[1]),
-      lender: offer.result[2] as `0x${string}`,
-      loanAmount: BigInt(offer.result[3]),
-      rate: BigInt(offer.result[4]),
-    }))
-
-    .filter(
-      (offer: LoanOffer) =>
-        offer.lender !== `0x0000000000000000000000000000000000000000`
-    );
+  let offers: LoanOffer[] = offersData.map((offer: any, index: number) => ({
+    offerId: BigInt(offer._id),
+    requestId: BigInt(offer.requestId),
+    lender: offer.lender as `0x${string}`,
+    loanAmount: BigInt(offer.loanAmount),
+    rate: BigInt(offer.rate),
+  }));
   if (params.address) {
     offers = offers.filter(
       (offer: LoanOffer) =>
