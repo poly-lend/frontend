@@ -16,44 +16,105 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Fragment, useState } from "react";
-import { usePublicClient, useWalletClient } from "wagmi";
+import { Fragment, useEffect, useState } from "react";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+} from "wagmi";
 import Address from "../widgets/address";
+import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
 
 export default function BorrowerRequestsTable({
   address,
   title,
   data,
+  onActionSuccess,
 }: {
   address?: `0x${string}`;
   title?: string;
   data: AllLoanData;
+  onActionSuccess?: (successText: string) => void;
 }) {
   const requests = data.requests;
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
+  const [cancellingRequestId, setCancellingRequestId] = useState<bigint | null>(
+    null
+  );
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelTxHash, setCancelTxHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
+  const { isLoading: isCancelConfirming, isSuccess: isCancelConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: cancelTxHash,
+    });
+
   const cancelRequest = async (requestId: bigint) => {
     if (!publicClient || !walletClient) return;
-    await walletClient.writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "cancelRequest",
-      args: [requestId],
-    });
+    try {
+      setCancellingRequestId(requestId);
+      setIsCancelling(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "cancelRequest",
+        args: [requestId],
+      });
+      setCancelTxHash(hash);
+    } finally {
+      setIsCancelling(false);
+    }
   };
+
+  const [acceptingOfferId, setAcceptingOfferId] = useState<bigint | null>(null);
+  const [isAccepting, setIsAccepting] = useState(false);
+  const [acceptTxHash, setAcceptTxHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
+  const { isLoading: isAcceptConfirming, isSuccess: isAcceptConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: acceptTxHash,
+    });
 
   const acceptOffer = async (offerId: bigint) => {
     if (!publicClient || !walletClient) return;
-    await walletClient.writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "accept",
-      args: [offerId],
-    });
+    try {
+      setAcceptingOfferId(offerId);
+      setIsAccepting(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "accept",
+        args: [offerId],
+      });
+      setAcceptTxHash(hash);
+    } finally {
+      setIsAccepting(false);
+    }
   };
+
+  useEffect(() => {
+    if (isCancelConfirmed) {
+      onActionSuccess?.("Request canceled successfully");
+      selectRequest(null);
+      setCancellingRequestId(null);
+      setCancelTxHash(undefined);
+    }
+  }, [isCancelConfirmed]);
+
+  useEffect(() => {
+    if (isAcceptConfirmed) {
+      onActionSuccess?.("Offer accepted successfully");
+      selectRequest(null);
+      setAcceptingOfferId(null);
+      setAcceptTxHash(undefined);
+    }
+  }, [isAcceptConfirmed]);
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center mt-8">
@@ -120,13 +181,17 @@ export default function BorrowerRequestsTable({
                           <ArrowDropDown />
                         )}
                       </Button>
-                      <Button
+                      <LoadingActionButton
                         variant="outlined"
                         color="error"
                         onClick={() => cancelRequest(request.requestId)}
+                        loading={
+                          cancellingRequestId === request.requestId &&
+                          (isCancelling || isCancelConfirming)
+                        }
                       >
                         Cancel
-                      </Button>
+                      </LoadingActionButton>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -147,7 +212,7 @@ export default function BorrowerRequestsTable({
                                 <TableCell align="right">Lender</TableCell>
                                 <TableCell align="right">Amount</TableCell>
                                 <TableCell align="right">Rate</TableCell>
-                                <TableCell align="right">Actions</TableCell>
+                                <TableCell align="center">Actions</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -172,14 +237,18 @@ export default function BorrowerRequestsTable({
                                   <TableCell align="right">
                                     {toAPYText(offer.rate)}
                                   </TableCell>
-                                  <TableCell align="right">
-                                    <Button
+                                  <TableCell align="center">
+                                    <LoadingActionButton
                                       variant="outlined"
                                       color="primary"
                                       onClick={() => acceptOffer(offer.offerId)}
+                                      loading={
+                                        acceptingOfferId === offer.offerId &&
+                                        (isAccepting || isAcceptConfirming)
+                                      }
                                     >
                                       Accept
-                                    </Button>
+                                    </LoadingActionButton>
                                   </TableCell>
                                 </TableRow>
                               ))}

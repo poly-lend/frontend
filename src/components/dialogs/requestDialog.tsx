@@ -184,7 +184,7 @@ export default function RequestDialog({
             loading={isApproving || isApprovalConfirming}
             disabled={!proxyAddress || isApproving || isApprovalConfirming}
           >
-            Request a Loan
+            Approve
           </LoadingActionButton>
         ) : (
           <LoadingActionButton

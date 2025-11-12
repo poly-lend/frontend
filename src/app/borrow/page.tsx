@@ -73,7 +73,7 @@ export default function Borrow() {
             severity="success"
             sx={{ width: "100%" }}
           >
-            Loan request submitted successfully
+            {successText || "Action completed successfully"}
           </Alert>
         </Snackbar>
         <ClientOnly>
@@ -85,6 +85,9 @@ export default function Borrow() {
                     address={address}
                     title="Borrower Requests"
                     data={data}
+                    onActionSuccess={(text: string) =>
+                      handleRequestSuccess(text)
+                    }
                   />
                   <BorrowerLoansTable
                     borrower={address}

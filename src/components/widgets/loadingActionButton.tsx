@@ -13,7 +13,7 @@ export default function LoadingActionButton({
   ...buttonProps
 }: LoadingActionButtonProps) {
   return (
-    <Box sx={{ m: 1, position: "relative" }}>
+    <Box sx={{ position: "relative" }}>
       <Button disabled={loading || disabled} {...buttonProps}>
         {children}
       </Button>
