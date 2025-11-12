@@ -88,6 +88,12 @@ export const polylendConfig = {
         { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
         {
           indexed: true,
+          internalType: "uint256",
+          name: "requestId",
+          type: "uint256",
+        },
+        {
+          indexed: true,
           internalType: "address",
           name: "lender",
           type: "address",
