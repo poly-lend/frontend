@@ -25,8 +25,8 @@ export default function Borrow() {
   }, [publicClient, walletClient, address]);
 
   return (
-    <div className="min-h-[calc(100vh-150px)] flex flex-col">
-      <Stack spacing={2} className="flex-1 pb-8">
+    <>
+      <Stack spacing={2}>
         <h1
           style={{
             fontSize: 36,
@@ -38,6 +38,17 @@ export default function Borrow() {
         >
           Borrow
         </h1>
+        <div className="flex justify-center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenRequestDialog(true)}
+            className="shadow-lg rounded-full w-fit"
+            size="large"
+          >
+            Request a loan
+          </Button>
+        </div>
         <RequestDialog
           open={openRequestDialog}
           close={() => setOpenRequestDialog(false)}
@@ -65,18 +76,6 @@ export default function Borrow() {
           )}
         </ClientOnly>
       </Stack>
-
-      <div className="flex justify-end px-2 pb-8">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenRequestDialog(true)}
-          className="shadow-lg rounded-full"
-          size="large"
-        >
-          Request a loan
-        </Button>
-      </div>
-    </div>
+    </>
   );
 }
