@@ -27,7 +27,7 @@ export default function OfferDialog({
     <Dialog open={open}>
       <DialogTitle>Offer for request {requestId.toString()}</DialogTitle>
       <DialogContent>
-        <Stack spacing={2}>
+        <Stack spacing={2} className="py-1.5">
           <TextField
             label="Loan Amount"
             type="number"

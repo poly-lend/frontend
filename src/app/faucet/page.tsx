@@ -40,7 +40,7 @@ export default function Faucet() {
   }, [isConfirmed, setBalanceRefresh]);
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={4}>
       <h1
         style={{
           fontSize: 36,
@@ -52,38 +52,44 @@ export default function Faucet() {
       >
         Faucet
       </h1>
-      <div>
-        <Input
-          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
-        />
-        <Button
-          variant="contained"
-          onClick={() => mintUSDC()}
-          disabled={isPending}
-        >
-          {isPending ? "Minting..." : "Mint pfUSDC"}
-        </Button>
-        {hash && (
-          <div>
-            Transaction Hash:{" "}
-            <a
-              style={{ color: "blue" }}
-              href={`https://polygonscan.com/tx/${hash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {hash}
-            </a>
-          </div>
-        )}
-        {isConfirming && <div>Waiting for confirmation...</div>}
-        {isConfirmed && <div>Transaction confirmed.</div>}
-        {error && (
-          <div>Error: {(error as BaseError).shortMessage || error.message}</div>
-        )}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <Input
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            placeholder="Amount"
+            value={amount}
+            onChange={(e) => setAmount(Number(e.target.value))}
+          />
+          <Button
+            variant="contained"
+            onClick={() => mintUSDC()}
+            disabled={isPending}
+          >
+            {isPending ? "Minting..." : "Mint pfUSDC"}
+          </Button>
+        </div>
+        <div>
+          {isConfirming && <div>Waiting for confirmation...</div>}
+          {isConfirmed && <div>Transaction confirmed.</div>}
+          {error && (
+            <div>
+              Error: {(error as BaseError).shortMessage || error.message}
+            </div>
+          )}
+          {hash && (
+            <div>
+              Transaction Hash:{" "}
+              <a
+                className="text-blue-500"
+                href={`https://polygonscan.com/tx/${hash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {hash}
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     </Stack>
   );

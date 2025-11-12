@@ -62,7 +62,7 @@ export default function RepayDialog({ loanId, open, close }: RepayDialogProps) {
     <Dialog open={open}>
       <DialogTitle>Repay Loan {loanId.toString()}</DialogTitle>
       <DialogContent>
-        <Stack spacing={2}>
+        <Stack spacing={2} className="py-1.5">
           <TextField
             label="Loan ID"
             type="number"

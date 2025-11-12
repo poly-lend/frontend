@@ -32,10 +32,20 @@ export default function Lend() {
       >
         Lend
       </h1>
-      {data && <LenderRequestsTable title="All Requests" data={data} />}
+      {data && (
+        <LenderRequestsTable
+          title="All Requests"
+          data={data}
+          userAddress={address as `0x${string}`}
+        />
+      )}
       {address && data ? (
         <>
-          <LenderOffersTable title="Lender Offers" data={data} />
+          <LenderOffersTable
+            title="Lender Offers"
+            data={data}
+            userAddress={address as `0x${string}`}
+          />
           <LenderLoansTable lender={address} title="Lender Loans" data={data} />
         </>
       ) : (

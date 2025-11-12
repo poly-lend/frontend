@@ -1,7 +1,8 @@
 import { polylendAddress, usdcAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
-import { toSPYWAI } from "@/utils/convertors";
+import { calculateMaxTransferRate } from "@/utils/calculations";
+import { toAPYText, toSPYWAI } from "@/utils/convertors";
 import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
 import {
   Button,
@@ -67,18 +68,27 @@ export default function TransferDialog({
     });
     close();
   };
-
+  const maxTransferRate = calculateMaxTransferRate(callTime);
+  console.log("maxTransferRate", maxTransferRate);
   return (
     <Dialog open={open}>
       <DialogTitle>Transfer Loan {loanId.toString()}</DialogTitle>
+
       <DialogContent>
-        <Stack spacing={2}>
-          <TextField
-            label="New rate (APY)"
-            type="number"
-            value={newRate}
-            onChange={(e) => setNewRate(Number(e.target.value))}
-          />
+        <Stack spacing={2} className="py-1.5">
+          <div>
+            <TextField
+              label="New rate (APY)"
+              type="number"
+              value={newRate}
+              onChange={(e) => setNewRate(Number(e.target.value))}
+              className="text-gray-100"
+            />
+            <p className="text-sm text-gray-400 font-medium mt-0.5">
+              Current max rate: {toAPYText(maxTransferRate)}
+            </p>
+          </div>
+
           <Button variant="contained" color="primary" onClick={handleApproval}>
             Approve
           </Button>

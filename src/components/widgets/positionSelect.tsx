@@ -1,5 +1,5 @@
 import { Position } from "@/types/polymarketPosition";
-import { MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 export default function PositionSelect({
@@ -27,37 +27,39 @@ export default function PositionSelect({
     staleTime: 60_000,
   });
   return (
-    <Select
-      label="Select a position"
-      style={{ width: "100%" }}
-      value={selectedPosition ? selectedPosition.asset.toString() : ""}
-      onChange={(e) => {
-        const selectedAsset = String(e.target.value);
-        const position =
-          positions?.find(
-            (position) => position.asset.toString() === selectedAsset
-          ) ?? null;
-        selectPosition(position);
-      }}
-    >
-      <MenuItem value="" disabled>
-        Select a position
-      </MenuItem>
-      {positions?.map((position) => (
-        <MenuItem
-          key={position.asset.toString()}
-          value={position.asset.toString()}
-        >
-          <img
-            src={position.icon}
-            alt={position.title}
-            width={50}
-            height={50}
-          />
-          <h3>{position.title}</h3>
-          <p>{position.currentValue.toFixed(2)}</p>
-        </MenuItem>
-      ))}
-    </Select>
+    <FormControl fullWidth>
+      <InputLabel id="position-select-label">Select Position</InputLabel>
+      <Select
+        labelId="position-select-label"
+        variant="outlined"
+        label="Select Position"
+        value={selectedPosition?.asset.toString() ?? ""}
+        onChange={(e) => {
+          const selectedAsset = String(e.target.value);
+          const position =
+            positions?.find(
+              (position) => position.asset.toString() === selectedAsset
+            ) ?? null;
+          selectPosition(position);
+        }}
+      >
+        {positions?.map((position) => (
+          <MenuItem
+            key={position.asset.toString()}
+            value={position.asset.toString()}
+            className="flex items-center gap-2"
+          >
+            <img
+              src={position.icon}
+              alt={position.title}
+              width={50}
+              height={50}
+            />
+            <h3>{position.title}</h3>
+            <p>{position.currentValue.toFixed(2)}</p>
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }

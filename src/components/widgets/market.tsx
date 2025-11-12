@@ -7,14 +7,14 @@ const Market = ({ market }: { market: any }) => {
     <Link
       href={`https://polymarket.com/event/${market.event.slug}`}
       target="_blank"
-      className="flex items-start gap-1"
+      className="flex items-center"
     >
       <img
         width={40}
         height={40}
         src={market.market.icon}
         alt={market.market.question}
-        className="rounded-full"
+        className="rounded-full mr-2"
       />
 
       <div className="text-sm text-left max-w-[300px] line-clamp-2">
@@ -22,7 +22,6 @@ const Market = ({ market }: { market: any }) => {
       </div>
 
       <Chip
-        className="mt-2"
         label={market.outcome}
         size="small"
         color={market.outcome === "Yes" ? "success" : "error"}

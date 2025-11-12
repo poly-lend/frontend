@@ -68,7 +68,7 @@ export default function LenderLoansTable({
       address: polylendAddress as `0x${string}`,
       abi: polylendConfig.abi,
       functionName: "reclaim",
-      args: [loanId, false],
+      args: [loanId, true],
     });
   };
 
@@ -110,14 +110,14 @@ export default function LenderLoansTable({
             <TableRow>
               <TableCell align="center">Borrower</TableCell>
               <TableCell align="center">Market</TableCell>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Shares</TableCell>
-              <TableCell align="center">Collateral</TableCell>
-              <TableCell align="center">Lent</TableCell>
-              <TableCell align="center">Owed</TableCell>
-              <TableCell align="center">Duration</TableCell>
-              <TableCell align="center">Time Left</TableCell>
-              <TableCell align="center">Rate</TableCell>
+              <TableCell align="right">Status</TableCell>
+              <TableCell align="right">Shares</TableCell>
+              <TableCell align="right">Collateral</TableCell>
+              <TableCell align="right">Lent</TableCell>
+              <TableCell align="right">Owed</TableCell>
+              <TableCell align="right">Duration</TableCell>
+              <TableCell align="right">Time Left</TableCell>
+              <TableCell align="right">Rate</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -130,7 +130,7 @@ export default function LenderLoansTable({
                 <TableCell align="center">
                   <Market market={loan.market} />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="right">
                   {loan.callTime > 0 ? "Called" : "Active"}
                 </TableCell>
                 <TableCell align="right">
@@ -170,7 +170,7 @@ export default function LenderLoansTable({
                       )}
                 </TableCell>
                 <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <div className="flex justify-end gap-2">
                     {dataType === "my" ? (
                       <>

@@ -26,11 +26,16 @@ import Market from "../widgets/market";
 export default function RequestsListTable({
   title,
   data,
+  userAddress,
 }: {
   title?: string;
   data: AllLoanData;
+  userAddress: `0x${string}`;
 }) {
-  const requests = data.requests;
+  let requests = data.requests;
+  requests = requests.filter(
+    (request: LoanRequest) => request.borrower !== userAddress
+  );
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
@@ -90,10 +95,10 @@ export default function RequestsListTable({
               <TableRow>
                 <TableCell align="center">Borrower</TableCell>
                 <TableCell align="center">Market</TableCell>
-                <TableCell align="center">Shares</TableCell>
-                <TableCell align="center">Collateral</TableCell>
-                <TableCell align="center">Duration</TableCell>
-                <TableCell align="center">Offers</TableCell>
+                <TableCell align="right">Shares</TableCell>
+                <TableCell align="right">Collateral</TableCell>
+                <TableCell align="right">Duration</TableCell>
+                <TableCell align="right">Offers</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -119,7 +124,7 @@ export default function RequestsListTable({
                     {toDuration(Number(request.minimumDuration))}
                   </TableCell>
                   <TableCell align="right">{request.offers.length}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <Button
                       variant="outlined"
                       color="primary"

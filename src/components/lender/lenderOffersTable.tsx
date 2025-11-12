@@ -22,11 +22,14 @@ import Market from "../widgets/market";
 export default function LenderOffersTable({
   title,
   data,
+  userAddress,
 }: {
   title?: string;
   data: AllLoanData;
+  userAddress: `0x${string}`;
 }) {
-  const offers = data.offers;
+  let offers = data.offers;
+  offers = offers.filter((offer) => offer.lender === userAddress);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const cancelOffer = async (offerId: bigint) => {
@@ -55,11 +58,11 @@ export default function LenderOffersTable({
             <TableRow>
               <TableCell align="center">Lender</TableCell>
               <TableCell align="center">Market</TableCell>
-              <TableCell align="center">Shares</TableCell>
-              <TableCell align="center">Collateral</TableCell>
-              <TableCell align="center">Amount</TableCell>
-              <TableCell align="center">Duration</TableCell>
-              <TableCell align="center">Rate</TableCell>
+              <TableCell align="right">Shares</TableCell>
+              <TableCell align="right">Collateral</TableCell>
+              <TableCell align="right">Amount</TableCell>
+              <TableCell align="right">Duration</TableCell>
+              <TableCell align="right">Rate</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -88,7 +91,7 @@ export default function LenderOffersTable({
                   {toDuration(Number(offer.request!.minimumDuration))}
                 </TableCell>
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                   <Button
                     variant="outlined"
                     color="error"
