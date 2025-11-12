@@ -22,11 +22,14 @@ import Market from "../widgets/market";
 export default function LenderOffersTable({
   title,
   data,
+  userAddress,
 }: {
   title?: string;
   data: AllLoanData;
+  userAddress: `0x${string}`;
 }) {
-  const offers = data.offers;
+  let offers = data.offers;
+  offers = offers.filter((offer) => offer.lender === userAddress);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const cancelOffer = async (offerId: bigint) => {

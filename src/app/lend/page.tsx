@@ -41,7 +41,11 @@ export default function Lend() {
       )}
       {address && data ? (
         <>
-          <LenderOffersTable title="Lender Offers" data={data} />
+          <LenderOffersTable
+            title="Lender Offers"
+            data={data}
+            userAddress={address as `0x${string}`}
+          />
           <LenderLoansTable lender={address} title="Lender Loans" data={data} />
         </>
       ) : (
