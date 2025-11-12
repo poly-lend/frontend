@@ -34,7 +34,7 @@ export default function LenderLoansTable({
   title?: string;
   borrower?: `0x${string}`;
 }) {
-  const [dataType, setDataType] = useState<"my" | "others">("my");
+  const [dataType, setDataType] = useState<"my" | "all">("my");
   const [transferringLoan, setTransferringLoan] = useState<{
     loanId: bigint;
     callTime: bigint;
@@ -99,7 +99,7 @@ export default function LenderLoansTable({
         aria-label="text alignment"
       >
         <ToggleButton value="my">My Loans</ToggleButton>
-        <ToggleButton value="others">Other's Loans</ToggleButton>
+        <ToggleButton value="all">All Loans</ToggleButton>
       </ToggleButtonGroup>
       {loans.length === 0 && (
         <div className="text-center mt-4">No loans found</div>
