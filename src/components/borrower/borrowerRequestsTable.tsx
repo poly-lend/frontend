@@ -167,7 +167,7 @@ export default function BorrowerRequestsTable({
                                     <Address address={offer.lender} />
                                   </TableCell>
                                   <TableCell align="right">
-                                    {toUSDCString(offer.loanAmount)} USDC
+                                    {toUSDCString(offer.loanAmount)}
                                   </TableCell>
                                   <TableCell align="right">
                                     {toAPYText(offer.rate)}
