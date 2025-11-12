@@ -5,11 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 export default function PositionSelect({
   address,
   selectedPosition,
-  selectPosition,
+  onPositionSelect,
 }: {
   address: string;
   selectedPosition: Position | null;
-  selectPosition: (position: Position | null) => void;
+  onPositionSelect: (position: Position | null) => void;
 }) {
   const {
     data: positions,
@@ -40,7 +40,7 @@ export default function PositionSelect({
             positions?.find(
               (position) => position.asset.toString() === selectedAsset
             ) ?? null;
-          selectPosition(position);
+          onPositionSelect(position);
         }}
       >
         {positions?.map((position) => (

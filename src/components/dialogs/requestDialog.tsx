@@ -5,18 +5,26 @@ import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
 import {
+  Alert,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
   Stack,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
-import { usePublicClient, useWalletClient } from "wagmi";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+  useWriteContract,
+} from "wagmi";
 import PositionSelect from "../widgets/positionSelect";
 
 export default function RequestDialog({
@@ -26,12 +34,30 @@ export default function RequestDialog({
   open: boolean;
   close: () => void;
 }) {
-  const { data: proxyAddress } = useProxyAddress();
-  const [selectedPosition, selectPosition] = useState<Position | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<Position | null>(
+    null
+  );
   const [shares, setShares] = useState(0);
   const [minimumDuration, setMinimumDuration] = useState(10);
+  const [isApproving, setIsApproving] = useState(false);
+  const [approvalTxHash, setApprovalTxHash] = useState<
+    `0x${string}` | undefined
+  >(undefined);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const { data: proxyAddress } = useProxyAddress();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+  const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: approvalTxHash,
+    });
 
   const value = selectedPosition ? shares * selectedPosition.curPrice : 0;
 
@@ -41,9 +67,25 @@ export default function RequestDialog({
     }
   }, [selectedPosition]);
 
+  // Reset UI state whenever dialog opens
+  useEffect(() => {
+    if (open) {
+      setIsApproving(false);
+      setApprovalTxHash(undefined);
+      setSnackbarOpen(false);
+    }
+  }, [open]);
+
+  // Show success snackbar when loan request confirms
+  useEffect(() => {
+    if (isConfirmed) {
+      setSnackbarOpen(true);
+    }
+  }, [isConfirmed]);
+
   const requestLoan = async () => {
     if (!walletClient || !publicClient || !selectedPosition) return;
-    walletClient.writeContract({
+    writeContract({
       address: polylendAddress as `0x${string}`,
       abi: polylendConfig.abi,
       functionName: "request",
@@ -58,19 +100,25 @@ export default function RequestDialog({
 
   const giveApproval = async () => {
     if (!walletClient || !publicClient || !proxyAddress) return;
-    await execSafeTransaction({
-      safe: proxyAddress as `0x${string}`,
-      tx: {
-        to: polymarketTokensAddress as `0x${string}`,
-        data: encodeFunctionData({
-          abi: polymarketTokensConfig.abi,
-          functionName: "setApprovalForAll",
-          args: [polylendAddress as `0x${string}`, true],
-        }),
-      },
-      walletClient,
-      publicClient,
-    });
+    try {
+      setIsApproving(true);
+      const { hash } = await execSafeTransaction({
+        safe: proxyAddress as `0x${string}`,
+        tx: {
+          to: polymarketTokensAddress as `0x${string}`,
+          data: encodeFunctionData({
+            abi: polymarketTokensConfig.abi,
+            functionName: "setApprovalForAll",
+            args: [polylendAddress as `0x${string}`, true],
+          }),
+        },
+        walletClient,
+        publicClient,
+      });
+      setApprovalTxHash(hash);
+    } finally {
+      setIsApproving(false);
+    }
   };
 
   const handleSharesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,30 +136,28 @@ export default function RequestDialog({
             <PositionSelect
               address={proxyAddress}
               selectedPosition={selectedPosition}
-              selectPosition={selectPosition}
+              onPositionSelect={setSelectedPosition}
             />
           )}
 
-          {selectedPosition && (
-            <>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Shares"
-                  value={shares}
-                  onChange={handleSharesChange}
-                />
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Value"
-                  value={value.toFixed(2)}
-                  disabled
-                />
-              </Box>
-            </>
-          )}
+          <>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <TextField
+                fullWidth
+                type="number"
+                label="Shares"
+                value={shares}
+                onChange={handleSharesChange}
+              />
+              <TextField
+                fullWidth
+                type="number"
+                label="Value"
+                value={value.toFixed(2)}
+                disabled
+              />
+            </Box>
+          </>
 
           <TextField
             fullWidth
@@ -131,23 +177,70 @@ export default function RequestDialog({
         >
           Cancel
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={giveApproval}
-          disabled={!selectedPosition}
-        >
-          Give Approval
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={requestLoan}
-          disabled={!selectedPosition || shares <= 0}
-        >
-          Request a Loan
-        </Button>
+        {!isApprovalConfirmed ? (
+          <Box sx={{ m: 1, position: "relative" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={giveApproval}
+              disabled={!proxyAddress || isApproving || isApprovalConfirming}
+            >
+              Give Approval
+            </Button>
+            {(isApproving || isApprovalConfirming) && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Box>
+        ) : (
+          <Box sx={{ m: 1, position: "relative" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={requestLoan}
+              disabled={
+                !selectedPosition || shares <= 0 || isPending || isConfirming
+              }
+            >
+              Request a Loan
+            </Button>
+            {(isPending || isConfirming) && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Box>
+        )}
       </DialogActions>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Loan request submitted successfully
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 }
