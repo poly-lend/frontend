@@ -71,6 +71,9 @@ export default function Lend() {
             title="Lender Offers"
             data={data}
             userAddress={address as `0x${string}`}
+            onCancelOfferSuccess={(successText: string) =>
+              handleRequestSuccess(successText)
+            }
           />
           <LenderLoansTable lender={address} title="Lender Loans" data={data} />
         </>
