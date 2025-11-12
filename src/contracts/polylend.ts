@@ -12,6 +12,7 @@ export const polylendConfig = {
         },
         { internalType: "address", name: "_usdc", type: "address" },
         { internalType: "address", name: "_safeProxyFactory", type: "address" },
+        { internalType: "address", name: "_feeRecipient", type: "address" },
       ],
       stateMutability: "nonpayable",
       type: "constructor",
@@ -65,6 +66,14 @@ export const polylendConfig = {
       anonymous: false,
       inputs: [
         { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
+      ],
+      name: "LoanOfferCanceled",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
         {
           indexed: true,
           internalType: "address",
@@ -98,14 +107,17 @@ export const polylendConfig = {
     {
       anonymous: false,
       inputs: [
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "id",
-          type: "uint256",
-        },
+        { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
       ],
       name: "LoanRepaid",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
+      ],
+      name: "LoanRequestCanceled",
       type: "event",
     },
     {
@@ -186,7 +198,21 @@ export const polylendConfig = {
     },
     {
       inputs: [],
+      name: "FEE_PERCENT",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
       name: "MAX_INTEREST",
+      outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "ONE_HUNDRED_PERCENT",
       outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
       stateMutability: "view",
       type: "function",
@@ -238,6 +264,13 @@ export const polylendConfig = {
           type: "address",
         },
       ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "feeRecipient",
+      outputs: [{ internalType: "address", name: "", type: "address" }],
       stateMutability: "view",
       type: "function",
     },
