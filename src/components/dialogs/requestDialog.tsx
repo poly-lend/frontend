@@ -37,7 +37,7 @@ export default function RequestDialog({
 
   useEffect(() => {
     if (selectedPosition) {
-      setShares(selectedPosition.totalBought);
+      setShares(selectedPosition.size);
     }
   }, [selectedPosition]);
 
