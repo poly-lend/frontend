@@ -1,6 +1,9 @@
 export default async function fetchMarkets(
   tokenIds: string[]
 ): Promise<Map<string, any>> {
+  if (tokenIds.length === 0) {
+    return new Map<string, any>();
+  }
   const params = tokenIds
     .map((tokenId) => `clob_token_ids=${tokenId}`)
     .join("&");
