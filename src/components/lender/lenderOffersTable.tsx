@@ -8,38 +8,72 @@ import {
   toUSDCString,
 } from "@/utils/convertors";
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from "@mui/material";
-import { usePublicClient, useWalletClient } from "wagmi";
+import { useEffect, useState } from "react";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+} from "wagmi";
 import Address from "../widgets/address";
+import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
 
 export default function LenderOffersTable({
   title,
   data,
   userAddress,
+  onCancelOfferSuccess,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
+  onCancelOfferSuccess?: (successText: string) => void;
 }) {
   let offers = data.offers;
   offers = offers.filter((offer) => offer.lender === userAddress);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
+  const [cancellingOfferId, setCancellingOfferId] = useState<bigint | null>(
+    null
+  );
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelTxHash, setCancelTxHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
+  const { isLoading: isCancelConfirming, isSuccess: isCancelConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: cancelTxHash,
+    });
+
+  useEffect(() => {
+    if (isCancelConfirmed) {
+      onCancelOfferSuccess?.("Offer canceled successfully");
+      setCancellingOfferId(null);
+      setCancelTxHash(undefined);
+    }
+  }, [isCancelConfirmed]);
+
   const cancelOffer = async (offerId: bigint) => {
     if (!publicClient || !walletClient) return;
-    await walletClient.writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "cancelOffer",
-      args: [offerId],
-    });
+    try {
+      setCancellingOfferId(offerId);
+      setIsCancelling(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "cancelOffer",
+        args: [offerId],
+      });
+      setCancelTxHash(hash);
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
   return (
@@ -92,13 +126,17 @@ export default function LenderOffersTable({
                 </TableCell>
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                 <TableCell align="center">
-                  <Button
+                  <LoadingActionButton
                     variant="outlined"
                     color="error"
                     onClick={() => cancelOffer(offer.offerId)}
+                    loading={
+                      cancellingOfferId === offer.offerId &&
+                      (isCancelling || isCancelConfirming)
+                    }
                   >
                     Cancel
-                  </Button>
+                  </LoadingActionButton>
                 </TableCell>
               </TableRow>
             ))}

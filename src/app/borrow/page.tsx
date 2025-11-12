@@ -7,13 +7,14 @@ import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
 import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
-import { Button, Stack } from "@mui/material";
+import { Alert, Button, Snackbar, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function Borrow() {
   const [data, setData] = useState<AllLoanData | null>(null);
   const [openRequestDialog, setOpenRequestDialog] = useState(false);
+  const [successText, setSuccessText] = useState("");
 
   const { address } = useAccount();
   const publicClient = usePublicClient();
@@ -23,6 +24,13 @@ export default function Borrow() {
     if (!publicClient || !walletClient) return;
     fetchData({ publicClient, borrower: address }).then(setData);
   }, [publicClient, walletClient, address]);
+
+  const handleRequestSuccess = async (successText: string) => {
+    setSuccessText(successText);
+    if (!publicClient || !walletClient) return;
+    const fresh = await fetchData({ publicClient, borrower: address });
+    setData(fresh);
+  };
 
   return (
     <>
@@ -52,7 +60,22 @@ export default function Borrow() {
         <RequestDialog
           open={openRequestDialog}
           close={() => setOpenRequestDialog(false)}
+          onSuccess={(successText: string) => handleRequestSuccess(successText)}
         />
+        <Snackbar
+          open={!!successText}
+          autoHideDuration={4000}
+          onClose={() => setSuccessText("")}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setSuccessText("")}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Loan request submitted successfully
+          </Alert>
+        </Snackbar>
         <ClientOnly>
           {address ? (
             <>

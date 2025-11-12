@@ -16,22 +16,47 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
-import { usePublicClient, useWalletClient } from "wagmi";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+  useWriteContract,
+} from "wagmi";
+import LoadingActionButton from "../widgets/loadingActionButton";
 import PositionSelect from "../widgets/positionSelect";
 
 export default function RequestDialog({
   open,
   close,
+  onSuccess,
 }: {
   open: boolean;
   close: () => void;
+  onSuccess?: (successText: string) => void;
 }) {
-  const { data: proxyAddress } = useProxyAddress();
-  const [selectedPosition, selectPosition] = useState<Position | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<Position | null>(
+    null
+  );
   const [shares, setShares] = useState(0);
   const [minimumDuration, setMinimumDuration] = useState(10);
+  const [isApproving, setIsApproving] = useState(false);
+  const [approvalTxHash, setApprovalTxHash] = useState<
+    `0x${string}` | undefined
+  >(undefined);
+
+  const { data: proxyAddress } = useProxyAddress();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+  const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: approvalTxHash,
+    });
 
   const value = selectedPosition ? shares * selectedPosition.curPrice : 0;
 
@@ -41,9 +66,25 @@ export default function RequestDialog({
     }
   }, [selectedPosition]);
 
+  // Reset UI state whenever dialog opens
+  useEffect(() => {
+    if (open) {
+      setIsApproving(false);
+      setApprovalTxHash(undefined);
+    }
+  }, [open]);
+
+  // When loan request confirms: close dialog and notify parent
+  useEffect(() => {
+    if (isConfirmed) {
+      close();
+      onSuccess?.("Loan request submitted successfully");
+    }
+  }, [isConfirmed]);
+
   const requestLoan = async () => {
     if (!walletClient || !publicClient || !selectedPosition) return;
-    walletClient.writeContract({
+    writeContract({
       address: polylendAddress as `0x${string}`,
       abi: polylendConfig.abi,
       functionName: "request",
@@ -58,19 +99,25 @@ export default function RequestDialog({
 
   const giveApproval = async () => {
     if (!walletClient || !publicClient || !proxyAddress) return;
-    await execSafeTransaction({
-      safe: proxyAddress as `0x${string}`,
-      tx: {
-        to: polymarketTokensAddress as `0x${string}`,
-        data: encodeFunctionData({
-          abi: polymarketTokensConfig.abi,
-          functionName: "setApprovalForAll",
-          args: [polylendAddress as `0x${string}`, true],
-        }),
-      },
-      walletClient,
-      publicClient,
-    });
+    try {
+      setIsApproving(true);
+      const { hash } = await execSafeTransaction({
+        safe: proxyAddress as `0x${string}`,
+        tx: {
+          to: polymarketTokensAddress as `0x${string}`,
+          data: encodeFunctionData({
+            abi: polymarketTokensConfig.abi,
+            functionName: "setApprovalForAll",
+            args: [polylendAddress as `0x${string}`, true],
+          }),
+        },
+        walletClient,
+        publicClient,
+      });
+      setApprovalTxHash(hash);
+    } finally {
+      setIsApproving(false);
+    }
   };
 
   const handleSharesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,30 +135,28 @@ export default function RequestDialog({
             <PositionSelect
               address={proxyAddress}
               selectedPosition={selectedPosition}
-              selectPosition={selectPosition}
+              onPositionSelect={setSelectedPosition}
             />
           )}
 
-          {selectedPosition && (
-            <>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Shares"
-                  value={shares}
-                  onChange={handleSharesChange}
-                />
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Value"
-                  value={value.toFixed(2)}
-                  disabled
-                />
-              </Box>
-            </>
-          )}
+          <>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <TextField
+                fullWidth
+                type="number"
+                label="Shares"
+                value={shares}
+                onChange={handleSharesChange}
+              />
+              <TextField
+                fullWidth
+                type="number"
+                label="Value"
+                value={value.toFixed(2)}
+                disabled
+              />
+            </Box>
+          </>
 
           <TextField
             fullWidth
@@ -131,22 +176,29 @@ export default function RequestDialog({
         >
           Cancel
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={giveApproval}
-          disabled={!selectedPosition}
-        >
-          Give Approval
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={requestLoan}
-          disabled={!selectedPosition || shares <= 0}
-        >
-          Request a Loan
-        </Button>
+        {!isApprovalConfirmed ? (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={giveApproval}
+            loading={isApproving || isApprovalConfirming}
+            disabled={!proxyAddress || isApproving || isApprovalConfirming}
+          >
+            Request a Loan
+          </LoadingActionButton>
+        ) : (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={requestLoan}
+            loading={isPending || isConfirming}
+            disabled={
+              !selectedPosition || shares <= 0 || isPending || isConfirming
+            }
+          >
+            Request a Loan
+          </LoadingActionButton>
+        )}
       </DialogActions>
     </Dialog>
   );

@@ -1,13 +1,5 @@
-import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
-import { usdcConfig } from "@/contracts/usdc";
 import { AllLoanData, LoanRequest } from "@/types/polyLend";
-import {
-  toDuration,
-  toSharesText,
-  toSPYWAI,
-  toUSDCString,
-} from "@/utils/convertors";
+import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 
 import {
   Button,
@@ -18,7 +10,6 @@ import {
   TableRow,
 } from "@mui/material";
 import { useState } from "react";
-import { usePublicClient, useWalletClient } from "wagmi";
 import OfferDialog from "../dialogs/offerDialog";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
@@ -27,48 +18,31 @@ export default function RequestsListTable({
   title,
   data,
   userAddress,
+  onRequestSuccess,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
+  onRequestSuccess?: (successText: string) => void;
 }) {
   let requests = data.requests;
   requests = requests.filter(
     (request: LoanRequest) => request.borrower !== userAddress
   );
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
 
-  const handleApproval = async (amount: number) => {
-    if (!publicClient || !walletClient) return;
-    await walletClient.writeContract({
-      address: usdcAddress as `0x${string}`,
-      abi: usdcConfig.abi,
-      functionName: "approve",
-      args: [polylendAddress, BigInt(amount * 10 ** usdcDecimals)],
-    });
-  };
-
-  const handleOffer = async (
-    requestId: bigint,
-    rate: number,
-    loanAmount: number
-  ) => {
-    if (!publicClient || !walletClient) return;
-    const rateInSPY = toSPYWAI(rate / 100);
-    const loanAmountInUSDC = loanAmount * 10 ** usdcDecimals;
-    await walletClient.writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "offer",
-      args: [requestId, BigInt(loanAmountInUSDC), rateInSPY],
-    });
+  const [openOfferDialog, setOpenOfferDialog] = useState<boolean>(false);
+  const closeOfferDialog = () => {
     setOpenOfferDialog(false);
     selectRequest(null);
   };
 
-  const [openOfferDialog, setOpenOfferDialog] = useState<boolean>(false);
+  const handleOfferSuccess = async (successText: string) => {
+    onRequestSuccess?.(successText);
+    setOpenOfferDialog(false);
+    selectRequest(null);
+  };
+
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center mt-8">
@@ -80,14 +54,12 @@ export default function RequestsListTable({
         <>
           {selectedRequest && (
             <OfferDialog
+              onSuccess={(successText: string) =>
+                handleOfferSuccess(successText)
+              }
               requestId={selectedRequest.requestId}
               open={openOfferDialog}
-              handleOffer={handleOffer}
-              handleApproval={handleApproval}
-              handleCancel={() => {
-                setOpenOfferDialog(false);
-                selectRequest(null);
-              }}
+              close={closeOfferDialog}
             />
           )}
           <Table size="small">
