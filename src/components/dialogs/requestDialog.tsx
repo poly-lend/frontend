@@ -32,7 +32,7 @@ export default function RequestDialog({
 }: {
   open: boolean;
   close: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (successText: string) => void;
 }) {
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(
     null
@@ -78,7 +78,7 @@ export default function RequestDialog({
   useEffect(() => {
     if (isConfirmed) {
       close();
-      onSuccess?.();
+      onSuccess?.("Loan request submitted successfully");
     }
   }, [isConfirmed]);
 

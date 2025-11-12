@@ -18,10 +18,12 @@ export default function RequestsListTable({
   title,
   data,
   userAddress,
+  onRequestSuccess,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
+  onRequestSuccess?: (successText: string) => void;
 }) {
   let requests = data.requests;
   requests = requests.filter(
@@ -34,6 +36,13 @@ export default function RequestsListTable({
     setOpenOfferDialog(false);
     selectRequest(null);
   };
+
+  const handleOfferSuccess = async (successText: string) => {
+    onRequestSuccess?.(successText);
+    setOpenOfferDialog(false);
+    selectRequest(null);
+  };
+
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center mt-8">
@@ -45,6 +54,9 @@ export default function RequestsListTable({
         <>
           {selectedRequest && (
             <OfferDialog
+              onSuccess={(successText: string) =>
+                handleOfferSuccess(successText)
+              }
               requestId={selectedRequest.requestId}
               open={openOfferDialog}
               close={closeOfferDialog}

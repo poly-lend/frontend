@@ -27,7 +27,7 @@ export default function OfferDialog({
   requestId: bigint;
   open: boolean;
   close: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (successText: string) => void;
 }) {
   const [loanAmount, setLoanAmount] = useState(0);
   const [rate, setRate] = useState(0);
@@ -67,7 +67,7 @@ export default function OfferDialog({
   useEffect(() => {
     if (isOfferConfirmed) {
       close();
-      onSuccess?.();
+      onSuccess?.("Offer submitted successfully");
     }
   }, [isOfferConfirmed]);
 

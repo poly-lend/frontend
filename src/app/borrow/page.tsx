@@ -14,7 +14,7 @@ import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 export default function Borrow() {
   const [data, setData] = useState<AllLoanData | null>(null);
   const [openRequestDialog, setOpenRequestDialog] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [successText, setSuccessText] = useState("");
 
   const { address } = useAccount();
   const publicClient = usePublicClient();
@@ -25,8 +25,8 @@ export default function Borrow() {
     fetchData({ publicClient, borrower: address }).then(setData);
   }, [publicClient, walletClient, address]);
 
-  const handleRequestSuccess = async () => {
-    setSnackbarOpen(true);
+  const handleRequestSuccess = async (successText: string) => {
+    setSuccessText(successText);
     if (!publicClient || !walletClient) return;
     const fresh = await fetchData({ publicClient, borrower: address });
     setData(fresh);
@@ -60,16 +60,16 @@ export default function Borrow() {
         <RequestDialog
           open={openRequestDialog}
           close={() => setOpenRequestDialog(false)}
-          onSuccess={handleRequestSuccess}
+          onSuccess={(successText: string) => handleRequestSuccess(successText)}
         />
         <Snackbar
-          open={snackbarOpen}
+          open={!!successText}
           autoHideDuration={4000}
-          onClose={() => setSnackbarOpen(false)}
+          onClose={() => setSuccessText("")}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <Alert
-            onClose={() => setSnackbarOpen(false)}
+            onClose={() => setSuccessText("")}
             severity="success"
             sx={{ width: "100%" }}
           >
