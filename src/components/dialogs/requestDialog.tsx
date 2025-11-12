@@ -7,7 +7,6 @@ import { execSafeTransaction } from "@/utils/proxy";
 import {
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,6 +22,7 @@ import {
   useWalletClient,
   useWriteContract,
 } from "wagmi";
+import LoadingActionButton from "../widgets/loadingActionButton";
 import PositionSelect from "../widgets/positionSelect";
 
 export default function RequestDialog({
@@ -177,53 +177,27 @@ export default function RequestDialog({
           Cancel
         </Button>
         {!isApprovalConfirmed ? (
-          <Box sx={{ m: 1, position: "relative" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={giveApproval}
-              disabled={!proxyAddress || isApproving || isApprovalConfirming}
-            >
-              Give Approval
-            </Button>
-            {(isApproving || isApprovalConfirming) && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </Box>
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={giveApproval}
+            loading={isApproving || isApprovalConfirming}
+            disabled={!proxyAddress || isApproving || isApprovalConfirming}
+          >
+            Request a Loan
+          </LoadingActionButton>
         ) : (
-          <Box sx={{ m: 1, position: "relative" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={requestLoan}
-              disabled={
-                !selectedPosition || shares <= 0 || isPending || isConfirming
-              }
-            >
-              Request a Loan
-            </Button>
-            {(isPending || isConfirming) && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
-          </Box>
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={requestLoan}
+            loading={isPending || isConfirming}
+            disabled={
+              !selectedPosition || shares <= 0 || isPending || isConfirming
+            }
+          >
+            Request a Loan
+          </LoadingActionButton>
         )}
       </DialogActions>
     </Dialog>
