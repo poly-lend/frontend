@@ -7,13 +7,14 @@ import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
 import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
-import { Button, Stack } from "@mui/material";
+import { Alert, Button, Snackbar, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function Borrow() {
   const [data, setData] = useState<AllLoanData | null>(null);
   const [openRequestDialog, setOpenRequestDialog] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const { address } = useAccount();
   const publicClient = usePublicClient();
@@ -52,7 +53,22 @@ export default function Borrow() {
         <RequestDialog
           open={openRequestDialog}
           close={() => setOpenRequestDialog(false)}
+          onSuccess={() => setSnackbarOpen(true)}
         />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Loan request submitted successfully
+          </Alert>
+        </Snackbar>
         <ClientOnly>
           {address ? (
             <>

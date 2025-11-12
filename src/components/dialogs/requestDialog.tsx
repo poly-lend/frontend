@@ -5,7 +5,6 @@ import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
@@ -13,7 +12,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Snackbar,
   Stack,
   TextField,
 } from "@mui/material";
@@ -30,9 +28,11 @@ import PositionSelect from "../widgets/positionSelect";
 export default function RequestDialog({
   open,
   close,
+  onSuccess,
 }: {
   open: boolean;
   close: () => void;
+  onSuccess?: () => void;
 }) {
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(
     null
@@ -43,7 +43,6 @@ export default function RequestDialog({
   const [approvalTxHash, setApprovalTxHash] = useState<
     `0x${string}` | undefined
   >(undefined);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const { data: proxyAddress } = useProxyAddress();
   const { data: walletClient } = useWalletClient();
@@ -72,14 +71,14 @@ export default function RequestDialog({
     if (open) {
       setIsApproving(false);
       setApprovalTxHash(undefined);
-      setSnackbarOpen(false);
     }
   }, [open]);
 
-  // Show success snackbar when loan request confirms
+  // When loan request confirms: close dialog and notify parent
   useEffect(() => {
     if (isConfirmed) {
-      setSnackbarOpen(true);
+      close();
+      onSuccess?.();
     }
   }, [isConfirmed]);
 
@@ -227,20 +226,6 @@ export default function RequestDialog({
           </Box>
         )}
       </DialogActions>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Loan request submitted successfully
-        </Alert>
-      </Snackbar>
     </Dialog>
   );
 }
