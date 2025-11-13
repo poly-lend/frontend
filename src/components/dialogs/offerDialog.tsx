@@ -2,11 +2,14 @@ import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import { toSPYWAI } from "@/utils/convertors";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Stack,
   TextField,
 } from "@mui/material";
@@ -106,50 +109,71 @@ export default function OfferDialog({
   };
 
   return (
-    <Dialog open={open}>
-      <DialogTitle>Offer for request {requestId.toString()}</DialogTitle>
+    <Dialog
+      open={open}
+      fullWidth
+      maxWidth="xs"
+      className="bg-gray-900/30 backdrop-blur-xs"
+      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
+    >
+      <DialogTitle className="flex items-center justify-between">
+        <p className="text-xl font-medium">
+          Offer for Request {requestId.toString()}
+        </p>
+        <IconButton
+          onClick={close}
+          size="small"
+          className="text-gray-400 hover:text-white"
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
-        <Stack spacing={2} className="py-1.5">
+        <Stack spacing={2.5} className="py-1.5">
           <TextField
+            fullWidth
             label="Loan Amount"
             type="number"
             value={loanAmount.toString()}
             onChange={(e) => setLoanAmount(Number(e.target.value))}
           />
           <TextField
+            fullWidth
             label="Rate (APY)"
             type="number"
             value={rate.toString()}
             onChange={(e) => setRate(Number(e.target.value))}
           />
-          {!isApprovalConfirmed ? (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={handleApproval}
-              className="w-full"
-              loading={isApproving || isApprovalConfirming}
-              disabled={loanAmount <= 0 || isApproving}
-            >
-              Approve
-            </LoadingActionButton>
-          ) : (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={handleOffer}
-              className="w-full"
-              loading={isOffering || isOfferConfirming}
-              disabled={loanAmount <= 0 || rate <= 0 || isOffering}
-            >
-              Offer
-            </LoadingActionButton>
-          )}
-          <Button variant="contained" color="secondary" onClick={close}>
-            Cancel
-          </Button>
         </Stack>
       </DialogContent>
+      <DialogActions
+        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
+      >
+        <Button variant="outlined" color="secondary" onClick={close}>
+          Cancel
+        </Button>
+        {!isApprovalConfirmed ? (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={handleApproval}
+            loading={isApproving || isApprovalConfirming}
+            disabled={loanAmount <= 0 || isApproving || isApprovalConfirming}
+          >
+            Approve
+          </LoadingActionButton>
+        ) : (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={handleOffer}
+            loading={isOffering || isOfferConfirming}
+            disabled={loanAmount <= 0 || rate <= 0 || isOffering}
+          >
+            Offer
+          </LoadingActionButton>
+        )}
+      </DialogActions>
     </Dialog>
   );
 }

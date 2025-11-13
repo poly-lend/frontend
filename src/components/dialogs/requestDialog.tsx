@@ -4,6 +4,7 @@ import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -11,6 +12,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Stack,
   TextField,
 } from "@mui/material";
@@ -127,8 +129,24 @@ export default function RequestDialog({
   };
 
   return (
-    <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
-      <DialogTitle>Request a loan</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={close}
+      maxWidth="xs"
+      fullWidth
+      className="bg-gray-900/30 backdrop-blur-xs"
+      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
+    >
+      <DialogTitle className="flex items-center justify-between">
+        <p className="text-xl font-medium">Request a Loan</p>
+        <IconButton
+          onClick={close}
+          size="small"
+          className="text-gray-400 hover:text-white"
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <Stack spacing={3} className="py-1.5">
           {proxyAddress && (
@@ -167,13 +185,10 @@ export default function RequestDialog({
           />
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 3, pt: 2 }}>
-        <Button
-          variant="outlined"
-          color="secondary"
-          onClick={close}
-          sx={{ mr: "auto" }}
-        >
+      <DialogActions
+        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
+      >
+        <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
         {!isApprovalConfirmed ? (

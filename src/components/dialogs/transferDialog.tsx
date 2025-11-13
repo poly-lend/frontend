@@ -4,11 +4,14 @@ import { usdcConfig } from "@/contracts/usdc";
 import { calculateMaxTransferRate } from "@/utils/calculations";
 import { toAPYText, toSPYWAI } from "@/utils/convertors";
 import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Stack,
   TextField,
 } from "@mui/material";
@@ -118,11 +121,26 @@ export default function TransferDialog({
   const maxTransferRate = calculateMaxTransferRate(callTime);
   console.log("maxTransferRate", maxTransferRate);
   return (
-    <Dialog open={open}>
-      <DialogTitle>Transfer Loan {loanId.toString()}</DialogTitle>
+    <Dialog
+      open={open}
+      fullWidth
+      maxWidth="xs"
+      className="bg-gray-900/30 backdrop-blur-xs"
+      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
+    >
+      <DialogTitle className="flex items-center justify-between">
+        <p className="text-xl font-medium">Transfer Loan {loanId.toString()}</p>
+        <IconButton
+          onClick={close}
+          size="small"
+          className="text-gray-400 hover:text-white"
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
       <DialogContent>
-        <Stack spacing={2} className="py-1.5">
+        <Stack spacing={2.5} className="py-1.5">
           <div>
             <TextField
               label="New rate (APY)"
@@ -130,44 +148,44 @@ export default function TransferDialog({
               value={newRate}
               onChange={(e) => setNewRate(Number(e.target.value))}
               className="text-gray-100"
+              fullWidth
             />
-            <p className="text-sm text-gray-400 font-medium mt-0.5">
+            <p className="text-sm text-gray-400 font-medium mt-1">
               Current max rate: {toAPYText(maxTransferRate)}
             </p>
           </div>
-
-          {!isApprovalConfirmed ? (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={handleApproval}
-              loading={isApproving || isApprovalConfirming}
-              disabled={
-                isApproving ||
-                isApprovalConfirming ||
-                amountAtCall === BigInt(0)
-              }
-              className="w-full"
-            >
-              Approve
-            </LoadingActionButton>
-          ) : (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={handleTransfer}
-              loading={isTransferring || isTransferConfirming}
-              disabled={isTransferring || isTransferConfirming || newRate <= 0}
-              className="w-full"
-            >
-              Transfer
-            </LoadingActionButton>
-          )}
-          <Button variant="contained" color="secondary" onClick={close}>
-            Cancel
-          </Button>
         </Stack>
       </DialogContent>
+      <DialogActions
+        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
+      >
+        <Button variant="outlined" color="secondary" onClick={close}>
+          Cancel
+        </Button>
+        {!isApprovalConfirmed ? (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={handleApproval}
+            loading={isApproving || isApprovalConfirming}
+            disabled={
+              isApproving || isApprovalConfirming || amountAtCall === BigInt(0)
+            }
+          >
+            Approve
+          </LoadingActionButton>
+        ) : (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={handleTransfer}
+            loading={isTransferring || isTransferConfirming}
+            disabled={isTransferring || isTransferConfirming || newRate <= 0}
+          >
+            Transfer
+          </LoadingActionButton>
+        )}
+      </DialogActions>
     </Dialog>
   );
 }
