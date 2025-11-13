@@ -184,7 +184,12 @@ export default function LenderLoansTable({
                 <TableCell align="center">
                   <Market market={loan.market} />
                 </TableCell>
-                <TableCell align="right">
+                <TableCell
+                  align="right"
+                  sx={{
+                    color: loan.callTime > 0 ? "red" : "green",
+                  }}
+                >
                   {loan.callTime > 0 ? "Called" : "Active"}
                 </TableCell>
                 <TableCell align="right">
