@@ -10,6 +10,7 @@ import {
 } from "@/utils/convertors";
 import {
   Button,
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -164,6 +165,7 @@ export default function LenderLoansTable({
             <TableRow>
               <TableCell align="center">Borrower</TableCell>
               <TableCell align="center">Market</TableCell>
+              <TableCell align="center"> Side </TableCell>
               <TableCell align="right">Status</TableCell>
               <TableCell align="right">Shares</TableCell>
               <TableCell align="right">Collateral</TableCell>
@@ -183,6 +185,13 @@ export default function LenderLoansTable({
                 </TableCell>
                 <TableCell align="center">
                   <Market market={loan.market} />
+                </TableCell>
+                <TableCell align="center">
+                  <Chip
+                    label={loan.market.outcome}
+                    size="small"
+                    color={loan.market.outcome === "Yes" ? "success" : "error"}
+                  />
                 </TableCell>
                 <TableCell
                   align="right"

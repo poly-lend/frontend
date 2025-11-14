@@ -8,6 +8,7 @@ import {
   toUSDCString,
 } from "@/utils/convertors";
 import {
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -92,6 +93,7 @@ export default function LenderOffersTable({
             <TableRow>
               <TableCell align="center">Lender</TableCell>
               <TableCell align="center">Market</TableCell>
+              <TableCell align="center"> Side </TableCell>
               <TableCell align="right">Shares</TableCell>
               <TableCell align="right">Collateral</TableCell>
               <TableCell align="right">Amount</TableCell>
@@ -108,6 +110,13 @@ export default function LenderOffersTable({
                 </TableCell>
                 <TableCell align="center">
                   <Market market={offer.market} />
+                </TableCell>
+                <TableCell align="center">
+                  <Chip
+                    label={offer.market.outcome}
+                    size="small"
+                    color={offer.market.outcome === "Yes" ? "success" : "error"}
+                  />
                 </TableCell>
                 <TableCell align="right">
                   {toSharesText(offer.request!.collateralAmount)}

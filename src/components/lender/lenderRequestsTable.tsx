@@ -5,6 +5,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Button,
+  Chip,
   Collapse,
   IconButton,
   Table,
@@ -85,8 +86,9 @@ export default function RequestsListTable({
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Borrower</TableCell>
+                <TableCell align="right">Borrower</TableCell>
                 <TableCell align="center">Market</TableCell>
+                <TableCell align="center"> Side </TableCell>
                 <TableCell align="right">Shares</TableCell>
                 <TableCell align="right">Collateral</TableCell>
                 <TableCell align="right">Duration</TableCell>
@@ -100,11 +102,22 @@ export default function RequestsListTable({
                 return (
                   <Fragment key={request.requestId.toString()}>
                     <TableRow>
-                      <TableCell align="center">
+                      <TableCell align="right">
                         <Address address={request.borrower} />
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="left">
                         <Market market={request.market} />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          label={request.market.outcome}
+                          size="small"
+                          color={
+                            request.market.outcome === "Yes"
+                              ? "success"
+                              : "error"
+                          }
+                        />
                       </TableCell>
                       <TableCell align="right">
                         {toSharesText(request.collateralAmount)}
@@ -151,20 +164,13 @@ export default function RequestsListTable({
                     </TableRow>
                     {isExpanded && (
                       <TableRow>
-                        <TableCell
-                          style={{ paddingBottom: 0, paddingTop: 0 }}
-                          colSpan={7}
-                        >
+                        <TableCell sx={{ p: 0.5 }} colSpan={8}>
                           <Collapse
                             in={isExpanded}
                             timeout="auto"
                             unmountOnExit
                           >
-                            <div className="p-2">
-                              <RequestOffersNestedTable
-                                offers={request.offers}
-                              />
-                            </div>
+                            <RequestOffersNestedTable offers={request.offers} />
                           </Collapse>
                         </TableCell>
                       </TableRow>

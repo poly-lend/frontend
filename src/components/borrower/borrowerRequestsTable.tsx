@@ -10,6 +10,7 @@ import {
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import {
   Button,
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -128,6 +129,7 @@ export default function BorrowerRequestsTable({
           <TableHead>
             <TableRow>
               <TableCell align="center">Market</TableCell>
+              <TableCell align="center"> Side </TableCell>
               <TableCell align="right">Shares</TableCell>
               <TableCell align="right">Collateral</TableCell>
               <TableCell align="right">Duration</TableCell>
@@ -141,6 +143,15 @@ export default function BorrowerRequestsTable({
                 <TableRow>
                   <TableCell align="center">
                     <Market market={request.market} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={request.market.outcome}
+                      size="small"
+                      color={
+                        request.market.outcome === "Yes" ? "success" : "error"
+                      }
+                    />
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(request.collateralAmount)}
@@ -198,7 +209,7 @@ export default function BorrowerRequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={6} sx={{ p: 0.5 }}>
+                      <TableCell colSpan={7} sx={{ p: 0.5 }}>
                         <div style={{ width: "92%", margin: "0 auto" }}>
                           <Table
                             size="small"

@@ -1,5 +1,4 @@
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { Chip } from "@mui/material";
 import Link from "next/link";
 
 const Market = ({ market }: { market: any }) => {
@@ -17,15 +16,9 @@ const Market = ({ market }: { market: any }) => {
         className="rounded-full mr-2"
       />
 
-      <div className="text-sm text-left max-w-[300px] line-clamp-2">
+      <div className="text-sm text-left line-clamp-2 mr-1 ">
         {market.market.question} <OpenInNewIcon sx={{ fontSize: 16 }} />
       </div>
-
-      <Chip
-        label={market.outcome}
-        size="small"
-        color={market.outcome === "Yes" ? "success" : "error"}
-      />
     </Link>
   );
 };
