@@ -196,6 +196,13 @@ export default function RequestDialog({
             label="Minimum Duration Days"
             value={minimumDuration}
             onChange={(e) => setMinimumDuration(Number(e.target.value))}
+            slotProps={{
+              input: {
+                inputProps: {
+                  min: 0,
+                },
+              },
+            }}
           />
         </Stack>
       </DialogContent>

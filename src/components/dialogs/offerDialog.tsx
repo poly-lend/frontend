@@ -151,6 +151,13 @@ export default function OfferDialog({
             type="number"
             value={loanAmount.toString()}
             onChange={(e) => setLoanAmount(Number(e.target.value))}
+            slotProps={{
+              input: {
+                inputProps: {
+                  min: 0,
+                },
+              },
+            }}
           />
           <TextField
             fullWidth
@@ -158,6 +165,13 @@ export default function OfferDialog({
             type="number"
             value={rate.toString()}
             onChange={(e) => setRate(Number(e.target.value))}
+            slotProps={{
+              input: {
+                inputProps: {
+                  min: 0,
+                },
+              },
+            }}
           />
         </Stack>
       </DialogContent>
