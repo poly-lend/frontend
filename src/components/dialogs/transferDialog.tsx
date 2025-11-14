@@ -44,6 +44,7 @@ export default function TransferDialog({
 
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
+
   const [isApproving, setIsApproving] = useState(false);
   const [approvalTxHash, setApprovalTxHash] = useState<
     `0x${string}` | undefined
@@ -52,6 +53,8 @@ export default function TransferDialog({
   const [transferTxHash, setTransferTxHash] = useState<
     `0x${string}` | undefined
   >(undefined);
+  const [inputError, setInputError] = useState<string | undefined>(undefined);
+
   const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
     useWaitForTransactionReceipt({ hash: approvalTxHash });
   const { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } =
@@ -90,6 +93,7 @@ export default function TransferDialog({
       setIsTransferring(false);
       setTransferTxHash(undefined);
       setNewRate(0);
+      setInputError(undefined);
     }
   }, [open]);
 
@@ -119,6 +123,11 @@ export default function TransferDialog({
   const handleTransfer = async () => {
     if (!walletClient || !publicClient) return;
     const rateInSPY = toSPYWAI(newRate / 100);
+    if (rateInSPY > maxTransferRate) {
+      setInputError("Exceeds max rate");
+      return;
+    }
+    setInputError(undefined);
     try {
       setIsTransferring(true);
       const hash = await walletClient.writeContract({
@@ -133,7 +142,6 @@ export default function TransferDialog({
     }
   };
   const maxTransferRate = calculateMaxTransferRate(callTime);
-  console.log("maxTransferRate", maxTransferRate);
   return (
     <Dialog
       open={open}
@@ -160,13 +168,33 @@ export default function TransferDialog({
               label="New rate (APY)"
               type="number"
               value={newRate}
-              onChange={(e) => setNewRate(Number(e.target.value))}
+              onChange={(e) => {
+                setNewRate(Number(e.target.value));
+                setInputError(undefined);
+              }}
+              error={!!inputError}
               className="text-gray-100"
+              slotProps={{
+                input: {
+                  inputProps: {
+                    min: 0,
+                  },
+                },
+              }}
               fullWidth
             />
-            <p className="text-sm text-gray-400 font-medium mt-1">
-              Current max rate: {toAPYText(maxTransferRate)}
-            </p>
+            <div className="flex justify-between mt-1">
+              <p
+                className={`text-sm text-gray-400 font-medium ${
+                  inputError ? "text-red-500" : ""
+                }`}
+              >
+                Current max rate: {toAPYText(maxTransferRate)}
+              </p>
+              {inputError ? (
+                <p className="text-sm text-red-500 font-medium">{inputError}</p>
+              ) : null}
+            </div>
           </div>
         </Stack>
       </DialogContent>
@@ -194,7 +222,12 @@ export default function TransferDialog({
             color="primary"
             onClick={handleTransfer}
             loading={isTransferring || isTransferConfirming}
-            disabled={isTransferring || isTransferConfirming || newRate <= 0}
+            disabled={
+              isTransferring ||
+              isTransferConfirming ||
+              newRate <= 0 ||
+              !!inputError
+            }
           >
             Transfer
           </LoadingActionButton>
