@@ -11,7 +11,7 @@ export default function DexScreenerIcon() {
         width={24}
         height={24}
         fill="#fff"
-        fill-rule="evenodd"
+        fillRule="evenodd"
         viewBox="0 0 252 300"
         focusable="false"
         className="chakra-icon custom-euf446"
