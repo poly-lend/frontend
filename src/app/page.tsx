@@ -1,14 +1,14 @@
 "use client";
 
+import DexScreenerIcon from "@/components/svgs/dexscreenerIcon";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkIcon from "@mui/icons-material/Link";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import XIcon from "@mui/icons-material/X";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col pitems-center justify-center">
+    <div className="flex flex-col pitems-center justify-center gap-1">
       <h1
         style={{
           fontSize: 36,
@@ -20,8 +20,8 @@ export default function Home() {
       >
         PolyLend
       </h1>
-      <p className="text-lg">
-        <LinkIcon />{" "}
+      <div className="flex items-center gap-1">
+        <DexScreenerIcon />
         <Link
           target="_blank"
           style={{ color: "violet" }}
@@ -29,7 +29,7 @@ export default function Home() {
         >
           9i9y5uZPFZYVJE8Ym4agXjkaCqniSDT95JPfSUH5pump
         </Link>
-      </p>
+      </div>
       <p>
         <GitHubIcon />{" "}
         <Link
