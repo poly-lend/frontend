@@ -1,9 +1,10 @@
 "use client";
 
 import { BalanceRefreshContext } from "@/app/context";
+import WalletGuard from "@/components/web3/walletGuard";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
-import { Input, Stack } from "@mui/material";
+import { Input } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -40,7 +41,7 @@ export default function Faucet() {
   }, [isConfirmed, setBalanceRefresh]);
 
   return (
-    <Stack spacing={4}>
+    <div className="flex flex-col gap-2">
       <h1
         style={{
           fontSize: 36,
@@ -52,45 +53,48 @@ export default function Faucet() {
       >
         Faucet
       </h1>
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <Input
-            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            placeholder="Amount"
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
-          />
-          <Button
-            variant="contained"
-            onClick={() => mintUSDC()}
-            disabled={isPending}
-          >
-            {isPending ? "Minting..." : "Mint pfUSDC"}
-          </Button>
+
+      <WalletGuard>
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="flex items-center gap-4">
+            <Input
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+            />
+            <Button
+              variant="contained"
+              onClick={() => mintUSDC()}
+              disabled={isPending}
+            >
+              {isPending ? "Minting..." : "Mint pfUSDC"}
+            </Button>
+          </div>
+          <div>
+            {isConfirming && <div>Waiting for confirmation...</div>}
+            {isConfirmed && <div>Transaction confirmed.</div>}
+            {error && (
+              <div>
+                Error: {(error as BaseError).shortMessage || error.message}
+              </div>
+            )}
+            {hash && (
+              <div>
+                Transaction Hash:{" "}
+                <a
+                  className="text-blue-500"
+                  href={`https://polygonscan.com/tx/${hash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {hash}
+                </a>
+              </div>
+            )}
+          </div>
         </div>
-        <div>
-          {isConfirming && <div>Waiting for confirmation...</div>}
-          {isConfirmed && <div>Transaction confirmed.</div>}
-          {error && (
-            <div>
-              Error: {(error as BaseError).shortMessage || error.message}
-            </div>
-          )}
-          {hash && (
-            <div>
-              Transaction Hash:{" "}
-              <a
-                className="text-blue-500"
-                href={`https://polygonscan.com/tx/${hash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {hash}
-              </a>
-            </div>
-          )}
-        </div>
-      </div>
-    </Stack>
+      </WalletGuard>
+    </div>
   );
 }

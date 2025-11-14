@@ -3,15 +3,15 @@
 import LenderLoansTable from "@/components/lender/lenderLoansTable";
 import LenderOffersTable from "@/components/lender/lenderOffersTable";
 import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
-import ConnectWidget from "@/components/web3/connectWidget";
+import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { Alert, Snackbar, Stack } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient } from "wagmi";
 
 export default function Lend() {
-  const { address } = useAccount();
+  const { address, status } = useAccount();
   const publicClient = usePublicClient();
   const [data, setData] = useState<AllLoanData | null>(null);
   const [successText, setSuccessText] = useState("");
@@ -29,7 +29,7 @@ export default function Lend() {
   };
 
   return (
-    <Stack spacing={2}>
+    <div className="flex flex-col gap-2">
       <h1
         style={{
           fontSize: 36,
@@ -41,16 +41,6 @@ export default function Lend() {
       >
         Lend
       </h1>
-      {data && (
-        <LenderRequestsTable
-          title="All Requests"
-          data={data}
-          userAddress={address as `0x${string}`}
-          onRequestSuccess={(successText: string) =>
-            handleRequestSuccess(successText)
-          }
-        />
-      )}
       <Snackbar
         open={!!successText}
         autoHideDuration={4000}
@@ -65,26 +55,33 @@ export default function Lend() {
           {successText || "Action completed successfully"}
         </Alert>
       </Snackbar>
-      {address && data ? (
+
+      <WalletGuard isDataReady={!!data}>
         <>
+          <LenderRequestsTable
+            title="All Requests"
+            data={data as AllLoanData}
+            userAddress={address as `0x${string}`}
+            onRequestSuccess={(successText: string) =>
+              handleRequestSuccess(successText)
+            }
+          />
           <LenderOffersTable
             title="Lender Offers"
-            data={data}
+            data={data as AllLoanData}
             userAddress={address as `0x${string}`}
             onCancelOfferSuccess={(successText: string) =>
               handleRequestSuccess(successText)
             }
           />
           <LenderLoansTable
-            lender={address}
+            lender={address as `0x${string}`}
             title="Lender Loans"
-            data={data}
+            data={data as AllLoanData}
             onActionSuccess={(text: string) => handleRequestSuccess(text)}
           />
         </>
-      ) : (
-        <ConnectWidget />
-      )}
-    </Stack>
+      </WalletGuard>
+    </div>
   );
 }

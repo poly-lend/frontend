@@ -3,9 +3,8 @@
 import BorrowerLoansTable from "@/components/borrower/borrowerLoansTable";
 import BorrowerRequestsTable from "@/components/borrower/borrowerRequestsTable";
 import RequestDialog from "@/components/dialogs/requestDialog";
-import ConnectWidget from "@/components/web3/connectWidget";
+import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
-import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
 import { Alert, Button, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -45,17 +44,6 @@ export default function Borrow() {
       >
         Borrow
       </h1>
-      <div className="flex justify-center">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenRequestDialog(true)}
-          className="shadow-lg rounded-full w-fit"
-          size="large"
-        >
-          Request a loan
-        </Button>
-      </div>
       <RequestDialog
         open={openRequestDialog}
         close={() => setOpenRequestDialog(false)}
@@ -75,30 +63,34 @@ export default function Borrow() {
           {successText || "Action completed successfully"}
         </Alert>
       </Snackbar>
-      <ClientOnly>
-        {address ? (
-          <>
-            {data && (
-              <>
-                <BorrowerRequestsTable
-                  address={address}
-                  title="Borrower Requests"
-                  data={data}
-                  onActionSuccess={(text: string) => handleRequestSuccess(text)}
-                />
-                <BorrowerLoansTable
-                  borrower={address}
-                  title="Borrower Loans"
-                  data={data}
-                  onActionSuccess={(text: string) => handleRequestSuccess(text)}
-                />
-              </>
-            )}
-          </>
-        ) : (
-          <ConnectWidget />
-        )}
-      </ClientOnly>
+
+      <WalletGuard isDataReady={!!data}>
+        <>
+          <div className="flex justify-center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setOpenRequestDialog(true)}
+              className="shadow-lg rounded-full w-fit"
+              size="large"
+            >
+              Request a loan
+            </Button>
+          </div>
+          <BorrowerRequestsTable
+            address={address as `0x${string}`}
+            title="Borrower Requests"
+            data={data as AllLoanData}
+            onActionSuccess={(text: string) => handleRequestSuccess(text)}
+          />
+          <BorrowerLoansTable
+            borrower={address as `0x${string}`}
+            title="Borrower Loans"
+            data={data as AllLoanData}
+            onActionSuccess={(text: string) => handleRequestSuccess(text)}
+          />
+        </>
+      </WalletGuard>
     </div>
   );
 }
