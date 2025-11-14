@@ -5,6 +5,6 @@ export const polylendDecimals = 18;
 export const polymarketSharesDecimals = 6;
 
 export const proxyAddress = "0xaacFeEa03eb1561C4e67d661e40682Bd20E3541b";
-export const polylendAddress = "0xD71D20477b9145C993D5dc1750B6d1D2932f706D";
+export const polylendAddress = "0x9BF793E4759154D84313485ca8b95fB933Aac1d6";
 export const polymarketTokensAddress =
   "0x4D97DCd97eC945f40cF65F87097ACe5EA0476045";
