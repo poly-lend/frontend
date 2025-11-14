@@ -187,7 +187,7 @@ export default function LenderLoansTable({
                 <TableCell
                   align="right"
                   sx={{
-                    color: loan.callTime > 0 ? "red" : "green",
+                    color: loan.callTime > 0 ? "red" : "",
                   }}
                 >
                   {loan.callTime > 0 ? "Called" : "Active"}

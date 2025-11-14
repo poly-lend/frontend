@@ -1,18 +1,23 @@
 import { AllLoanData, LoanRequest } from "@/types/polyLend";
 import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Button,
+  Collapse,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import OfferDialog from "../dialogs/offerDialog";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
+import RequestOffersNestedTable from "./requestOffersNestedTable";
 
 export default function RequestsListTable({
   title,
@@ -35,6 +40,21 @@ export default function RequestsListTable({
   const closeOfferDialog = () => {
     setOpenOfferDialog(false);
     selectRequest(null);
+  };
+
+  const [expandedRequestIds, setExpandedRequestIds] = useState<Set<bigint>>(
+    new Set()
+  );
+  const toggleExpanded = (requestId: bigint) => {
+    setExpandedRequestIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(requestId)) {
+        next.delete(requestId);
+      } else {
+        next.add(requestId);
+      }
+      return next;
+    });
   };
 
   const handleOfferSuccess = async (successText: string) => {
@@ -75,41 +95,83 @@ export default function RequestsListTable({
               </TableRow>
             </TableHead>
             <TableBody>
-              {requests.map((request) => (
-                <TableRow key={request.requestId}>
-                  <TableCell align="center">
-                    <Address address={request.borrower} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <Market market={request.market} />
-                  </TableCell>
-                  <TableCell align="right">
-                    {toSharesText(request.collateralAmount)}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toUSDCString(
-                      Number(request.market.outcomePrice) *
-                        Number(request.collateralAmount)
+              {requests.map((request) => {
+                const isExpanded = expandedRequestIds.has(request.requestId);
+                return (
+                  <Fragment key={request.requestId.toString()}>
+                    <TableRow>
+                      <TableCell align="center">
+                        <Address address={request.borrower} />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Market market={request.market} />
+                      </TableCell>
+                      <TableCell align="right">
+                        {toSharesText(request.collateralAmount)}
+                      </TableCell>
+                      <TableCell align="right">
+                        {toUSDCString(
+                          Number(request.market.outcomePrice) *
+                            Number(request.collateralAmount)
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        {toDuration(Number(request.minimumDuration))}
+                      </TableCell>
+                      <TableCell align="right">
+                        <div className="flex justify-end items-center gap-1">
+                          {request.offers.length > 0 && (
+                            <IconButton
+                              size="small"
+                              aria-label="expand offers"
+                              onClick={() => toggleExpanded(request.requestId)}
+                            >
+                              {isExpanded ? (
+                                <KeyboardArrowUpIcon fontSize="small" />
+                              ) : (
+                                <KeyboardArrowDownIcon fontSize="small" />
+                              )}
+                            </IconButton>
+                          )}
+                          <span>{request.offers.length}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            selectRequest(request);
+                            setOpenOfferDialog(true);
+                          }}
+                        >
+                          Offer
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                    {isExpanded && (
+                      <TableRow>
+                        <TableCell
+                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                          colSpan={7}
+                        >
+                          <Collapse
+                            in={isExpanded}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <div className="p-2">
+                              <RequestOffersNestedTable
+                                offers={request.offers}
+                              />
+                            </div>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
                     )}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toDuration(Number(request.minimumDuration))}
-                  </TableCell>
-                  <TableCell align="right">{request.offers.length}</TableCell>
-                  <TableCell align="center">
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        selectRequest(request);
-                        setOpenOfferDialog(true);
-                      }}
-                    >
-                      Offer
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                  </Fragment>
+                );
+              })}
             </TableBody>
           </Table>
         </>
