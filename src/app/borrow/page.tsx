@@ -7,7 +7,7 @@ import ConnectWidget from "@/components/web3/connectWidget";
 import { AllLoanData } from "@/types/polyLend";
 import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
-import { Alert, Button, Snackbar, Stack } from "@mui/material";
+import { Alert, Button, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
@@ -33,78 +33,72 @@ export default function Borrow() {
   };
 
   return (
-    <>
-      <Stack spacing={2}>
-        <h1
-          style={{
-            fontSize: 36,
-            fontWeight: 800,
-            paddingTop: 50,
-            paddingBottom: 20,
-            textAlign: "center",
-          }}
+    <div className="flex flex-col gap-2">
+      <h1
+        style={{
+          fontSize: 36,
+          fontWeight: 800,
+          paddingTop: 50,
+          paddingBottom: 20,
+          textAlign: "center",
+        }}
+      >
+        Borrow
+      </h1>
+      <div className="flex justify-center">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setOpenRequestDialog(true)}
+          className="shadow-lg rounded-full w-fit"
+          size="large"
         >
-          Borrow
-        </h1>
-        <div className="flex justify-center">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setOpenRequestDialog(true)}
-            className="shadow-lg rounded-full w-fit"
-            size="large"
-          >
-            Request a loan
-          </Button>
-        </div>
-        <RequestDialog
-          open={openRequestDialog}
-          close={() => setOpenRequestDialog(false)}
-          onSuccess={(successText: string) => handleRequestSuccess(successText)}
-        />
-        <Snackbar
-          open={!!successText}
-          autoHideDuration={4000}
+          Request a loan
+        </Button>
+      </div>
+      <RequestDialog
+        open={openRequestDialog}
+        close={() => setOpenRequestDialog(false)}
+        onSuccess={(successText: string) => handleRequestSuccess(successText)}
+      />
+      <Snackbar
+        open={!!successText}
+        autoHideDuration={4000}
+        onClose={() => setSuccessText("")}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
           onClose={() => setSuccessText("")}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          severity="success"
+          sx={{ width: "100%" }}
         >
-          <Alert
-            onClose={() => setSuccessText("")}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            {successText || "Action completed successfully"}
-          </Alert>
-        </Snackbar>
-        <ClientOnly>
-          {address ? (
-            <>
-              {data && (
-                <>
-                  <BorrowerRequestsTable
-                    address={address}
-                    title="Borrower Requests"
-                    data={data}
-                    onActionSuccess={(text: string) =>
-                      handleRequestSuccess(text)
-                    }
-                  />
-                  <BorrowerLoansTable
-                    borrower={address}
-                    title="Borrower Loans"
-                    data={data}
-                    onActionSuccess={(text: string) =>
-                      handleRequestSuccess(text)
-                    }
-                  />
-                </>
-              )}
-            </>
-          ) : (
-            <ConnectWidget />
-          )}
-        </ClientOnly>
-      </Stack>
-    </>
+          {successText || "Action completed successfully"}
+        </Alert>
+      </Snackbar>
+      <ClientOnly>
+        {address ? (
+          <>
+            {data && (
+              <>
+                <BorrowerRequestsTable
+                  address={address}
+                  title="Borrower Requests"
+                  data={data}
+                  onActionSuccess={(text: string) => handleRequestSuccess(text)}
+                />
+                <BorrowerLoansTable
+                  borrower={address}
+                  title="Borrower Loans"
+                  data={data}
+                  onActionSuccess={(text: string) => handleRequestSuccess(text)}
+                />
+              </>
+            )}
+          </>
+        ) : (
+          <ConnectWidget />
+        )}
+      </ClientOnly>
+    </div>
   );
 }
