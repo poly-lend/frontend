@@ -66,7 +66,7 @@ export default function RequestsListTable({
 
   return (
     <>
-      <h2 className="text-2xl font-bold w-full text-center mt-8">
+      <h2 className="text-2xl font-bold w-full text-center">
         {title ? title : "All Borrow Requests"}
       </h2>
       {requests.length === 0 ? (
