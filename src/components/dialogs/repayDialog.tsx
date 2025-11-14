@@ -1,6 +1,7 @@
 import { polylendAddress, usdcAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
+import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -55,6 +56,19 @@ export default function RepayDialog({
     useWaitForTransactionReceipt({
       hash: repayTxHash,
     });
+
+  const { allowance } = useErc20Allowance(
+    open,
+    usdcAddress as `0x${string}`,
+    polylendAddress as `0x${string}`,
+    [isApprovalConfirmed]
+  );
+
+  const hasAnyAllowance = allowance > BigInt(0);
+  const hasSufficientAllowance = allowance >= amount;
+  const shouldShowRepay =
+    isApprovalConfirmed ||
+    (amount === BigInt(0) ? hasAnyAllowance : hasSufficientAllowance);
 
   useEffect(() => {
     const getAmountOwed = async () => {
@@ -143,7 +157,7 @@ export default function RepayDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!isApprovalConfirmed ? (
+        {!shouldShowRepay ? (
           <LoadingActionButton
             variant="contained"
             color="primary"

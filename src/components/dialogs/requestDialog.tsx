@@ -1,6 +1,7 @@
 import { polylendAddress, polymarketTokensAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
+import useIsApprovedForAll from "@/hooks/useIsApprovedForAll";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
@@ -60,6 +61,17 @@ export default function RequestDialog({
       hash: approvalTxHash,
     });
 
+  const { isApproved: isOperatorApproved } = useIsApprovedForAll(
+    open,
+    {
+      tokenAddress: polymarketTokensAddress as `0x${string}`,
+      owner: proxyAddress as `0x${string}` | undefined,
+      operator: polylendAddress as `0x${string}`,
+      abi: polymarketTokensConfig.abi,
+    },
+    [isApprovalConfirmed]
+  );
+
   const value = selectedPosition ? shares * selectedPosition.curPrice : 0;
 
   useEffect(() => {
@@ -83,6 +95,8 @@ export default function RequestDialog({
       onSuccess?.("Loan request submitted successfully");
     }
   }, [isConfirmed]);
+
+  const shouldShowRequest = isApprovalConfirmed || isOperatorApproved;
 
   const requestLoan = async () => {
     if (!walletClient || !publicClient || !selectedPosition) return;
@@ -191,7 +205,7 @@ export default function RequestDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!isApprovalConfirmed ? (
+        {!shouldShowRequest ? (
           <LoadingActionButton
             variant="contained"
             color="primary"

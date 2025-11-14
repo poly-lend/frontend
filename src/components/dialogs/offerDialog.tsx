@@ -1,6 +1,7 @@
 import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
+import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { toSPYWAI } from "@/utils/convertors";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -108,6 +109,20 @@ export default function OfferDialog({
     }
   };
 
+  const { allowance } = useErc20Allowance(
+    open,
+    usdcAddress as `0x${string}`,
+    polylendAddress as `0x${string}`,
+    [isApprovalConfirmed]
+  );
+
+  const requiredAllowance = BigInt(loanAmount * 10 ** usdcDecimals);
+  const hasAnyAllowance = allowance > BigInt(0);
+  const hasSufficientAllowance = allowance >= requiredAllowance;
+  const shouldShowOffer =
+    isApprovalConfirmed ||
+    (loanAmount <= 0 ? hasAnyAllowance : hasSufficientAllowance);
+
   return (
     <Dialog
       open={open}
@@ -152,17 +167,7 @@ export default function OfferDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!isApprovalConfirmed ? (
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={handleApproval}
-            loading={isApproving || isApprovalConfirming}
-            disabled={loanAmount <= 0 || isApproving || isApprovalConfirming}
-          >
-            Approve
-          </LoadingActionButton>
-        ) : (
+        {shouldShowOffer ? (
           <LoadingActionButton
             variant="contained"
             color="primary"
@@ -171,6 +176,16 @@ export default function OfferDialog({
             disabled={loanAmount <= 0 || rate <= 0 || isOffering}
           >
             Offer
+          </LoadingActionButton>
+        ) : (
+          <LoadingActionButton
+            variant="contained"
+            color="primary"
+            onClick={handleApproval}
+            loading={isApproving || isApprovalConfirming}
+            disabled={loanAmount <= 0 || isApproving || isApprovalConfirming}
+          >
+            Approve
           </LoadingActionButton>
         )}
       </DialogActions>

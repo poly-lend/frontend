@@ -1,6 +1,7 @@
 import { polylendAddress, usdcAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
+import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { calculateMaxTransferRate } from "@/utils/calculations";
 import { toAPYText, toSPYWAI } from "@/utils/convertors";
 import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
@@ -55,6 +56,19 @@ export default function TransferDialog({
     useWaitForTransactionReceipt({ hash: approvalTxHash });
   const { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } =
     useWaitForTransactionReceipt({ hash: transferTxHash });
+
+  const { allowance } = useErc20Allowance(
+    open,
+    usdcAddress as `0x${string}`,
+    polylendAddress as `0x${string}`,
+    [isApprovalConfirmed]
+  );
+
+  const hasAnyAllowance = allowance > BigInt(0);
+  const hasSufficientAllowance = allowance >= amountAtCall;
+  const shouldShowTransfer =
+    isApprovalConfirmed ||
+    (amountAtCall === BigInt(0) ? hasAnyAllowance : hasSufficientAllowance);
 
   useEffect(() => {
     const getAmountOwed = async () => {
@@ -162,7 +176,7 @@ export default function TransferDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!isApprovalConfirmed ? (
+        {!shouldShowTransfer ? (
           <LoadingActionButton
             variant="contained"
             color="primary"
