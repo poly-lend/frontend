@@ -20,6 +20,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BaseError } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -35,12 +36,14 @@ export default function LenderLoansTable({
   title,
   data,
   onActionSuccess,
+  onActionError,
 }: {
   lender: `0x${string}`;
   data: AllLoanData;
   title?: string;
   borrower?: `0x${string}`;
   onActionSuccess?: (successText: string) => void;
+  onActionError?: (errorText: string) => void;
 }) {
   const [dataType, setDataType] = useState<"my" | "all">("my");
   const [transferringLoan, setTransferringLoan] = useState<{
@@ -104,6 +107,13 @@ export default function LenderLoansTable({
         args: [loanId],
       });
       setCallTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onActionError?.(message);
+      setCallingLoanId(null);
     } finally {
       setIsCalling(false);
     }
@@ -121,6 +131,13 @@ export default function LenderLoansTable({
         args: [loanId, true],
       });
       setReclaimTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onActionError?.(message);
+      setReclaimingLoanId(null);
     } finally {
       setIsReclaiming(false);
     }
@@ -141,6 +158,7 @@ export default function LenderLoansTable({
           open={transferringLoan !== null}
           close={() => setTransferringLoan(null)}
           onSuccess={(text: string) => onActionSuccess?.(text)}
+          onError={(text: string) => onActionError?.(text)}
         />
       )}
 

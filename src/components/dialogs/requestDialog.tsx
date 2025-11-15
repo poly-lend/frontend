@@ -18,12 +18,11 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { encodeFunctionData } from "viem";
+import { BaseError, encodeFunctionData } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
   useWalletClient,
-  useWriteContract,
 } from "wagmi";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import PositionSelect from "../widgets/positionSelect";
@@ -32,10 +31,12 @@ export default function RequestDialog({
   open,
   close,
   onSuccess,
+  onError,
 }: {
   open: boolean;
   close: () => void;
   onSuccess?: (successText: string) => void;
+  onError?: (errorText: string) => void;
 }) {
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(
     null
@@ -51,10 +52,13 @@ export default function RequestDialog({
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [requestTxHash, setRequestTxHash] = useState<`0x${string}` | undefined>(
+    undefined
+  );
+  const { isLoading: isRequestConfirming, isSuccess: isRequestConfirmed } =
     useWaitForTransactionReceipt({
-      hash,
+      hash: requestTxHash,
     });
   const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
     useWaitForTransactionReceipt({
@@ -90,27 +94,39 @@ export default function RequestDialog({
 
   // When loan request confirms: close dialog and notify parent
   useEffect(() => {
-    if (isConfirmed) {
+    if (isRequestConfirmed) {
       close();
       onSuccess?.("Loan request submitted successfully");
     }
-  }, [isConfirmed]);
+  }, [isRequestConfirmed]);
 
   const shouldShowRequest = isApprovalConfirmed || isOperatorApproved;
 
   const requestLoan = async () => {
     if (!walletClient || !publicClient || !selectedPosition) return;
-    writeContract({
-      address: polylendAddress as `0x${string}`,
-      abi: polylendConfig.abi,
-      functionName: "request",
-      args: [
-        selectedPosition.asset,
-        BigInt(shares * 10 ** 6),
-        BigInt(minimumDuration * 24 * 60 * 60),
-        !!proxyAddress,
-      ],
-    });
+    try {
+      setIsRequesting(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "request",
+        args: [
+          selectedPosition.asset,
+          BigInt(shares * 10 ** 6),
+          BigInt(minimumDuration * 24 * 60 * 60),
+          !!proxyAddress,
+        ],
+      });
+      setRequestTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
+    } finally {
+      setIsRequesting(false);
+    }
   };
 
   const giveApproval = async () => {
@@ -131,6 +147,12 @@ export default function RequestDialog({
         publicClient,
       });
       setApprovalTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsApproving(false);
     }
@@ -227,9 +249,12 @@ export default function RequestDialog({
             variant="contained"
             color="primary"
             onClick={requestLoan}
-            loading={isPending || isConfirming}
+            loading={isRequesting || isRequestConfirming}
             disabled={
-              !selectedPosition || shares <= 0 || isPending || isConfirming
+              !selectedPosition ||
+              shares <= 0 ||
+              isRequesting ||
+              isRequestConfirming
             }
           >
             Request a Loan

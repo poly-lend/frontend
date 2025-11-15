@@ -15,6 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BaseError } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -27,6 +28,7 @@ export type RepayDialogProps = {
   open: boolean;
   close: () => void;
   onSuccess?: (successText: string) => void;
+  onError?: (errorText: string) => void;
 };
 
 export default function RepayDialog({
@@ -34,6 +36,7 @@ export default function RepayDialog({
   open,
   close,
   onSuccess,
+  onError,
 }: RepayDialogProps) {
   const timestamp = BigInt(Math.floor(Date.now() / 1000));
   const [amount, setAmount] = useState<bigint>(BigInt(0));
@@ -101,6 +104,12 @@ export default function RepayDialog({
         args: [polylendAddress, amount],
       });
       setApprovalTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsApproving(false);
     }
@@ -117,6 +126,12 @@ export default function RepayDialog({
         args: [loanId, timestamp],
       });
       setRepayTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsRepaying(false);
     }

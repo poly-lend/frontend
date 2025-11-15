@@ -24,12 +24,14 @@ export default function BorrowerLoansTable({
   title,
   data,
   onActionSuccess,
+  onActionError,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
   title?: string;
   data: AllLoanData;
   onActionSuccess?: (successText: string) => void;
+  onActionError?: (errorText: string) => void;
 }) {
   const loans = data.loans;
 
@@ -48,6 +50,7 @@ export default function BorrowerLoansTable({
           open={selectLoan != null}
           close={() => selectLoan(null)}
           onSuccess={(text: string) => onActionSuccess?.(text)}
+          onError={(text: string) => onActionError?.(text)}
         />
       )}
       {loans.length === 0 && <div className="text-center">No loans found</div>}

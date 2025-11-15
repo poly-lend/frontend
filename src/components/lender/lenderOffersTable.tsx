@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BaseError } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -30,11 +31,13 @@ export default function LenderOffersTable({
   data,
   userAddress,
   onCancelOfferSuccess,
+  onCancelOfferError,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
   onCancelOfferSuccess?: (successText: string) => void;
+  onCancelOfferError?: (errorText: string) => void;
 }) {
   let offers = data.offers;
   offers = offers.filter((offer) => offer.lender === userAddress);
@@ -72,6 +75,13 @@ export default function LenderOffersTable({
         args: [offerId],
       });
       setCancelTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onCancelOfferError?.(message);
+      setCancellingOfferId(null);
     } finally {
       setIsCancelling(false);
     }

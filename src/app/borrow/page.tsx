@@ -14,6 +14,7 @@ export default function Borrow() {
   const [data, setData] = useState<AllLoanData | null>(null);
   const [openRequestDialog, setOpenRequestDialog] = useState(false);
   const [successText, setSuccessText] = useState("");
+  const [errorText, setErrorText] = useState("");
 
   const { address } = useAccount();
   const publicClient = usePublicClient();
@@ -26,6 +27,7 @@ export default function Borrow() {
 
   const handleRequestSuccess = async (successText: string) => {
     setSuccessText(successText);
+    setErrorText("");
     if (!publicClient || !walletClient) return;
     const fresh = await fetchData({ publicClient, borrower: address });
     setData(fresh);
@@ -48,21 +50,33 @@ export default function Borrow() {
         open={openRequestDialog}
         close={() => setOpenRequestDialog(false)}
         onSuccess={(successText: string) => handleRequestSuccess(successText)}
+        onError={(text: string) => {
+          setErrorText(text);
+          setSuccessText("");
+        }}
       />
-      <Snackbar
-        open={!!successText}
-        autoHideDuration={4000}
-        onClose={() => setSuccessText("")}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setSuccessText("")}
-          severity="success"
-          sx={{ width: "100%" }}
+      {(errorText || successText) && (
+        <Snackbar
+          open={!!successText || !!errorText}
+          autoHideDuration={4000}
+          onClose={() => {
+            setSuccessText("");
+            setErrorText("");
+          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          {successText || "Action completed successfully"}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={() => {
+              setSuccessText("");
+              setErrorText("");
+            }}
+            severity={errorText ? "error" : "success"}
+            sx={{ width: "100%" }}
+          >
+            {errorText || successText}
+          </Alert>
+        </Snackbar>
+      )}
 
       <WalletGuard isDataReady={!!data}>
         <>
@@ -82,12 +96,20 @@ export default function Borrow() {
             title="Borrower Requests"
             data={data as AllLoanData}
             onActionSuccess={(text: string) => handleRequestSuccess(text)}
+            onActionError={(text: string) => {
+              setErrorText(text);
+              setSuccessText("");
+            }}
           />
           <BorrowerLoansTable
             borrower={address as `0x${string}`}
             title="Borrower Loans"
             data={data as AllLoanData}
             onActionSuccess={(text: string) => handleRequestSuccess(text)}
+            onActionError={(text: string) => {
+              setErrorText(text);
+              setSuccessText("");
+            }}
           />
         </>
       </WalletGuard>

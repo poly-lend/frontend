@@ -87,12 +87,20 @@ export default function Lend() {
             onCancelOfferSuccess={(successText: string) =>
               handleRequestSuccess(successText)
             }
+            onCancelOfferError={(text: string) => {
+              setErrorText(text);
+              setSuccessText("");
+            }}
           />
           <LenderLoansTable
             lender={address as `0x${string}`}
             title="Lender Loans"
             data={data as AllLoanData}
             onActionSuccess={(text: string) => handleRequestSuccess(text)}
+            onActionError={(text: string) => {
+              setErrorText(text);
+              setSuccessText("");
+            }}
           />
         </>
       </WalletGuard>

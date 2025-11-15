@@ -17,6 +17,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BaseError } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -30,6 +31,7 @@ export type TransferDialogProps = {
   open: boolean;
   close: () => void;
   onSuccess?: (successText: string) => void;
+  onError?: (errorText: string) => void;
 };
 
 export default function TransferDialog({
@@ -38,6 +40,7 @@ export default function TransferDialog({
   open,
   close,
   onSuccess,
+  onError,
 }: TransferDialogProps) {
   const [newRate, setNewRate] = useState<number>(0);
   const [amountAtCall, setAmountAtCall] = useState<bigint>(BigInt(0));
@@ -115,6 +118,12 @@ export default function TransferDialog({
         args: [polylendAddress, amountAtCall],
       });
       setApprovalTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsApproving(false);
     }
@@ -137,6 +146,12 @@ export default function TransferDialog({
         args: [loanId, rateInSPY],
       });
       setTransferTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsTransferring(false);
     }

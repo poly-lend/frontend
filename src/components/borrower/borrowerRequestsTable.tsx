@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
+import { BaseError } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -32,11 +33,13 @@ export default function BorrowerRequestsTable({
   title,
   data,
   onActionSuccess,
+  onActionError,
 }: {
   address?: `0x${string}`;
   title?: string;
   data: AllLoanData;
   onActionSuccess?: (successText: string) => void;
+  onActionError?: (errorText: string) => void;
 }) {
   const requests = data.requests;
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
@@ -67,6 +70,13 @@ export default function BorrowerRequestsTable({
         args: [requestId],
       });
       setCancelTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onActionError?.(message);
+      setCancellingRequestId(null);
     } finally {
       setIsCancelling(false);
     }
@@ -94,6 +104,13 @@ export default function BorrowerRequestsTable({
         args: [offerId],
       });
       setAcceptTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onActionError?.(message);
+      setAcceptingOfferId(null);
     } finally {
       setIsAccepting(false);
     }
