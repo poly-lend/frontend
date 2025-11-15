@@ -15,6 +15,7 @@ export default function Lend() {
   const publicClient = usePublicClient();
   const [data, setData] = useState<AllLoanData | null>(null);
   const [successText, setSuccessText] = useState("");
+  const [errorText, setErrorText] = useState("");
 
   useEffect(() => {
     if (!publicClient) return;
@@ -23,6 +24,7 @@ export default function Lend() {
 
   const handleRequestSuccess = async (successText: string) => {
     setSuccessText(successText);
+    setErrorText("");
     if (!publicClient) return;
     const fresh = await fetchData({ publicClient });
     setData(fresh);
@@ -41,20 +43,28 @@ export default function Lend() {
       >
         Lend
       </h1>
-      <Snackbar
-        open={!!successText}
-        autoHideDuration={4000}
-        onClose={() => setSuccessText("")}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setSuccessText("")}
-          severity="success"
-          sx={{ width: "100%" }}
+      {(errorText || successText) && (
+        <Snackbar
+          open={!!successText || !!errorText}
+          autoHideDuration={4000}
+          onClose={() => {
+            setSuccessText("");
+            setErrorText("");
+          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
-          {successText || "Action completed successfully"}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={() => {
+              setSuccessText("");
+              setErrorText("");
+            }}
+            severity={errorText ? "error" : "success"}
+            sx={{ width: "100%" }}
+          >
+            {errorText || successText}
+          </Alert>
+        </Snackbar>
+      )}
 
       <WalletGuard isDataReady={!!data}>
         <>
@@ -65,6 +75,10 @@ export default function Lend() {
             onRequestSuccess={(successText: string) =>
               handleRequestSuccess(successText)
             }
+            onRequestError={(text: string) => {
+              setErrorText(text);
+              setSuccessText("");
+            }}
           />
           <LenderOffersTable
             title="Lender Offers"

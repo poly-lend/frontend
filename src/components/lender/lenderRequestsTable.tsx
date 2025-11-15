@@ -25,11 +25,13 @@ export default function RequestsListTable({
   data,
   userAddress,
   onRequestSuccess,
+  onRequestError,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
   onRequestSuccess?: (successText: string) => void;
+  onRequestError?: (errorText: string) => void;
 }) {
   let requests = data.requests;
   requests = requests.filter(
@@ -78,6 +80,7 @@ export default function RequestsListTable({
               onSuccess={(successText: string) =>
                 handleOfferSuccess(successText)
               }
+              onError={onRequestError}
               requestId={selectedRequest.requestId}
               open={openOfferDialog}
               close={closeOfferDialog}

@@ -15,6 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BaseError } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -27,11 +28,13 @@ export default function OfferDialog({
   open,
   close,
   onSuccess,
+  onError,
 }: {
   requestId: bigint;
   open: boolean;
   close: () => void;
   onSuccess?: (successText: string) => void;
+  onError?: (errorText: string) => void;
 }) {
   const [loanAmount, setLoanAmount] = useState(0);
   const [rate, setRate] = useState(0);
@@ -86,6 +89,12 @@ export default function OfferDialog({
         args: [polylendAddress, BigInt(loanAmount * 10 ** usdcDecimals)],
       });
       setApprovalTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsApproving(false);
     }
@@ -104,6 +113,12 @@ export default function OfferDialog({
         args: [requestId, BigInt(loanAmountInUSDC), rateInSPY],
       });
       setOfferTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      onError?.(message);
     } finally {
       setIsOffering(false);
     }
