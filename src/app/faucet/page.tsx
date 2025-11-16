@@ -2,10 +2,10 @@
 
 import { BalanceRefreshContext } from "@/app/context";
 import WalletGuard from "@/components/web3/walletGuard";
+import LoadingActionButton from "@/components/widgets/loadingActionButton";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
-import { Input } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Alert, Input, Snackbar } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import {
   BaseError,
@@ -18,6 +18,12 @@ export default function Faucet() {
   const { address } = useAccount();
   const [amount, setAmount] = useState(1000);
   const { setBalanceRefresh } = useContext(BalanceRefreshContext);
+  const [successText, setSuccessText] = useState("");
+  const [errorText, setErrorText] = useState("");
+  const [submittedAmount, setSubmittedAmount] = useState<number | null>(null);
+  const [lastNotifiedHash, setLastNotifiedHash] = useState<
+    `0x${string}` | undefined
+  >(undefined);
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -26,6 +32,7 @@ export default function Faucet() {
     });
 
   const mintUSDC = async () => {
+    setSubmittedAmount(amount);
     writeContract({
       address: usdcConfig.address,
       abi: usdcConfig.abi,
@@ -35,10 +42,25 @@ export default function Faucet() {
   };
 
   useEffect(() => {
-    if (isConfirmed) {
+    if (isConfirmed && hash && hash !== lastNotifiedHash) {
       setBalanceRefresh(true);
+      const minted = (submittedAmount ?? amount).toLocaleString();
+      setSuccessText(`Minted ${minted} pfUSDC`);
+      setErrorText("");
+      setLastNotifiedHash(hash);
     }
-  }, [isConfirmed, setBalanceRefresh]);
+  }, [isConfirmed, hash, lastNotifiedHash, setBalanceRefresh, submittedAmount]);
+
+  useEffect(() => {
+    if (error) {
+      const message =
+        (error as BaseError)?.shortMessage ||
+        (error as Error)?.message ||
+        "Transaction failed";
+      setErrorText(message);
+      setSuccessText("");
+    }
+  }, [error]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -54,6 +76,29 @@ export default function Faucet() {
         Faucet
       </h1>
 
+      {(errorText || successText) && (
+        <Snackbar
+          open={!!successText || !!errorText}
+          autoHideDuration={4000}
+          onClose={() => {
+            setSuccessText("");
+            setErrorText("");
+          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => {
+              setSuccessText("");
+              setErrorText("");
+            }}
+            severity={errorText ? "error" : "success"}
+            sx={{ width: "100%" }}
+          >
+            {errorText || successText}
+          </Alert>
+        </Snackbar>
+      )}
+
       <WalletGuard>
         <div className="flex flex-col gap-4 mt-4">
           <div className="flex items-center gap-4">
@@ -63,35 +108,15 @@ export default function Faucet() {
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
             />
-            <Button
+            <LoadingActionButton
               variant="contained"
+              color="primary"
               onClick={() => mintUSDC()}
-              disabled={isPending}
+              loading={isPending || isConfirming}
+              disabled={isPending || isConfirming}
             >
-              {isPending ? "Minting..." : "Mint pfUSDC"}
-            </Button>
-          </div>
-          <div>
-            {isConfirming && <div>Waiting for confirmation...</div>}
-            {isConfirmed && <div>Transaction confirmed.</div>}
-            {error && (
-              <div>
-                Error: {(error as BaseError).shortMessage || error.message}
-              </div>
-            )}
-            {hash && (
-              <div>
-                Transaction Hash:{" "}
-                <a
-                  className="text-blue-500"
-                  href={`https://polygonscan.com/tx/${hash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {hash}
-                </a>
-              </div>
-            )}
+              Mint pfUSDC
+            </LoadingActionButton>
           </div>
         </div>
       </WalletGuard>
