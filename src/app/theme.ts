@@ -40,7 +40,6 @@ export const theme = createTheme({
       styleOverrides: {
         root: { textTransform: "none", fontWeight: 600 },
         containedPrimary: {
-          // hover/active grounded in brand yellow
           "&:hover": { backgroundColor: "#b88d2f" },
           "&:active": { backgroundColor: "#a47a24" },
         },
@@ -71,10 +70,16 @@ export const theme = createTheme({
         root: {
           color: "#ededed",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "rgba(255,255,255,0.08)",
+            borderColor: "rgba(255,255,255,0.12)",
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderColor: "#ededed",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: BRAND_YELLOW,
+          },
+          "&.Mui-focused:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: BRAND_YELLOW,
           },
         },
         input: {
