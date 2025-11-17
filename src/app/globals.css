@@ -19,9 +19,7 @@
 
   --border: rgba(255, 255, 255, 0.08);
   --focus: rgba(215, 173, 77, 0.45);
-}
 
-@theme inline {
   --color-background: var(--background);
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);

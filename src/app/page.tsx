@@ -1,10 +1,16 @@
 "use client";
 
-import { Button } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+} from "@mui/material";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col pitems-center justify-center gap-1">
+    <div className="flex flex-col items-center justify-center gap-1 px-4 mb-8 sm:px-6 lg:px-8 mx-auto ">
       {/* Hero */}
       <section
         id="product"
@@ -31,7 +37,12 @@ export default function Home() {
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <Button variant="contained" color="primary" href="/borrow">
+            <Button
+              component={Link}
+              variant="contained"
+              color="primary"
+              href="/borrow"
+            >
               Borrow now
             </Button>
             <Button
@@ -359,54 +370,150 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <article className="rounded-xl border border-slate-900 bg-slate-950/85 p-4 text-sm">
-              <h3 className="mb-1 text-sm font-semibold text-slate-50">
-                Is PolyLend custodial?
-              </h3>
-              <p className="text-xs leading-relaxed text-slate-300">
-                Collateral and loans are managed by smart contracts. There is no
-                traditional custodian, but the code is unaudited and may contain
-                bugs. Always verify contract addresses and understand the
-                trade-offs before interacting.
-              </p>
-            </article>
+          <div className="space-y-3">
+            <Accordion
+              disableGutters
+              className="rounded-xl border border-slate-900 bg-slate-950/85"
+              sx={{ "&:before": { display: "none" } }}
+            >
+              <AccordionSummary
+                expandIcon={
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-slate-400"
+                  >
+                    <path
+                      d="M8.12 9.29L12 13.17L15.88 9.29C16.27 8.9 16.9 8.9 17.29 9.29C17.68 9.68 17.68 10.31 17.29 10.7L12.7 15.29C12.31 15.68 11.68 15.68 11.29 15.29L6.7 10.7C6.31 10.31 6.31 9.68 6.7 9.29C7.09 8.9 7.73 8.9 8.12 9.29Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+              >
+                <div className="text-sm font-semibold text-slate-50">
+                  Is PolyLend custodial?
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div className="text-xs leading-relaxed text-slate-300">
+                  Collateral and loans are managed by smart contracts. There is
+                  no traditional custodian, but the code is unaudited and may
+                  contain bugs. Always verify contract addresses and understand
+                  the trade-offs before interacting.
+                </div>
+              </AccordionDetails>
+            </Accordion>
 
-            <article className="rounded-xl border border-slate-900 bg-slate-950/85 p-4 text-sm">
-              <h3 className="mb-1 text-sm font-semibold text-slate-50">
-                What happens if no one refinances my loan?
-              </h3>
-              <p className="text-xs leading-relaxed text-slate-300">
-                If a lender calls a loan and the refinancing auction fails, the
-                loan can be closed by transferring collateral to the lender. The
-                borrower loses their position and may still realize a loss
-                relative to the debt they owed.
-              </p>
-            </article>
+            <Accordion
+              disableGutters
+              className="rounded-xl border border-slate-900 bg-slate-950/85"
+              sx={{ "&:before": { display: "none" } }}
+            >
+              <AccordionSummary
+                expandIcon={
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-slate-400"
+                  >
+                    <path
+                      d="M8.12 9.29L12 13.17L15.88 9.29C16.27 8.9 16.9 8.9 17.29 9.29C17.68 9.68 17.68 10.31 17.29 10.7L12.7 15.29C12.31 15.68 11.68 15.68 11.29 15.29L6.7 10.7C6.31 10.31 6.31 9.68 6.7 9.29C7.09 8.9 7.73 8.9 8.12 9.29Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+              >
+                <div className="text-sm font-semibold text-slate-50">
+                  What happens if no one refinances my loan?
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div className="text-xs leading-relaxed text-slate-300">
+                  If a lender calls a loan and the refinancing auction fails,
+                  the loan can be closed by transferring collateral to the
+                  lender. The borrower loses their position and may still
+                  realize a loss relative to the debt they owed.
+                </div>
+              </AccordionDetails>
+            </Accordion>
 
-            <article className="rounded-xl border border-slate-900 bg-slate-950/85 p-4 text-sm">
-              <h3 className="mb-1 text-sm font-semibold text-slate-50">
-                Which markets and chains are supported?
-              </h3>
-              <p className="text-xs leading-relaxed text-slate-300">
-                PolyLend is designed for Polymarket conditional tokens on the
-                same chain where those markets are deployed. Check the docs and
-                UI for the current supported network and collateral types before
-                interacting.
-              </p>
-            </article>
+            <Accordion
+              disableGutters
+              className="rounded-xl border border-slate-900 bg-slate-950/85"
+              sx={{ "&:before": { display: "none" } }}
+            >
+              <AccordionSummary
+                expandIcon={
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-slate-400"
+                  >
+                    <path
+                      d="M8.12 9.29L12 13.17L15.88 9.29C16.27 8.9 16.9 8.9 17.29 9.29C17.68 9.68 17.68 10.31 17.29 10.7L12.7 15.29C12.31 15.68 11.68 15.68 11.29 15.29L6.7 10.7C6.31 10.31 6.31 9.68 6.7 9.29C7.09 8.9 7.73 8.9 8.12 9.29Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+              >
+                <div className="text-sm font-semibold text-slate-50">
+                  Which markets and chains are supported?
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div className="text-xs leading-relaxed text-slate-300">
+                  PolyLend is designed for Polymarket conditional tokens on the
+                  same chain where those markets are deployed. Check the docs
+                  and UI for the current supported network and collateral types
+                  before interacting.
+                </div>
+              </AccordionDetails>
+            </Accordion>
 
-            <article className="rounded-xl border border-slate-900 bg-slate-950/85 p-4 text-sm">
-              <h3 className="mb-1 text-sm font-semibold text-slate-50">
-                Who is PolyLend for (and who is it not for)?
-              </h3>
-              <p className="text-xs leading-relaxed text-slate-300">
-                PolyLend is for advanced users who understand prediction
-                markets, on-chain lending, and smart contract risk. It is not
-                suitable for users seeking guaranteed returns or a simple
-                savings product.
-              </p>
-            </article>
+            <Accordion
+              disableGutters
+              className="rounded-xl border border-slate-900 bg-slate-950/85"
+              sx={{ "&:before": { display: "none" } }}
+            >
+              <AccordionSummary
+                expandIcon={
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-slate-400"
+                  >
+                    <path
+                      d="M8.12 9.29L12 13.17L15.88 9.29C16.27 8.9 16.9 8.9 17.29 9.29C17.68 9.68 17.68 10.31 17.29 10.7L12.7 15.29C12.31 15.68 11.68 15.68 11.29 15.29L6.7 10.7C6.31 10.31 6.31 9.68 6.7 9.29C7.09 8.9 7.73 8.9 8.12 9.29Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+              >
+                <div className="text-sm font-semibold text-slate-50">
+                  Who is PolyLend for (and who is it not for)?
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div className="text-xs leading-relaxed text-slate-300">
+                  PolyLend is for advanced users who understand prediction
+                  markets, on-chain lending, and smart contract risk. It is not
+                  suitable for users seeking guaranteed returns or a simple
+                  savings product.
+                </div>
+              </AccordionDetails>
+            </Accordion>
           </div>
         </section>
       </main>
