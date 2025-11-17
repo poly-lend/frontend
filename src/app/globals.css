@@ -1,20 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #091926;
-  --foreground: #d7ad4d;
-  --text-primary: #d7ad4d;
+  --brand-navy: #091926;
+  --brand-yellow: #d7ad4d;
+  --brand-yellow-soft: #f5e3b0; /* light tint for gradients/text accents */
+  --brand-yellow-10: rgba(215, 173, 77, 0.1);
+  --brand-yellow-15: rgba(215, 173, 77, 0.15);
+  --brand-yellow-50: rgba(215, 173, 77, 0.5);
+  --brand-yellow-60: rgba(215, 173, 77, 0.6);
+  --brand-yellow-90: rgba(215, 173, 77, 0.9);
+
+  --background: var(--brand-navy);
+  --surface-1: #0c2233;
+  --surface-2: #0f2b43;
+
+  --text-primary: #ededed;
+  --text-secondary: rgba(237, 237, 237, 0.72);
+
+  --border: rgba(255, 255, 255, 0.08);
+  --focus: rgba(215, 173, 77, 0.45);
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-brand: var(--brand-yellow);
+  --color-brand-soft: var(--brand-yellow-soft);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: "Roboto Mono", monospace;
+  color: var(--text-primary);
 }

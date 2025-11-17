@@ -11,14 +11,14 @@ export default function Home() {
         className="grid flex-1 grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]"
       >
         <div className="flex flex-col justify-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-slate-600/80 bg-gradient-to-r from-[#d7ad4d]/15 via-transparent to-transparent px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-slate-300">
-            <span className="h-2 w-2 rounded-full bg-[#d7ad4d] shadow-[0_0_10px_rgba(215,173,77,0.9)]" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-600/80 bg-gradient-to-r from-[var(--brand-yellow-15)] via-transparent to-transparent px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-slate-300">
+            <span className="h-2 w-2 rounded-full bg-[var(--brand-yellow)] shadow-[0_0_10px_var(--brand-yellow-90)]" />
             <span>Experimental on-chain protocol</span>
           </div>
 
           <h1 className="mt-5 text-3xl font-semibold leading-tight sm:text-4xl lg:text-[2.7rem]">
             Leverage your{" "}
-            <span className="bg-gradient-to-r from-[#d7ad4d] to-[#f5e3b0] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--brand-yellow)] to-[var(--brand-yellow-soft)] bg-clip-text text-transparent">
               Polymarket conviction
             </span>{" "}
             without leaving the market.
@@ -52,9 +52,9 @@ export default function Home() {
         </div>
 
         {/* Hero side card */}
-        <aside className="order-first rounded-2xl border border-slate-900 bg-gradient-to-b from-slate-950/90 via-[#091926] to-black p-5 shadow-[0_0_0_1px_rgba(15,23,42,1),0_24px_80px_rgba(15,23,42,0.9)] md:order-none">
+        <aside className="order-first rounded-2xl border border-slate-900 bg-gradient-to-b from-slate-950/90 via-[var(--brand-navy)] to-black p-5 shadow-[0_0_0_1px_rgba(15,23,42,1),0_24px_80px_rgba(15,23,42,0.9)] md:order-none">
           <div className="mb-3 flex flex-wrap gap-2">
-            <span className="rounded-full border border-[#d7ad4d]/50 bg-[#d7ad4d]/10 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[#f5e3b0]">
+            <span className="rounded-full border border-[var(--brand-yellow-50)] bg-[var(--brand-yellow-10)] px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.16em] text-[var(--brand-yellow-soft)]">
               No oracles
             </span>
             <span className="rounded-full border border-slate-600 px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.16em] text-slate-300">
@@ -185,7 +185,7 @@ export default function Home() {
             {/* Traders */}
             <article className="rounded-xl border border-slate-900 bg-slate-950/80 p-4 text-sm">
               <div className="mb-3 flex flex-wrap gap-2 text-[0.68rem]">
-                <span className="rounded-full border border-[#d7ad4d]/60 bg-[#d7ad4d]/10 px-2 py-0.5 font-medium uppercase tracking-[0.16em] text-[#f5e3b0]">
+                <span className="rounded-full border border-[var(--brand-yellow-60)] bg-[var(--brand-yellow-10)] px-2 py-0.5 font-medium uppercase tracking-[0.16em] text-[var(--brand-yellow-soft)]">
                   For traders
                 </span>
                 <span className="rounded-full border border-slate-700 px-2 py-0.5 font-medium uppercase tracking-[0.16em] text-slate-300">
@@ -202,19 +202,19 @@ export default function Home() {
               </p>
               <ul className="space-y-1 text-xs text-slate-300">
                 <li className="relative pl-3">
-                  <span className="absolute left-0 top-1 text-[#d7ad4d]">
+                  <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
                     •
                   </span>
                   Request a loan with amount and minimum duration.
                 </li>
                 <li className="relative pl-3">
-                  <span className="absolute left-0 top-1 text-[#d7ad4d]">
+                  <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
                     •
                   </span>
                   Choose from competing lender offers at different rates.
                 </li>
                 <li className="relative pl-3">
-                  <span className="absolute left-0 top-1 text-[#d7ad4d]">
+                  <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
                     •
                   </span>
                   Repay early anytime to reclaim your conditional tokens.
@@ -225,7 +225,7 @@ export default function Home() {
             {/* Lenders */}
             <article className="rounded-xl border border-slate-900 bg-slate-950/80 p-4 text-sm">
               <div className="mb-3 flex flex-wrap gap-2 text-[0.68rem]">
-                <span className="rounded-full border border-[#d7ad4d]/60 bg-[#d7ad4d]/10 px-2 py-0.5 font-medium uppercase tracking-[0.16em] text-[#f5e3b0]">
+                <span className="rounded-full border border-[var(--brand-yellow-60)] bg-[var(--brand-yellow-10)] px-2 py-0.5 font-medium uppercase tracking-[0.16em] text-[var(--brand-yellow-soft)]">
                   For lenders
                 </span>
                 <span className="rounded-full border border-slate-700 px-2 py-0.5 font-medium uppercase tracking-[0.16em] text-slate-300">
@@ -242,20 +242,20 @@ export default function Home() {
               </p>
               <ul className="space-y-1 text-xs text-slate-300">
                 <li className="relative pl-3">
-                  <span className="absolute left-0 top-1 text-[#d7ad4d]">
+                  <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
                     •
                   </span>
                   Browse open loan requests filtered by market and collateral.
                 </li>
                 <li className="relative pl-3">
-                  <span className="absolute left-0 top-1 text-[#d7ad4d]">
+                  <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
                     •
                   </span>
                   Post principal + rate offers, optionally with a minimum
                   duration.
                 </li>
                 <li className="relative pl-3">
-                  <span className="absolute left-0 top-1 text-[#d7ad4d]">
+                  <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
                     •
                   </span>
                   Call loans after the minimum period and rely on auctions to
