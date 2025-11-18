@@ -167,7 +167,6 @@ export default function RequestDialog({
   return (
     <Dialog
       open={open}
-      onClose={close}
       maxWidth="xs"
       fullWidth
       className="bg-gray-900/30 backdrop-blur-xs"
