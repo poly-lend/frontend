@@ -166,7 +166,7 @@ export default function TransferDialog({
       slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
     >
       <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">Transfer Loan {loanId.toString()}</p>
+        <p className="text-xl font-medium">Transfer Loan</p>
         <IconButton
           onClick={close}
           size="small"

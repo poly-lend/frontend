@@ -88,7 +88,7 @@ export default function Borrow() {
               className="shadow-lg rounded-full w-fit"
               size="large"
             >
-              Request a loan
+              Request a Loan
             </Button>
           </div>
           <BorrowerRequestsTable

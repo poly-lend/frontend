@@ -146,7 +146,7 @@ export default function RepayDialog({
       slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
     >
       <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">Repay Loan {loanId.toString()}</p>
+        <p className="text-xl font-medium">Repay Loan</p>
         <IconButton
           onClick={close}
           size="small"

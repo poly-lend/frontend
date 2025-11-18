@@ -147,9 +147,7 @@ export default function OfferDialog({
       slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
     >
       <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">
-          Offer for Request {requestId.toString()}
-        </p>
+        <p className="text-xl font-medium">Make an Offer</p>
         <IconButton
           onClick={close}
           size="small"
