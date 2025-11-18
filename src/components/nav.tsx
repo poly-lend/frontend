@@ -1,14 +1,12 @@
 import LaunchIcon from "@mui/icons-material/Launch";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import ClientOnly from "../utils/clientOnly";
 import ConnectWallet from "./web3/connectWallet";
 import SwitchChain from "./web3/switchChain";
 import Balance from "./widgets/balance";
 
 export default function Nav() {
-  const [selected, setSelected] = useState("home");
   const links = [
     { href: "/", label: "Home", id: "home" },
     { href: "/lend", label: "Lend", id: "lend" },

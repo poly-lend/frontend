@@ -1,44 +1,45 @@
 "use client";
 
 import ClientOnly from "@/utils/clientOnly";
+import { chain } from "@/utils/wagmi";
 import { CircularProgress } from "@mui/material";
 import { ReactNode } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import ConnectWidget from "./connectWidget";
+import SwitchWidget from "./switchWidget";
 
 type WalletGuardProps = {
   children: ReactNode;
   isDataReady?: boolean;
-  loadingFallback?: ReactNode;
-  disconnectedFallback?: ReactNode;
 };
 
 export default function WalletGuard({
   children,
   isDataReady = true,
-  loadingFallback,
-  disconnectedFallback,
 }: WalletGuardProps) {
-  const { status } = useAccount();
+  const { status, address, chain: currentChain } = useAccount();
+  const { switchChain } = useSwitchChain();
 
+  const isPolygon = currentChain?.id === chain.id;
   const isWalletLoading = status === "connecting" || status === "reconnecting";
-  const showSpinner =
-    isWalletLoading || (status === "connected" && !isDataReady);
+
   const showConnect = status === "disconnected";
+  const showSwitch = status === "connected" && !isPolygon && address;
+  const showSpinner =
+    isWalletLoading || (!isDataReady && !showConnect && !showSwitch);
+  const showChildren =
+    isDataReady && !showConnect && !showSwitch && !showSpinner;
 
   return (
     <ClientOnly>
-      {showSpinner ? (
-        loadingFallback ?? (
-          <div className="flex justify-center py-6">
-            <CircularProgress />
-          </div>
-        )
-      ) : showConnect ? (
-        disconnectedFallback ?? <ConnectWidget />
-      ) : (
-        <>{children}</>
+      {showConnect && <ConnectWidget />}
+      {showSwitch && <SwitchWidget />}
+      {showSpinner && (
+        <div className="flex justify-center py-6">
+          <CircularProgress />
+        </div>
       )}
+      {showChildren && <>{children}</>}
     </ClientOnly>
   );
 }
