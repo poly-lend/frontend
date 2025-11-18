@@ -1,4 +1,4 @@
-import { polylendAddress, usdcAddress } from "@/configs";
+import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
@@ -160,7 +160,7 @@ export default function RepayDialog({
           <TextField
             label="Amount Owed"
             type="number"
-            value={amount.toString()}
+            value={(Number(amount) / 10 ** usdcDecimals).toFixed(6)}
             disabled
             fullWidth
           />
