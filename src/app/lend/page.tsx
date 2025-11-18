@@ -74,7 +74,7 @@ export default function Lend() {
               <LenderRequestsTable
                 title="All Requests"
                 data={data as AllLoanData}
-                userAddress={address as `0x${string}`}
+                userAddress={undefined}
                 onRequestSuccess={(successText: string) =>
                   handleRequestSuccess(successText)
                 }

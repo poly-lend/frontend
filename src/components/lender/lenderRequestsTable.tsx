@@ -29,7 +29,7 @@ export default function RequestsListTable({
 }: {
   title?: string;
   data: AllLoanData;
-  userAddress: `0x${string}`;
+  userAddress: string | undefined;
   onRequestSuccess?: (successText: string) => void;
   onRequestError?: (errorText: string) => void;
 }) {
@@ -156,6 +156,7 @@ export default function RequestsListTable({
                         <Button
                           variant="outlined"
                           color="primary"
+                          disabled={!userAddress}
                           onClick={() => {
                             selectRequest(request);
                             setOpenOfferDialog(true);
