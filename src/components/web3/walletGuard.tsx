@@ -11,11 +11,13 @@ import SwitchWidget from "./switchWidget";
 type WalletGuardProps = {
   children: ReactNode;
   isDataReady?: boolean;
+  disconnectedChildren?: ReactNode;
 };
 
 export default function WalletGuard({
   children,
   isDataReady = true,
+  disconnectedChildren,
 }: WalletGuardProps) {
   const { status, address, chain: currentChain } = useAccount();
   const { switchChain } = useSwitchChain();
@@ -32,14 +34,23 @@ export default function WalletGuard({
 
   return (
     <ClientOnly>
-      {showConnect && <ConnectWidget />}
-      {showSwitch && <SwitchWidget />}
-      {showSpinner && (
-        <div className="flex justify-center py-6">
-          <CircularProgress />
-        </div>
-      )}
+      <div
+        className={`h-40 flex justify-center ${
+          showChildren ? "hidden" : "block"
+        }`}
+      >
+        {showConnect && <ConnectWidget />}
+        {showSwitch && <SwitchWidget />}
+        {showSpinner && (
+          <div className="flex justify-center py-6">
+            <CircularProgress />
+          </div>
+        )}
+      </div>
       {showChildren && <>{children}</>}
+      {!showChildren && disconnectedChildren && !showSpinner && (
+        <>{disconnectedChildren}</>
+      )}
     </ClientOnly>
   );
 }

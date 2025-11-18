@@ -6,7 +6,7 @@ import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient } from "wagmi";
 
@@ -66,7 +66,31 @@ export default function Lend() {
         </Snackbar>
       )}
 
-      <WalletGuard isDataReady={!!data}>
+      <WalletGuard
+        isDataReady={!!data}
+        disconnectedChildren={
+          !!data ? (
+            <>
+              <LenderRequestsTable
+                title="All Requests"
+                data={data as AllLoanData}
+                userAddress={address as `0x${string}`}
+                onRequestSuccess={(successText: string) =>
+                  handleRequestSuccess(successText)
+                }
+                onRequestError={(text: string) => {
+                  setErrorText(text);
+                  setSuccessText("");
+                }}
+              />
+            </>
+          ) : (
+            <div className="flex justify-center py-6">
+              <CircularProgress />
+            </div>
+          )
+        }
+      >
         <>
           <LenderRequestsTable
             title="All Requests"
