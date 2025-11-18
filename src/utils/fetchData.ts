@@ -12,20 +12,21 @@ export const fetchData = async (params: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
 }): Promise<AllLoanData> => {
-  const requests = await fetchRequests({
-    publicClient: params.publicClient,
-    address: params.borrower,
-  });
-  const offers = await fetchOffers({
-    publicClient: params.publicClient,
-    address: params.lender,
-  });
-
-  const loans = await fetchLoans({
-    publicClient: params.publicClient,
-    borrower: params.borrower,
-    lender: params.lender,
-  });
+  const [requests, offers, loans] = await Promise.all([
+    fetchRequests({
+      publicClient: params.publicClient,
+      address: params.borrower,
+    }),
+    fetchOffers({
+      publicClient: params.publicClient,
+      address: params.lender,
+    }),
+    fetchLoans({
+      publicClient: params.publicClient,
+      borrower: params.borrower,
+      lender: params.lender,
+    }),
+  ]);
 
   let positionIds = [
     ...new Set([
