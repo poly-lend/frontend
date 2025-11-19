@@ -36,8 +36,8 @@ export default function OfferDialog({
   onSuccess?: (successText: string) => void;
   onError?: (errorText: string) => void;
 }) {
-  const [loanAmount, setLoanAmount] = useState(0);
-  const [rate, setRate] = useState(0);
+  const [loanAmount, setLoanAmount] = useState(1);
+  const [rate, setRate] = useState(20);
   const [isApproving, setIsApproving] = useState(false);
   const [approvalTxHash, setApprovalTxHash] = useState<
     `0x${string}` | undefined
@@ -66,8 +66,8 @@ export default function OfferDialog({
       setApprovalTxHash(undefined);
       setIsOffering(false);
       setOfferTxHash(undefined);
-      setLoanAmount(0);
-      setRate(0);
+      setLoanAmount(1);
+      setRate(20);
     }
   }, [open]);
 
@@ -160,7 +160,7 @@ export default function OfferDialog({
         <Stack spacing={2.5} className="py-1.5">
           <TextField
             fullWidth
-            label="Loan Amount"
+            label="Loan Amount (pfUSDC)"
             type="number"
             value={loanAmount.toString()}
             onChange={(e) => setLoanAmount(Number(e.target.value))}
