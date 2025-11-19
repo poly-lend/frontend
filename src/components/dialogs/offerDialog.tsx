@@ -2,7 +2,7 @@ import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
-import { toSPYWAI } from "@/utils/convertors";
+import { toDuration, toSPYWAI } from "@/utils/convertors";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Alert,
@@ -12,7 +12,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Stack,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -26,12 +25,14 @@ import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function OfferDialog({
   requestId,
+  loanDuration,
   open,
   close,
   onSuccess,
   onError,
 }: {
   requestId: bigint;
+  loanDuration: number;
   open: boolean;
   close: () => void;
   onSuccess?: (successText: string) => void;
@@ -158,7 +159,7 @@ export default function OfferDialog({
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Stack spacing={2.5} className="py-1.5">
+        <div className="flex flex-col gap-5 py-1.5">
           <TextField
             fullWidth
             label="Loan Amount (pfUSDC)"
@@ -187,7 +188,23 @@ export default function OfferDialog({
               },
             }}
           />
-        </Stack>
+        </div>
+        {loanAmount > 0 && rate > 0 && loanDuration > 0 && (
+          <div className="mt-3 rounded-lg border border-gray-700/50 bg-gray-800/30 px-3 py-2.5">
+            <p className="text-sm text-gray-300">
+              You will receive{" "}
+              <span className="font-semibold text-[#d7ad4d]">
+                {(
+                  loanAmount +
+                  (loanAmount * rate * loanDuration) / (100 * 31536000)
+                ).toFixed(2)}{" "}
+                pfUSDC
+              </span>{" "}
+              after the {toDuration(loanDuration)} loan duration (principal +
+              interest).
+            </p>
+          </div>
+        )}
         {!offerIsEnabled && loanAmount > 0 && (
           <Alert
             severity="info"

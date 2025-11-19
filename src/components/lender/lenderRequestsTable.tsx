@@ -77,6 +77,7 @@ export default function RequestsListTable({
         <>
           {selectedRequest && (
             <OfferDialog
+              loanDuration={Number(selectedRequest.minimumDuration)}
               onSuccess={(successText: string) =>
                 handleOfferSuccess(successText)
               }
