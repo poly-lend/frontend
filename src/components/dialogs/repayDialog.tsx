@@ -21,6 +21,7 @@ import {
   useWaitForTransactionReceipt,
   useWalletClient,
 } from "wagmi";
+import InfoAlert from "../widgets/infoAlert";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 export type RepayDialogProps = {
@@ -60,18 +61,16 @@ export default function RepayDialog({
       hash: repayTxHash,
     });
 
-  const { allowance } = useErc20Allowance(
+  const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(
     open,
     usdcAddress as `0x${string}`,
     polylendAddress as `0x${string}`,
     [isApprovalConfirmed]
   );
 
-  const hasAnyAllowance = allowance > BigInt(0);
   const hasSufficientAllowance = allowance >= amount;
   const shouldShowRepay =
-    isApprovalConfirmed ||
-    (amount === BigInt(0) ? hasAnyAllowance : hasSufficientAllowance);
+    !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   useEffect(() => {
     const getAmountOwed = async () => {
@@ -165,6 +164,9 @@ export default function RepayDialog({
             fullWidth
           />
         </Stack>
+        {!shouldShowRepay && amount > BigInt(0) && !isAllowanceLoading && (
+          <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
+        )}
       </DialogContent>
       <DialogActions
         sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
@@ -172,7 +174,7 @@ export default function RepayDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!shouldShowRepay ? (
+        {!shouldShowRepay && !isAllowanceLoading ? (
           <LoadingActionButton
             variant="contained"
             color="primary"

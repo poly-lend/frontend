@@ -24,6 +24,7 @@ import {
   useWaitForTransactionReceipt,
   useWalletClient,
 } from "wagmi";
+import InfoAlert from "../widgets/infoAlert";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import PositionSelect from "../widgets/positionSelect";
 
@@ -65,7 +66,10 @@ export default function RequestDialog({
       hash: approvalTxHash,
     });
 
-  const { isApproved: isOperatorApproved } = useIsApprovedForAll(
+  const {
+    isApproved: isOperatorApproved,
+    isLoading: isOperatorApprovalLoading,
+  } = useIsApprovedForAll(
     open,
     {
       tokenAddress: polymarketTokensAddress as `0x${string}`,
@@ -100,7 +104,8 @@ export default function RequestDialog({
     }
   }, [isRequestConfirmed]);
 
-  const shouldShowRequest = isApprovalConfirmed || isOperatorApproved;
+  const shouldShowRequest =
+    !isOperatorApprovalLoading && (isApprovalConfirmed || isOperatorApproved);
 
   const requestLoan = async () => {
     if (!walletClient || !publicClient || !selectedPosition) return;
@@ -226,6 +231,9 @@ export default function RequestDialog({
             }}
           />
         </Stack>
+        {!shouldShowRequest && proxyAddress && !isOperatorApprovalLoading && (
+          <InfoAlert text="You need to approve the contract to transfer your Polymarket positions before you can request a loan. Click 'Approve' first, then 'Request a Loan' once the approval is confirmed." />
+        )}
       </DialogContent>
       <DialogActions
         sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
@@ -233,7 +241,7 @@ export default function RequestDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!shouldShowRequest ? (
+        {!shouldShowRequest && !isOperatorApprovalLoading ? (
           <LoadingActionButton
             variant="contained"
             color="primary"

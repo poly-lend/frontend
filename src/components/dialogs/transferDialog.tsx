@@ -23,6 +23,7 @@ import {
   useWaitForTransactionReceipt,
   useWalletClient,
 } from "wagmi";
+import InfoAlert from "../widgets/infoAlert";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 export type TransferDialogProps = {
@@ -63,18 +64,16 @@ export default function TransferDialog({
   const { isLoading: isTransferConfirming, isSuccess: isTransferConfirmed } =
     useWaitForTransactionReceipt({ hash: transferTxHash });
 
-  const { allowance } = useErc20Allowance(
+  const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(
     open,
     usdcAddress as `0x${string}`,
     polylendAddress as `0x${string}`,
     [isApprovalConfirmed]
   );
 
-  const hasAnyAllowance = allowance > BigInt(0);
   const hasSufficientAllowance = allowance >= amountAtCall;
   const shouldShowTransfer =
-    isApprovalConfirmed ||
-    (amountAtCall === BigInt(0) ? hasAnyAllowance : hasSufficientAllowance);
+    !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   useEffect(() => {
     const getAmountOwed = async () => {
@@ -212,6 +211,9 @@ export default function TransferDialog({
             </div>
           </div>
         </Stack>
+        {!shouldShowTransfer && !isAllowanceLoading && (
+          <InfoAlert text="You need to approve the contract to spend your tokens before you can transfer the loan. Click 'Approve' first, then 'Transfer' once the approval is confirmed." />
+        )}
       </DialogContent>
       <DialogActions
         sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
@@ -219,7 +221,7 @@ export default function TransferDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!shouldShowTransfer ? (
+        {!shouldShowTransfer && !isAllowanceLoading ? (
           <LoadingActionButton
             variant="contained"
             color="primary"
