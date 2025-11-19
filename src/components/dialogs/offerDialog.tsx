@@ -126,7 +126,7 @@ export default function OfferDialog({
     }
   };
 
-  const { allowance } = useErc20Allowance(
+  const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(
     open,
     usdcAddress as `0x${string}`,
     polylendAddress as `0x${string}`,
@@ -134,11 +134,9 @@ export default function OfferDialog({
   );
 
   const requiredAllowance = BigInt(loanAmount * 10 ** usdcDecimals);
-  const hasAnyAllowance = allowance > BigInt(0);
   const hasSufficientAllowance = allowance >= requiredAllowance;
   const offerIsEnabled =
-    isApprovalConfirmed ||
-    (loanAmount <= 0 ? hasAnyAllowance : hasSufficientAllowance);
+    !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   return (
     <Dialog
@@ -205,7 +203,7 @@ export default function OfferDialog({
             </p>
           </div>
         )}
-        {!offerIsEnabled && loanAmount > 0 && (
+        {!offerIsEnabled && loanAmount > 0 && !isAllowanceLoading && (
           <Alert
             severity="info"
             className="mt-2"
@@ -230,7 +228,7 @@ export default function OfferDialog({
         </Button>
 
         <div className="flex items-center gap-2">
-          {!offerIsEnabled && (
+          {!offerIsEnabled && !isAllowanceLoading && (
             <LoadingActionButton
               variant="contained"
               color="primary"
