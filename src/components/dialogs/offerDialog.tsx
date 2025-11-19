@@ -134,7 +134,7 @@ export default function OfferDialog({
   const requiredAllowance = BigInt(loanAmount * 10 ** usdcDecimals);
   const hasAnyAllowance = allowance > BigInt(0);
   const hasSufficientAllowance = allowance >= requiredAllowance;
-  const shouldShowOffer =
+  const offerIsEnabled =
     isApprovalConfirmed ||
     (loanAmount <= 0 ? hasAnyAllowance : hasSufficientAllowance);
 
@@ -194,27 +194,32 @@ export default function OfferDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {shouldShowOffer ? (
+
+        <div className="flex items-center gap-2">
+          {!offerIsEnabled && (
+            <LoadingActionButton
+              variant="contained"
+              color="primary"
+              onClick={handleApproval}
+              loading={isApproving || isApprovalConfirming}
+              disabled={loanAmount <= 0 || isApproving || isApprovalConfirming}
+            >
+              Approve
+            </LoadingActionButton>
+          )}
+
           <LoadingActionButton
             variant="contained"
             color="primary"
             onClick={handleOffer}
             loading={isOffering || isOfferConfirming}
-            disabled={loanAmount <= 0 || rate <= 0 || isOffering}
+            disabled={
+              loanAmount <= 0 || rate <= 0 || isOffering || !offerIsEnabled
+            }
           >
             Offer
           </LoadingActionButton>
-        ) : (
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={handleApproval}
-            loading={isApproving || isApprovalConfirming}
-            disabled={loanAmount <= 0 || isApproving || isApprovalConfirming}
-          >
-            Approve
-          </LoadingActionButton>
-        )}
+        </div>
       </DialogActions>
     </Dialog>
   );
