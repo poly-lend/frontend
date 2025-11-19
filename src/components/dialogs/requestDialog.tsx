@@ -104,7 +104,7 @@ export default function RequestDialog({
     }
   }, [isRequestConfirmed]);
 
-  const shouldShowRequest =
+  const requestIsEnabled =
     !isOperatorApprovalLoading && (isApprovalConfirmed || isOperatorApproved);
 
   const requestLoan = async () => {
@@ -231,7 +231,7 @@ export default function RequestDialog({
             }}
           />
         </Stack>
-        {!shouldShowRequest && proxyAddress && !isOperatorApprovalLoading && (
+        {!requestIsEnabled && proxyAddress && !isOperatorApprovalLoading && (
           <InfoAlert text="You need to approve the contract to transfer your Polymarket positions before you can request a loan. Click 'Approve' first, then 'Request a Loan' once the approval is confirmed." />
         )}
       </DialogContent>
@@ -241,17 +241,19 @@ export default function RequestDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!shouldShowRequest && !isOperatorApprovalLoading ? (
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={giveApproval}
-            loading={isApproving || isApprovalConfirming}
-            disabled={!proxyAddress || isApproving || isApprovalConfirming}
-          >
-            Approve
-          </LoadingActionButton>
-        ) : (
+        <div className="flex items-center gap-2">
+          {!requestIsEnabled && !isOperatorApprovalLoading && (
+            <LoadingActionButton
+              variant="contained"
+              color="primary"
+              onClick={giveApproval}
+              loading={isApproving || isApprovalConfirming}
+              disabled={!proxyAddress || isApproving || isApprovalConfirming}
+            >
+              Approve
+            </LoadingActionButton>
+          )}
+
           <LoadingActionButton
             variant="contained"
             color="primary"
@@ -261,12 +263,13 @@ export default function RequestDialog({
               !selectedPosition ||
               shares <= 0 ||
               isRequesting ||
-              isRequestConfirming
+              isRequestConfirming ||
+              !requestIsEnabled
             }
           >
             Request a Loan
           </LoadingActionButton>
-        )}
+        </div>
       </DialogActions>
     </Dialog>
   );

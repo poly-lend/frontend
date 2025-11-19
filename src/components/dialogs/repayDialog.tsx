@@ -69,7 +69,7 @@ export default function RepayDialog({
   );
 
   const hasSufficientAllowance = allowance >= amount;
-  const shouldShowRepay =
+  const repayIsEnabled =
     !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ export default function RepayDialog({
             fullWidth
           />
         </Stack>
-        {!shouldShowRepay && amount > BigInt(0) && !isAllowanceLoading && (
+        {!repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
           <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
         )}
       </DialogContent>
@@ -174,29 +174,31 @@ export default function RepayDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!shouldShowRepay && !isAllowanceLoading ? (
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={() => handleApproval(amount)}
-            loading={isApproving || isApprovalConfirming}
-            disabled={
-              isApproving || isApprovalConfirming || amount === BigInt(0)
-            }
-          >
-            Approve
-          </LoadingActionButton>
-        ) : (
+        <div className="flex items-center gap-2">
+          {!repayIsEnabled && !isAllowanceLoading && (
+            <LoadingActionButton
+              variant="contained"
+              color="primary"
+              onClick={() => handleApproval(amount)}
+              loading={isApproving || isApprovalConfirming}
+              disabled={
+                isApproving || isApprovalConfirming || amount === BigInt(0)
+              }
+            >
+              Approve
+            </LoadingActionButton>
+          )}
+
           <LoadingActionButton
             variant="contained"
             color="primary"
             onClick={() => handleRepay(loanId, timestamp)}
             loading={isRepaying || isRepayConfirming}
-            disabled={isRepaying || isRepayConfirming}
+            disabled={isRepaying || isRepayConfirming || !repayIsEnabled}
           >
             Repay
           </LoadingActionButton>
-        )}
+        </div>
       </DialogActions>
     </Dialog>
   );

@@ -72,7 +72,7 @@ export default function TransferDialog({
   );
 
   const hasSufficientAllowance = allowance >= amountAtCall;
-  const shouldShowTransfer =
+  const transferIsEnabled =
     !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export default function TransferDialog({
             </div>
           </div>
         </Stack>
-        {!shouldShowTransfer && !isAllowanceLoading && (
+        {!transferIsEnabled && !isAllowanceLoading && (
           <InfoAlert text="You need to approve the contract to spend your tokens before you can transfer the loan. Click 'Approve' first, then 'Transfer' once the approval is confirmed." />
         )}
       </DialogContent>
@@ -221,19 +221,23 @@ export default function TransferDialog({
         <Button variant="outlined" color="secondary" onClick={close}>
           Cancel
         </Button>
-        {!shouldShowTransfer && !isAllowanceLoading ? (
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={handleApproval}
-            loading={isApproving || isApprovalConfirming}
-            disabled={
-              isApproving || isApprovalConfirming || amountAtCall === BigInt(0)
-            }
-          >
-            Approve
-          </LoadingActionButton>
-        ) : (
+        <div className="flex items-center gap-2">
+          {!transferIsEnabled && !isAllowanceLoading && (
+            <LoadingActionButton
+              variant="contained"
+              color="primary"
+              onClick={handleApproval}
+              loading={isApproving || isApprovalConfirming}
+              disabled={
+                isApproving ||
+                isApprovalConfirming ||
+                amountAtCall === BigInt(0)
+              }
+            >
+              Approve
+            </LoadingActionButton>
+          )}
+
           <LoadingActionButton
             variant="contained"
             color="primary"
@@ -243,12 +247,13 @@ export default function TransferDialog({
               isTransferring ||
               isTransferConfirming ||
               newRate <= 0 ||
-              !!inputError
+              !!inputError ||
+              !transferIsEnabled
             }
           >
             Transfer
           </LoadingActionButton>
-        )}
+        </div>
       </DialogActions>
     </Dialog>
   );
