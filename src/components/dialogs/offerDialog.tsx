@@ -5,6 +5,7 @@ import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { toSPYWAI } from "@/utils/convertors";
 import CloseIcon from "@mui/icons-material/Close";
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -187,6 +188,22 @@ export default function OfferDialog({
             }}
           />
         </Stack>
+        {!offerIsEnabled && loanAmount > 0 && (
+          <Alert
+            severity="info"
+            className="mt-2"
+            sx={{
+              backgroundColor: "rgba(33, 150, 243, 0.1)",
+              "& .MuiAlert-message": {
+                fontSize: "0.8rem",
+              },
+            }}
+          >
+            You need to approve the contract to spend your tokens before you can
+            make an offer. Click "Approve" first, then "Offer" once the approval
+            is confirmed.
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions
         sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
