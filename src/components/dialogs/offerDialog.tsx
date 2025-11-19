@@ -187,7 +187,7 @@ export default function OfferDialog({
             }}
           />
         </div>
-        {loanAmount > 0 && rate > 0 && loanDuration > 0 && (
+        {loanAmount > 0 && rate > 0 && (
           <div className="mt-3 rounded-lg border border-gray-700/50 bg-gray-800/30 px-3 py-2.5">
             <p className="text-sm text-gray-300">
               You will receive{" "}
