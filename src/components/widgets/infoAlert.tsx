@@ -1,18 +1,14 @@
-import { Alert } from "@mui/material";
+import { InfoIcon } from "lucide-react";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function InfoAlert({ text }: { text: string }) {
   return (
-    <Alert
-      severity="info"
-      className="mt-2"
-      sx={{
-        backgroundColor: "rgba(33, 150, 243, 0.1)",
-        "& .MuiAlert-message": {
-          fontSize: "0.8rem",
-        },
-      }}
-    >
-      {text}
+    <Alert>
+      <InfoIcon />
+      <AlertDescription className=" text-gray-400">
+        <p>{text}</p>
+      </AlertDescription>
     </Alert>
   );
 }

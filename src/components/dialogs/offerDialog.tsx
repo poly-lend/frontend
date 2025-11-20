@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { HandCoinsIcon } from "lucide-react";
 
 export default function OfferDialog({
   requestId,
@@ -176,22 +178,25 @@ export default function OfferDialog({
           </div>
 
           {/* Info boxes */}
-          <div>
+          <div className="flex flex-col gap-2">
             {loanAmount > 0 && rate > 0 && (
-              <div className="rounded-lg border border-gray-700/50 bg-gray-800/30 px-3 py-2.5">
-                <p className="text-sm text-gray-300">
-                  You will receive{" "}
-                  <span className="font-semibold text-[#d7ad4d]">
-                    {(
-                      loanAmount +
-                      (loanAmount * rate * loanDuration) / (100 * 31536000)
-                    ).toFixed(2)}{" "}
-                    pfUSDC
-                  </span>{" "}
-                  after the {toDuration(loanDuration)} loan duration (principal
-                  + interest).
-                </p>
-              </div>
+              <Alert>
+                <HandCoinsIcon />
+                <AlertDescription className="flex text-gray-300">
+                  <p>
+                    You will receive{" "}
+                    <span className="text-primary">
+                      {(
+                        loanAmount +
+                        (loanAmount * rate * loanDuration) / (100 * 31536000)
+                      ).toFixed(2)}{" "}
+                      pfUSDC
+                    </span>{" "}
+                    after the {toDuration(loanDuration)} loan duration
+                    (principal + interest).
+                  </p>
+                </AlertDescription>
+              </Alert>
             )}
             {!offerIsEnabled && loanAmount > 0 && !isAllowanceLoading && (
               <InfoAlert text="You need to approve the contract to spend your tokens before you can make an offer. Click 'Approve' first, then 'Offer' once the approval is confirmed." />
