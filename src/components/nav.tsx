@@ -21,7 +21,7 @@ export default function Nav() {
   ];
 
   return (
-    <nav className="sticky z-10 top-0 w-full bg-[var(--background)] text-[var(--text-primary)] flex justify-between items-center px-4 h-16">
+    <nav className="sticky z-10 top-0 w-full text-[var(--text-primary)] flex justify-between items-center px-4 h-16">
       <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
         <div className="flex">
           <Link href="/">
