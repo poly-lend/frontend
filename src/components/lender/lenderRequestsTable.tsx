@@ -154,17 +154,8 @@ export default function RequestsListTable({
                         </div>
                       </TableCell>
                       <TableCell align="center">
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          disabled={!userAddress}
-                          onClick={() => {
-                            selectRequest(request);
-                            setOpenOfferDialog(true);
-                          }}
-                        >
-                          Offer
-                        </Button>
+                       <OfferDialog requestId={request.requestId} loanDuration={Number(request.minimumDuration)} open={openOfferDialog} close={closeOfferDialog} onSuccess={handleOfferSuccess} onError={onRequestError} />
+                      
                       </TableCell>
                     </TableRow>
                     {isExpanded && (
