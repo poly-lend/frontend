@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
 import { useConnect } from "wagmi";
+import { Button } from "../ui/button";
 
 export function ConnectButton() {
   const { connectors, connect } = useConnect();
@@ -10,9 +10,8 @@ export function ConnectButton() {
     }
     return (
       <Button
-        variant="contained"
-        color="primary"
         key={connector.uid}
+        className="bg-amber-500 cursor-pointer hover:bg-amber-600"
         onClick={() => connect({ connector })}
       >
         Connect
