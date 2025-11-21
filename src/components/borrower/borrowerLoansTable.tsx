@@ -6,17 +6,20 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
+import RepayDialog from "../dialogs/repayDialog";
+import Address from "../widgets/address";
+import Market from "../widgets/market";
+
 import {
-  Chip,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  TableHeader,
   TableRow,
-} from "@mui/material";
-import RepayDialog from "../dialogs/repayDialog";
-import Address from "../widgets/address";
-import Market from "../widgets/market";
+} from "@/components/ui/table";
+
+import { Badge } from "@/components/ui/badge";
 
 export default function BorrowerLoansTable({
   title,
@@ -45,21 +48,21 @@ export default function BorrowerLoansTable({
       {loans.length > 0 && (
         <div>
           <Table>
-            <TableHead>
+            <TableHeader>
               <TableRow>
-                <TableCell align="center">Lender</TableCell>
-                <TableCell align="center">Market</TableCell>
-                <TableCell align="center"> Side </TableCell>
-                <TableCell align="right">Shares</TableCell>
-                <TableCell align="right">Collateral</TableCell>
-                <TableCell align="right">Borrowed</TableCell>
-                <TableCell align="right">Owed</TableCell>
-                <TableCell align="right">Duration</TableCell>
-                <TableCell align="right">Time Left</TableCell>
-                <TableCell align="right">Rate</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableHead align="center">Lender</TableHead>
+                <TableHead align="center">Market</TableHead>
+                <TableHead align="center"> Side </TableHead>
+                <TableHead align="right">Shares</TableHead>
+                <TableHead align="right">Collateral</TableHead>
+                <TableHead align="right">Borrowed</TableHead>
+                <TableHead align="right">Owed</TableHead>
+                <TableHead align="right">Duration</TableHead>
+                <TableHead align="right">Time Left</TableHead>
+                <TableHead align="right">Rate</TableHead>
+                <TableHead align="center">Actions</TableHead>
               </TableRow>
-            </TableHead>
+            </TableHeader>
             <TableBody>
               {loans.map((loan) => (
                 <TableRow key={loan.loanId}>
@@ -70,13 +73,13 @@ export default function BorrowerLoansTable({
                     <Market market={loan.market} />
                   </TableCell>
                   <TableCell align="center">
-                    <Chip
-                      label={loan.market.outcome}
-                      size="small"
-                      color={
-                        loan.market.outcome === "Yes" ? "success" : "error"
+                    <Badge
+                      variant={
+                        loan.market.outcome === "Yes" ? "yes" : "destructive"
                       }
-                    />
+                    >
+                      {loan.market.outcome}
+                    </Badge>
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(loan.collateralAmount)}
