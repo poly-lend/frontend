@@ -3,7 +3,7 @@ import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { toDuration, toSPYWAI } from "@/utils/convertors";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BaseError } from "viem";
 import {
   usePublicClient,
@@ -29,18 +29,15 @@ import { HandCoinsIcon } from "lucide-react";
 export default function OfferDialog({
   requestId,
   loanDuration,
-  open,
-  close,
   onSuccess,
   onError,
 }: {
   requestId: bigint;
   loanDuration: number;
-  open: boolean;
-  close: () => void;
   onSuccess?: (successText: string) => void;
   onError?: (errorText: string) => void;
 }) {
+  const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState(1);
   const [rate, setRate] = useState(20);
   const [isApproving, setIsApproving] = useState(false);
@@ -51,6 +48,7 @@ export default function OfferDialog({
   const [offerTxHash, setOfferTxHash] = useState<`0x${string}` | undefined>(
     undefined
   );
+  const hasCalledSuccessRef = useRef<string | undefined>(undefined);
 
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
@@ -73,15 +71,21 @@ export default function OfferDialog({
       setOfferTxHash(undefined);
       setLoanAmount(1);
       setRate(20);
+      hasCalledSuccessRef.current = undefined;
     }
   }, [open]);
 
   useEffect(() => {
-    if (isOfferConfirmed) {
-      close();
+    if (
+      isOfferConfirmed &&
+      offerTxHash &&
+      hasCalledSuccessRef.current !== offerTxHash
+    ) {
+      hasCalledSuccessRef.current = offerTxHash;
+      setOpen(false);
       onSuccess?.("Offer submitted successfully");
     }
-  }, [isOfferConfirmed]);
+  }, [isOfferConfirmed, offerTxHash, onSuccess]);
 
   const handleApproval = async () => {
     if (!publicClient || !walletClient) return;
@@ -142,7 +146,7 @@ export default function OfferDialog({
     !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
           <Button variant="outline">Offer</Button>

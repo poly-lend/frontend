@@ -4,7 +4,6 @@ import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
-  Button,
   Chip,
   Collapse,
   IconButton,
@@ -37,13 +36,6 @@ export default function RequestsListTable({
   requests = requests.filter(
     (request: LoanRequest) => request.borrower !== userAddress
   );
-  const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
-
-  const [openOfferDialog, setOpenOfferDialog] = useState<boolean>(false);
-  const closeOfferDialog = () => {
-    setOpenOfferDialog(false);
-    selectRequest(null);
-  };
 
   const [expandedRequestIds, setExpandedRequestIds] = useState<Set<bigint>>(
     new Set()
@@ -60,12 +52,6 @@ export default function RequestsListTable({
     });
   };
 
-  const handleOfferSuccess = async (successText: string) => {
-    onRequestSuccess?.(successText);
-    setOpenOfferDialog(false);
-    selectRequest(null);
-  };
-
   return (
     <>
       <h2 className="text-2xl font-bold w-full text-center">
@@ -75,18 +61,6 @@ export default function RequestsListTable({
         <div className="text-center mt-4">No requests found</div>
       ) : (
         <>
-          {selectedRequest && (
-            <OfferDialog
-              loanDuration={Number(selectedRequest.minimumDuration)}
-              onSuccess={(successText: string) =>
-                handleOfferSuccess(successText)
-              }
-              onError={onRequestError}
-              requestId={selectedRequest.requestId}
-              open={openOfferDialog}
-              close={closeOfferDialog}
-            />
-          )}
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -154,8 +128,14 @@ export default function RequestsListTable({
                         </div>
                       </TableCell>
                       <TableCell align="center">
-                       <OfferDialog requestId={request.requestId} loanDuration={Number(request.minimumDuration)} open={openOfferDialog} close={closeOfferDialog} onSuccess={handleOfferSuccess} onError={onRequestError} />
-                      
+                        <OfferDialog
+                          requestId={request.requestId}
+                          loanDuration={Number(request.minimumDuration)}
+                          onSuccess={(successText: string) =>
+                            onRequestSuccess?.(successText)
+                          }
+                          onError={onRequestError}
+                        />
                       </TableCell>
                     </TableRow>
                     {isExpanded && (
