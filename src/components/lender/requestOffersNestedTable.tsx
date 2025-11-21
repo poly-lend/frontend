@@ -1,13 +1,17 @@
 import { LoanOffer } from "@/types/polyLend";
 import { toAPYText, toUSDCString } from "@/utils/convertors";
+import Address from "../widgets/address";
+
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
+  TableHeader,
   TableRow,
-} from "@mui/material";
-import Address from "../widgets/address";
+} from "@/components/ui/table";
 
 export default function RequestOffersNestedTable({
   offers,
@@ -16,29 +20,17 @@ export default function RequestOffersNestedTable({
 }) {
   return (
     <div style={{ width: "92%", margin: "0 auto" }}>
-      <Table
-        size="small"
-        sx={{
-          "& td, & th": { fontSize: "0.8rem" },
-        }}
-      >
-        <TableHead>
+      <Table className="text-xs">
+        <TableHeader className="border-b">
           <TableRow>
-            <TableCell align="right">Lender</TableCell>
-            <TableCell align="right">Amount</TableCell>
-            <TableCell align="right">Rate</TableCell>
+            <TableHead className="text-right">Lender</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-right">Rate</TableHead>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {offers.map((offer) => (
-            <TableRow
-              key={offer.offerId.toString()}
-              sx={{
-                "&:last-child td, &:last-child th": {
-                  border: 0,
-                },
-              }}
-            >
+            <TableRow key={offer.offerId.toString()}>
               <TableCell align="center">
                 <Address address={offer.lender} />
               </TableCell>
