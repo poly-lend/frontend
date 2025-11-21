@@ -8,7 +8,6 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import {
   Table,
   TableBody,
@@ -18,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -147,21 +147,19 @@ export default function LenderLoansTable({
         </h2>
       </div>
 
-      <ToggleButtonGroup
-        className="w-full flex justify-center mt-4"
-        color="primary"
-        size="small"
-        value={dataType}
-        exclusive
-        onChange={(_, value) => setDataType(value)}
-        aria-label="text alignment"
-      >
-        <ToggleButton value="my">My Loans</ToggleButton>
-        <ToggleButton value="all">All Loans</ToggleButton>
-      </ToggleButtonGroup>
-      {loans.length === 0 && (
-        <div className="text-center mt-4">No loans found</div>
-      )}
+      <div className="w-full flex justify-center mt-4 mb-2">
+        <Tabs
+          defaultValue="my"
+          className="w-fit"
+          onValueChange={(value) => setDataType(value as "my" | "all")}
+        >
+          <TabsList>
+            <TabsTrigger value="my">My Loans</TabsTrigger>
+            <TabsTrigger value="all">All Loans</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       {loans.length > 0 && (
         <Table>
           <TableHeader>
