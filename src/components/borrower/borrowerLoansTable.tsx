@@ -50,17 +50,17 @@ export default function BorrowerLoansTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead align="center">Lender</TableHead>
-                <TableHead align="center">Market</TableHead>
-                <TableHead align="center"> Side </TableHead>
-                <TableHead align="right">Shares</TableHead>
-                <TableHead align="right">Collateral</TableHead>
-                <TableHead align="right">Borrowed</TableHead>
-                <TableHead align="right">Owed</TableHead>
-                <TableHead align="right">Duration</TableHead>
-                <TableHead align="right">Time Left</TableHead>
-                <TableHead align="right">Rate</TableHead>
-                <TableHead align="center">Actions</TableHead>
+                <TableHead className="text-center">Lender</TableHead>
+                <TableHead className="text-center">Market</TableHead>
+                <TableHead className="text-center"> Side </TableHead>
+                <TableHead className="text-right">Shares</TableHead>
+                <TableHead className="text-right">Collateral</TableHead>
+                <TableHead className="text-right">Borrowed</TableHead>
+                <TableHead className="text-right">Owed</TableHead>
+                <TableHead className="text-right">Duration</TableHead>
+                <TableHead className="text-right">Time Left</TableHead>
+                <TableHead className="text-right">Rate</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

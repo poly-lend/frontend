@@ -7,16 +7,6 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
-// import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
-// import {
-//   Button,
-//   Chip,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableRow,
-// } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -25,15 +15,12 @@ import {
   useWalletClient,
 } from "wagmi";
 import Address from "../widgets/address";
-import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
