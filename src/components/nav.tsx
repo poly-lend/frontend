@@ -33,13 +33,13 @@ export default function Nav() {
     <nav className="sticky z-10 top-0 w-full bg-background">
       <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
         <NavigationMenu viewport={false}>
-          <NavigationMenuList className="gap-10 items-center flex">
+          <NavigationMenuList className="gap-8 items-center flex">
             <NavigationMenuItem>
               <Link href="/" className="flex items-center">
                 <img src="logo.png" alt="logo" className="h-12 w-auto" />
               </Link>
             </NavigationMenuItem>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center">
               {links.map((link) => {
                 return (
                   <NavigationMenuItem key={link.id}>
