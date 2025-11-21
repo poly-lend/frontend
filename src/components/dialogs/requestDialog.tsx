@@ -14,7 +14,6 @@ import {
   useWalletClient,
 } from "wagmi";
 import InfoAlert from "../widgets/infoAlert";
-import LoadingActionButton from "../widgets/loadingActionButton";
 import PositionSelect from "../widgets/positionSelect";
 
 import {

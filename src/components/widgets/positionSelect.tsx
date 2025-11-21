@@ -43,7 +43,7 @@ export default function PositionSelect({
           onPositionSelect(position);
         }}
       >
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full min-w-0 overflow-hidden *:data-[slot=select-value]:min-w-0">
           <SelectValue placeholder="Select Position" />
         </SelectTrigger>
         <SelectContent>
@@ -61,10 +61,12 @@ export default function PositionSelect({
                 <img
                   src={position.icon}
                   alt={position.title}
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8 rounded-full shrink-0"
                 />
-                <p className="text-sm font-medium">{position.title}</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm font-medium truncate min-w-0">
+                  {position.title}
+                </p>
+                <p className="text-sm text-gray-500 shrink-0">
                   {position.currentValue.toFixed(2)}
                 </p>
               </SelectItem>
