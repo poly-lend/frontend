@@ -1,6 +1,13 @@
 import { Position } from "@/types/polymarketPosition";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 export default function PositionSelect({
   address,
@@ -11,11 +18,7 @@ export default function PositionSelect({
   selectedPosition: Position | null;
   onPositionSelect: (position: Position | null) => void;
 }) {
-  const {
-    data: positions,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: positions, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const r = await fetch(
@@ -26,40 +29,53 @@ export default function PositionSelect({
     },
     staleTime: 60_000,
   });
+
   return (
-    <FormControl fullWidth>
-      <InputLabel id="position-select-label">Select Position</InputLabel>
+    <div className="grid gap-3">
+      <Label htmlFor="position">Position</Label>
       <Select
-        labelId="position-select-label"
-        variant="outlined"
-        label="Select Position"
-        value={selectedPosition?.asset.toString() ?? ""}
-        onChange={(e) => {
-          const selectedAsset = String(e.target.value);
+        value={selectedPosition?.asset.toString() ?? undefined}
+        onValueChange={(value) => {
           const position =
             positions?.find(
-              (position) => position.asset.toString() === selectedAsset
+              (position) => position.asset.toString() === value
             ) ?? null;
           onPositionSelect(position);
         }}
       >
-        {positions?.map((position) => (
-          <MenuItem
-            key={position.asset.toString()}
-            value={position.asset.toString()}
-            className="flex items-center gap-2"
-          >
-            <img
-              src={position.icon}
-              alt={position.title}
-              width={50}
-              height={50}
-            />
-            <h3>{position.title}</h3>
-            <p>{position.currentValue.toFixed(2)}</p>
-          </MenuItem>
-        ))}
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select Position" />
+        </SelectTrigger>
+        <SelectContent>
+          {isLoading ? (
+            <SelectItem value="loading" disabled>
+              Loading...
+            </SelectItem>
+          ) : positions && positions.length > 0 ? (
+            positions.map((position) => (
+              <SelectItem
+                key={position.asset.toString()}
+                value={position.asset.toString()}
+                className="flex items-center gap-2"
+              >
+                <img
+                  src={position.icon}
+                  alt={position.title}
+                  className="w-8 h-8 rounded-full"
+                />
+                <p className="text-sm font-medium">{position.title}</p>
+                <p className="text-sm text-gray-500">
+                  {position.currentValue.toFixed(2)}
+                </p>
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem value="no-positions" disabled>
+              No positions available
+            </SelectItem>
+          )}
+        </SelectContent>
       </Select>
-    </FormControl>
+    </div>
   );
 }

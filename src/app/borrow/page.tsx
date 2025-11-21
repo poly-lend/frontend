@@ -46,15 +46,7 @@ export default function Borrow() {
       >
         Borrow
       </h1>
-      <RequestDialog
-        open={openRequestDialog}
-        close={() => setOpenRequestDialog(false)}
-        onSuccess={(successText: string) => handleRequestSuccess(successText)}
-        onError={(text: string) => {
-          setErrorText(text);
-          setSuccessText("");
-        }}
-      />
+
       {(errorText || successText) && (
         <Snackbar
           open={!!successText || !!errorText}
@@ -81,15 +73,17 @@ export default function Borrow() {
       <WalletGuard isDataReady={!!data}>
         <>
           <div className="flex justify-center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenRequestDialog(true)}
-              className="shadow-lg rounded-full w-fit"
-              size="large"
-            >
-              Request a Loan
-            </Button>
+            <RequestDialog
+              open={openRequestDialog}
+              close={() => setOpenRequestDialog(false)}
+              onSuccess={(successText: string) =>
+                handleRequestSuccess(successText)
+              }
+              onError={(text: string) => {
+                setErrorText(text);
+                setSuccessText("");
+              }}
+            />
           </div>
           <BorrowerRequestsTable
             address={address as `0x${string}`}
