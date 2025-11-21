@@ -1,5 +1,5 @@
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 
 const Market = ({ market }: { market: any }) => {
   return (
@@ -16,8 +16,8 @@ const Market = ({ market }: { market: any }) => {
         className="rounded-full mr-2"
       />
 
-      <div className="text-sm text-left line-clamp-2 mr-1 ">
-        {market.market.question} <OpenInNewIcon sx={{ fontSize: 16 }} />
+      <div className="flex items-center gap-1 text-sm text-left line-clamp-2 mr-1 ">
+        {market.market.question} <ExternalLink className="w-4 h-4" />
       </div>
     </Link>
   );

@@ -8,16 +8,16 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import {
-  Chip,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  TableHeader,
   TableRow,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -29,6 +29,7 @@ import TransferDialog from "../dialogs/transferDialog";
 import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
+import { cn } from "@/lib/utils";
 
 export default function LenderLoansTable({
   lender,
@@ -163,22 +164,22 @@ export default function LenderLoansTable({
       )}
       {loans.length > 0 && (
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
-              <TableCell align="center">Borrower</TableCell>
-              <TableCell align="center">Market</TableCell>
-              <TableCell align="center"> Side </TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Shares</TableCell>
-              <TableCell align="right">Collateral</TableCell>
-              <TableCell align="right">Lent</TableCell>
-              <TableCell align="right">Owed</TableCell>
-              <TableCell align="right">Duration</TableCell>
-              <TableCell align="right">Time Left</TableCell>
-              <TableCell align="right">Rate</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableHead className="text-center">Borrower</TableHead>
+              <TableHead className="text-center">Market</TableHead>
+              <TableHead className="text-center"> Side </TableHead>
+              <TableHead className="text-right">Status</TableHead>
+              <TableHead className="text-right">Shares</TableHead>
+              <TableHead className="text-right">Collateral</TableHead>
+              <TableHead className="text-right">Lent</TableHead>
+              <TableHead className="text-right">Owed</TableHead>
+              <TableHead className="text-right">Duration</TableHead>
+              <TableHead className="text-right">Time Left</TableHead>
+              <TableHead className="text-right">Rate</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
           <TableBody>
             {loans.map((loan) => (
               <TableRow key={loan.loanId}>
@@ -189,17 +190,13 @@ export default function LenderLoansTable({
                   <Market market={loan.market} />
                 </TableCell>
                 <TableCell align="center">
-                  <Chip
-                    label={loan.market.outcome}
-                    size="small"
-                    color={loan.market.outcome === "Yes" ? "success" : "error"}
-                  />
+                  <Badge variant={loan.market.outcome === "Yes" ? "yes" : "no"}>
+                    {loan.market.outcome}
+                  </Badge>
                 </TableCell>
                 <TableCell
                   align="right"
-                  sx={{
-                    color: loan.callTime > 0 ? "red" : "",
-                  }}
+                  className={cn(loan.callTime > 0 ? "text-red-500" : "")}
                 >
                   {loan.callTime > 0 ? "Called" : "Active"}
                 </TableCell>

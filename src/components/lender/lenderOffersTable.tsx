@@ -7,14 +7,6 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
-import {
-  Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -25,6 +17,16 @@ import {
 import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "../ui/badge";
 
 export default function LenderOffersTable({
   title,
@@ -98,20 +100,20 @@ export default function LenderOffersTable({
         <div className="text-center mt-4">No offers found</div>
       )}
       {offers.length > 0 && (
-        <Table size="small">
-          <TableHead>
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell align="center">Lender</TableCell>
-              <TableCell align="center">Market</TableCell>
-              <TableCell align="center"> Side </TableCell>
-              <TableCell align="right">Shares</TableCell>
-              <TableCell align="right">Collateral</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Duration</TableCell>
-              <TableCell align="right">Rate</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableHead className="text-center">Lender</TableHead>
+              <TableHead className="text-center">Market</TableHead>
+              <TableHead className="text-center"> Side </TableHead>
+              <TableHead className="text-right">Shares</TableHead>
+              <TableHead className="text-right">Collateral</TableHead>
+              <TableHead className="text-right">Amount</TableHead>
+              <TableHead className="text-right">Duration</TableHead>
+              <TableHead className="text-right">Rate</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
           <TableBody>
             {offers.map((offer) => (
               <TableRow key={offer.offerId.toString()}>
@@ -122,11 +124,11 @@ export default function LenderOffersTable({
                   <Market market={offer.market} />
                 </TableCell>
                 <TableCell align="center">
-                  <Chip
-                    label={offer.market.outcome}
-                    size="small"
-                    color={offer.market.outcome === "Yes" ? "success" : "error"}
-                  />
+                  <Badge
+                    variant={offer.market.outcome === "Yes" ? "yes" : "no"}
+                  >
+                    {offer.market.outcome}
+                  </Badge>
                 </TableCell>
                 <TableCell align="right">
                   {toSharesText(offer.request!.collateralAmount)}
@@ -146,8 +148,8 @@ export default function LenderOffersTable({
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                 <TableCell align="center">
                   <LoadingActionButton
-                    variant="outlined"
-                    color="error"
+                    variant="outline"
+                    className="text-destructive hover:bg-destructive/20 hover:text-destructive"
                     onClick={() => cancelOffer(offer.offerId)}
                     loading={
                       cancellingOfferId === offer.offerId &&
