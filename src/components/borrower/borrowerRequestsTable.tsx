@@ -17,6 +17,7 @@ import {
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 
+import LoadingActionButton from "../widgets/loadingActionButton";
 import {
   Table,
   TableBody,
@@ -211,19 +212,17 @@ export default function BorrowerRequestsTable({
                           <ChevronDown />
                         )}
                       </Button>
-                      <Button
+                      <LoadingActionButton
                         variant="outline"
                         className="text-destructive hover:bg-destructive/20 hover:text-destructive"
                         onClick={() => cancelRequest(request.requestId)}
-                        disabled={
+                        loading={
                           cancellingRequestId === request.requestId &&
                           (isCancelling || isCancelConfirming)
                         }
                       >
-                        {isCancelling || isCancelConfirming
-                          ? "Cancelling..."
-                          : "Cancel"}
-                      </Button>
+                        Cancel
+                      </LoadingActionButton>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -265,19 +264,17 @@ export default function BorrowerRequestsTable({
                                   {toAPYText(offer.rate)}
                                 </TableCell>
                                 <TableCell align="center">
-                                  <Button
+                                  <LoadingActionButton
                                     variant="outline"
                                     className="text-primary hover:bg-primary/20 hover:text-primary"
                                     onClick={() => acceptOffer(offer.offerId)}
-                                    disabled={
+                                    loading={
                                       acceptingOfferId === offer.offerId &&
                                       (isAccepting || isAcceptConfirming)
                                     }
                                   >
-                                    {isAccepting || isAcceptConfirming
-                                      ? "Accepting..."
-                                      : "Accept"}
-                                  </Button>
+                                    Accept
+                                  </LoadingActionButton>
                                 </TableCell>
                               </TableRow>
                             ))}

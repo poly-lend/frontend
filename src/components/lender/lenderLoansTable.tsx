@@ -245,7 +245,7 @@ export default function LenderLoansTable({
                     {dataType === "my" ? (
                       <>
                         <LoadingActionButton
-                          variant="outlined"
+                          variant="outline"
                           color="primary"
                           disabled={
                             Number(loan.minimumDuration) -
@@ -264,7 +264,7 @@ export default function LenderLoansTable({
                           Call
                         </LoadingActionButton>
                         <LoadingActionButton
-                          variant="outlined"
+                          variant="outline"
                           color="primary"
                           disabled={
                             Number(loan.callTime) === 0 ||

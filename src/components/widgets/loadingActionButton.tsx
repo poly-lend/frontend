@@ -1,34 +1,32 @@
-import { Box, Button, CircularProgress, type ButtonProps } from "@mui/material";
 import { ReactNode } from "react";
+import { Spinner } from "../ui/spinner";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 type LoadingActionButtonProps = {
   children: ReactNode;
   loading?: boolean;
-} & ButtonProps;
+} & React.ComponentProps<typeof Button>;
 
 export default function LoadingActionButton({
   children,
   loading = false,
   disabled,
+  className,
   ...buttonProps
 }: LoadingActionButtonProps) {
   return (
-    <Box sx={{ position: "relative" }}>
-      <Button disabled={loading || disabled} {...buttonProps}>
-        {children}
-      </Button>
+    <Button
+      disabled={loading || disabled}
+      className={cn("relative", className)}
+      {...buttonProps}
+    >
+      <span className={loading ? "invisible" : "visible"}>{children}</span>
       {loading && (
-        <CircularProgress
-          size={24}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            marginTop: "-12px",
-            marginLeft: "-12px",
-          }}
-        />
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <Spinner />
+        </span>
       )}
-    </Box>
+    </Button>
   );
 }
