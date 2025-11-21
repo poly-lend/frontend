@@ -18,6 +18,8 @@ export default function Balance() {
   });
 
   useEffect(() => {
+    if (!balanceRefresh) return;
+
     refetch();
     setBalanceRefresh(false);
   }, [balanceRefresh, refetch, setBalanceRefresh]);

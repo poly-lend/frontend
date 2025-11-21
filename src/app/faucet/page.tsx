@@ -5,7 +5,9 @@ import WalletGuard from "@/components/web3/walletGuard";
 import LoadingActionButton from "@/components/widgets/loadingActionButton";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
-import { Alert, Input, Snackbar } from "@mui/material";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, Snackbar } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import {
   BaseError,
@@ -100,23 +102,51 @@ export default function Faucet() {
       )}
 
       <WalletGuard>
-        <div className="flex flex-col gap-4 mt-4">
-          <div className="flex items-center gap-4">
-            <Input
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              placeholder="Amount"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
-            />
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={() => mintUSDC()}
-              loading={isPending || isConfirming}
-              disabled={isPending || isConfirming}
-            >
-              Mint pfUSDC
-            </LoadingActionButton>
+        <div className="mt-6 w-full max-w-md mx-auto rounded-xl border border-slate-900 bg-slate-950/80 p-6 space-y-4">
+          <div className="space-y-1">
+            <h2 className="text-base font-semibold text-slate-50">
+              Mint test pfUSDC
+            </h2>
+            <p className="text-xs text-slate-300">
+              Request test pfUSDC for experimenting with PolyLend. Funds are for
+              testing only and have no real-world value.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label
+                htmlFor="faucet-amount"
+                className="text-xs font-medium text-slate-200"
+              >
+                Amount to mint
+              </Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  id="faucet-amount"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  type="number"
+                  placeholder="1000"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                  className="flex-1"
+                />
+                <LoadingActionButton
+                  variant="default"
+                  onClick={() => mintUSDC()}
+                  loading={isPending || isConfirming}
+                  disabled={isPending || isConfirming}
+                  className="min-w-30"
+                >
+                  {isPending || isConfirming ? "Minting..." : "Mint pfUSDC"}
+                </LoadingActionButton>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-slate-400">
+              Transaction may take a few moments to confirm on-chain.
+            </p>
           </div>
         </div>
       </WalletGuard>
