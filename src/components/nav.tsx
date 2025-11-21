@@ -1,12 +1,21 @@
-import LaunchIcon from "@mui/icons-material/Launch";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ClientOnly from "../utils/clientOnly";
 import ConnectWallet from "./web3/connectWallet";
 import SwitchChain from "./web3/switchChain";
 import Balance from "./widgets/balance";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 export default function Nav() {
+  const pathname = usePathname();
   const links = [
     { href: "/", label: "Home", id: "home" },
     { href: "/lend", label: "Lend", id: "lend" },
@@ -21,33 +30,45 @@ export default function Nav() {
   ];
 
   return (
-    <nav className="sticky z-10 top-0 w-full text-[var(--text-primary)] flex justify-between items-center px-4 h-16">
+    <nav className="sticky z-10 top-0 w-full bg-background">
       <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
-        <div className="flex">
-          <Link href="/">
-            <img src="logo.png" alt="logo" className="h-12 w-auto mr-12" />
-          </Link>
+        <NavigationMenu viewport={false}>
+          <NavigationMenuList className="gap-10 items-center flex">
+            <NavigationMenuItem>
+              <Link href="/" className="flex items-center">
+                <img src="logo.png" alt="logo" className="h-12 w-auto" />
+              </Link>
+            </NavigationMenuItem>
+            <div className="flex items-center gap-4">
+              {links.map((link) => {
+                return (
+                  <NavigationMenuItem key={link.id}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={link.href}
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          pathname === link.href && "text-primary"
+                        )}
+                      >
+                        <div className="flex items-center gap-1.5 text-base">
+                          {link.label}
+                          {link.external && (
+                            <ExternalLink className="h-4 w-4" />
+                          )}
+                        </div>
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                );
+              })}
+            </div>
+          </NavigationMenuList>
+        </NavigationMenu>
 
-          {links.map((link) => (
-            <Link
-              href={link.href}
-              key={link.id}
-              className="mr-8 mt-3 font-bold"
-              style={{
-                color:
-                  usePathname() === link.href
-                    ? "var(--brand-yellow)"
-                    : "var(--text-primary)",
-              }}
-              target={link.external ? "_blank" : undefined}
-            >
-              {link.label}{" "}
-              {link.external && <LaunchIcon sx={{ fontSize: 16 }} />}
-            </Link>
-          ))}
-        </div>
-
-        <div className="flex items-center h-16 px-4">
+        <div className="flex items-center gap-4">
           <ClientOnly>
             <SwitchChain />
           </ClientOnly>
