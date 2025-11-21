@@ -9,7 +9,6 @@ import {
   toUSDCString,
 } from "@/utils/convertors";
 import {
-  Button,
   Chip,
   Table,
   TableBody,
@@ -46,10 +45,6 @@ export default function LenderLoansTable({
   onActionError?: (errorText: string) => void;
 }) {
   const [dataType, setDataType] = useState<"my" | "all">("my");
-  const [transferringLoan, setTransferringLoan] = useState<{
-    loanId: bigint;
-    callTime: bigint;
-  } | null>(null);
   let loans = data.loans;
 
   loans = loans.filter((loan: Loan) => loan.borrower !== lender);
@@ -150,17 +145,6 @@ export default function LenderLoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
-
-      {transferringLoan !== null && (
-        <TransferDialog
-          loanId={transferringLoan.loanId}
-          callTime={transferringLoan.callTime}
-          open={transferringLoan !== null}
-          close={() => setTransferringLoan(null)}
-          onSuccess={(text: string) => onActionSuccess?.(text)}
-          onError={(text: string) => onActionError?.(text)}
-        />
-      )}
 
       <ToggleButtonGroup
         className="w-full flex justify-center mt-4"
@@ -300,19 +284,12 @@ export default function LenderLoansTable({
                       </>
                     ) : (
                       <>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          disabled={Number(loan.callTime) == 0}
-                          onClick={() =>
-                            setTransferringLoan({
-                              loanId: loan.loanId,
-                              callTime: loan.callTime,
-                            })
-                          }
-                        >
-                          Transfer
-                        </Button>
+                        <TransferDialog
+                          loanId={loan.loanId}
+                          callTime={loan.callTime}
+                          onSuccess={(text: string) => onActionSuccess?.(text)}
+                          onError={(text: string) => onActionError?.(text)}
+                        />
                       </>
                     )}
                   </div>

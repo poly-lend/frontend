@@ -5,18 +5,7 @@ import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { calculateMaxTransferRate } from "@/utils/calculations";
 import { toAPYText, toSPYWAI } from "@/utils/convertors";
 import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BaseError } from "viem";
 import {
   usePublicClient,
@@ -24,13 +13,22 @@ import {
   useWalletClient,
 } from "wagmi";
 import InfoAlert from "../widgets/infoAlert";
-import LoadingActionButton from "../widgets/loadingActionButton";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export type TransferDialogProps = {
   loanId: bigint;
   callTime: bigint;
-  open: boolean;
-  close: () => void;
   onSuccess?: (successText: string) => void;
   onError?: (errorText: string) => void;
 };
@@ -38,11 +36,10 @@ export type TransferDialogProps = {
 export default function TransferDialog({
   loanId,
   callTime,
-  open,
-  close,
   onSuccess,
   onError,
 }: TransferDialogProps) {
+  const [open, setOpen] = useState(false);
   const [newRate, setNewRate] = useState<number>(0);
   const [amountAtCall, setAmountAtCall] = useState<bigint>(BigInt(0));
 
@@ -58,6 +55,7 @@ export default function TransferDialog({
     `0x${string}` | undefined
   >(undefined);
   const [inputError, setInputError] = useState<string | undefined>(undefined);
+  const hasCalledSuccessRef = useRef<string | undefined>(undefined);
 
   const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
     useWaitForTransactionReceipt({ hash: approvalTxHash });
@@ -86,7 +84,7 @@ export default function TransferDialog({
       setAmountAtCall(owed);
     };
     getAmountOwed();
-  }, [publicClient, open, loanId, callTime]);
+  }, [open, publicClient, loanId, callTime]);
 
   useEffect(() => {
     if (open) {
@@ -96,15 +94,21 @@ export default function TransferDialog({
       setTransferTxHash(undefined);
       setNewRate(0);
       setInputError(undefined);
+      hasCalledSuccessRef.current = undefined;
     }
   }, [open]);
 
   useEffect(() => {
-    if (isTransferConfirmed) {
-      close();
+    if (
+      isTransferConfirmed &&
+      transferTxHash &&
+      hasCalledSuccessRef.current !== transferTxHash
+    ) {
+      hasCalledSuccessRef.current = transferTxHash;
+      setOpen(false);
       onSuccess?.("Transfer submitted successfully");
     }
-  }, [isTransferConfirmed]);
+  }, [isTransferConfirmed, transferTxHash, onSuccess]);
 
   const handleApproval = async () => {
     if (!walletClient || !publicClient) return;
@@ -156,105 +160,94 @@ export default function TransferDialog({
     }
   };
   const maxTransferRate = calculateMaxTransferRate(callTime);
+
   return (
-    <Dialog
-      open={open}
-      fullWidth
-      maxWidth="xs"
-      className="bg-gray-900/30 backdrop-blur-xs"
-      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
-    >
-      <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">Transfer Loan</p>
-        <IconButton
-          onClick={close}
-          size="small"
-          className="text-gray-400 hover:text-white"
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent>
-        <Stack spacing={2.5} className="py-1.5">
-          <div>
-            <TextField
-              label="New rate (APY)"
-              type="number"
-              value={newRate}
-              onChange={(e) => {
-                setNewRate(Number(e.target.value));
-                setInputError(undefined);
-              }}
-              error={!!inputError}
-              className="text-gray-100"
-              slotProps={{
-                input: {
-                  inputProps: {
-                    min: 0,
-                  },
-                },
-              }}
-              fullWidth
-            />
-            <div className="flex justify-between mt-1">
-              <p
-                className={`text-sm text-gray-400 font-medium ${
-                  inputError ? "text-red-500" : ""
-                }`}
-              >
-                Current max rate: {toAPYText(maxTransferRate)}
-              </p>
-              {inputError ? (
-                <p className="text-sm text-red-500 font-medium">{inputError}</p>
-              ) : null}
-            </div>
-          </div>
-        </Stack>
-        {!transferIsEnabled && !isAllowanceLoading && (
-          <InfoAlert text="You need to approve the contract to spend your tokens before you can transfer the loan. Click 'Approve' first, then 'Transfer' once the approval is confirmed." />
-        )}
-      </DialogContent>
-      <DialogActions
-        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
-      >
-        <Button variant="outlined" color="secondary" onClick={close}>
-          Cancel
-        </Button>
-        <div className="flex items-center gap-2">
-          {!transferIsEnabled && !isAllowanceLoading && (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={handleApproval}
-              loading={isApproving || isApprovalConfirming}
-              disabled={
-                isApproving ||
-                isApprovalConfirming ||
-                amountAtCall === BigInt(0)
-              }
-            >
-              Approve
-            </LoadingActionButton>
-          )}
-
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={handleTransfer}
-            loading={isTransferring || isTransferConfirming}
-            disabled={
-              isTransferring ||
-              isTransferConfirming ||
-              newRate <= 0 ||
-              !!inputError ||
-              !transferIsEnabled
-            }
-          >
+    <Dialog open={open} onOpenChange={setOpen}>
+      <form>
+        <DialogTrigger asChild>
+          <Button variant="outline" disabled={Number(callTime) === 0}>
             Transfer
-          </LoadingActionButton>
-        </div>
-      </DialogActions>
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Transfer Loan</DialogTitle>
+          </DialogHeader>
+
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="newRate">New rate (APY)</Label>
+              <Input
+                id="newRate"
+                type="number"
+                value={newRate}
+                onChange={(e) => {
+                  setNewRate(Number(e.target.value));
+                  setInputError(undefined);
+                }}
+                min={0}
+                aria-invalid={!!inputError}
+              />
+              <div className="flex justify-between">
+                <p
+                  className={`text-sm text-gray-400 font-medium ${
+                    inputError ? "text-red-500" : ""
+                  }`}
+                >
+                  Current max rate: {toAPYText(maxTransferRate)}
+                </p>
+                {inputError ? (
+                  <p className="text-sm text-red-500 font-medium">
+                    {inputError}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            {!transferIsEnabled && !isAllowanceLoading && (
+              <InfoAlert text="You need to approve the contract to spend your tokens before you can transfer the loan. Click 'Approve' first, then 'Transfer' once the approval is confirmed." />
+            )}
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <div className="flex items-center gap-2">
+              {!transferIsEnabled && !isAllowanceLoading && (
+                <Button
+                  onClick={handleApproval}
+                  disabled={
+                    isApproving ||
+                    isApprovalConfirming ||
+                    amountAtCall === BigInt(0)
+                  }
+                >
+                  {isApproving || isApprovalConfirming
+                    ? "Approving..."
+                    : "Approve"}
+                </Button>
+              )}
+
+              <Button
+                onClick={handleTransfer}
+                disabled={
+                  isTransferring ||
+                  isTransferConfirming ||
+                  newRate <= 0 ||
+                  !!inputError ||
+                  !transferIsEnabled
+                }
+              >
+                {isTransferring || isTransferConfirming
+                  ? "Transferring..."
+                  : "Transfer"}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </form>
     </Dialog>
   );
 }
