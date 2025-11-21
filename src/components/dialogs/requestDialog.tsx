@@ -95,6 +95,8 @@ export default function RequestDialog({
     if (open) {
       setIsApproving(false);
       setApprovalTxHash(undefined);
+      setIsRequesting(false);
+      setRequestTxHash(undefined);
     }
   }, [open]);
 
