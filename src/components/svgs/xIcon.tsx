@@ -1,8 +1,12 @@
 import Link from "next/link";
 
-export default function DexScreenerIcon() {
+export default function XIcon() {
   return (
-    <Link href="https://x.com/poly_lend" target="_blank">
+    <Link
+      href="https://x.com/poly_lend"
+      target="_blank"
+      className=" hover:scale-110 transition-all duration-150"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 30 30"

@@ -1,8 +1,12 @@
 import Link from "next/link";
 
-export default function DexScreenerIcon() {
+export default function GithubIcon() {
   return (
-    <Link href="https://github.com/poly-lend/" target="_blank">
+    <Link
+      href="https://github.com/poly-lend/"
+      target="_blank"
+      className=" hover:scale-110 transition-all duration-150"
+    >
       <svg
         fill="#ffffff"
         width="24px"

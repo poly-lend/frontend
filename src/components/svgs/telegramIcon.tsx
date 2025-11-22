@@ -1,8 +1,12 @@
 import Link from "next/link";
 
-export default function DexScreenerIcon() {
+export default function TelegramIcon() {
   return (
-    <Link href="https://t.me/poly_lend" target="_blank">
+    <Link
+      href="https://t.me/poly_lend"
+      target="_blank"
+      className=" hover:scale-110 transition-all duration-150"
+    >
       <svg
         width="24px"
         height="24px"

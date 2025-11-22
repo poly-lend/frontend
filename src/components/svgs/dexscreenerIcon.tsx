@@ -5,6 +5,7 @@ export default function DexScreenerIcon() {
     <Link
       href="https://dexscreener.com/solana/spxt3uccvjbuixzv8uwtxscxkchkzrs9hqnmyxzgfkh"
       target="_blank"
+      className=" hover:scale-110 transition-all duration-150"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
