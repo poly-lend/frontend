@@ -74,17 +74,7 @@ export default function Faucet() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1
-        style={{
-          fontSize: 36,
-          fontWeight: 800,
-          paddingTop: 50,
-          paddingBottom: 20,
-          textAlign: "center",
-        }}
-      >
-        Faucet
-      </h1>
+      <h1 className="font-bold text-center text-4xl mb-4">Faucet</h1>
 
       <WalletGuard>
         <div className="mt-6 w-full max-w-md mx-auto rounded-xl border border-slate-900 bg-slate-950/80 p-6 space-y-4">

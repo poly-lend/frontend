@@ -43,17 +43,7 @@ export default function Borrow() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1
-        style={{
-          fontSize: 36,
-          fontWeight: 800,
-          paddingTop: 50,
-          paddingBottom: 20,
-          textAlign: "center",
-        }}
-      >
-        Borrow
-      </h1>
+      <h1 className="font-bold text-center text-4xl mb-4">Borrow</h1>
 
       <WalletGuard isDataReady={!!data}>
         <>

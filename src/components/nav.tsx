@@ -53,7 +53,7 @@ export default function Nav() {
                           pathname === link.href && "text-primary"
                         )}
                       >
-                        <div className="flex items-center gap-1.5 text-base">
+                        <div className="flex items-center gap-1.5 text-base font-bold">
                           {link.label}
                           {link.external && (
                             <ExternalLink className="h-4 w-4" />
@@ -68,7 +68,7 @@ export default function Nav() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 font-bold">
           <ClientOnly>
             <SwitchChain />
           </ClientOnly>

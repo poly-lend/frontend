@@ -4,7 +4,6 @@ import { BalanceRefreshContext } from "@/app/context";
 import Bottom from "@/components/bottom";
 import Nav from "@/components/nav";
 import Top from "@/components/top";
-import { Toaster } from "@/components/ui/sonner";
 import { queryClient, wagmiConfig } from "@/utils/wagmi";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
@@ -22,11 +21,10 @@ export default function Children({ children }: { children: React.ReactNode }) {
           <QueryClientProvider client={queryClient}>
             <Top />
             <Nav />
-            <div className="w-full max-w-7xl mx-auto px-4 flex-1">
+            <div className="w-full max-w-7xl mx-auto px-4 flex-1 py-8">
               {children}
             </div>
             <Bottom />
-            <Toaster closeButton />
           </QueryClientProvider>
         </WagmiProvider>
       </BalanceRefreshContext.Provider>

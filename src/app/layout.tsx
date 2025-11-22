@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Children from "./children";
 import "./globals.css";
-
+import { Toaster } from "@/components/ui/sonner";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({
-  weight: "600",
+  weight: ["400", "500", "700"],
   subsets: ["latin"],
 });
 
@@ -27,6 +27,7 @@ export default function RootLayout({
     <html lang="en" className={roboto.className}>
       <body className="min-h-screen flex flex-col">
         <Children>{children}</Children>
+        <Toaster closeButton />
       </body>
     </html>
   );
