@@ -1,13 +1,11 @@
 "use client";
 
 import { BalanceRefreshContext } from "@/app/context";
-import { theme } from "@/app/theme";
 import Bottom from "@/components/bottom";
 import Nav from "@/components/nav";
 import Top from "@/components/top";
 import { Toaster } from "@/components/ui/sonner";
 import { queryClient, wagmiConfig } from "@/utils/wagmi";
-import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { WagmiProvider } from "wagmi";
@@ -16,8 +14,7 @@ export default function Children({ children }: { children: React.ReactNode }) {
   const [balanceRefresh, setBalanceRefresh] = useState(false);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <>
       <BalanceRefreshContext.Provider
         value={{ balanceRefresh, setBalanceRefresh }}
       >
@@ -33,6 +30,6 @@ export default function Children({ children }: { children: React.ReactNode }) {
           </QueryClientProvider>
         </WagmiProvider>
       </BalanceRefreshContext.Provider>
-    </ThemeProvider>
+    </>
   );
 }
