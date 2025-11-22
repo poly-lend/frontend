@@ -6,7 +6,6 @@ import RequestDialog from "@/components/dialogs/requestDialog";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
@@ -24,7 +23,7 @@ export default function Borrow() {
 
   const handleRefreshData = () => {
     if (!publicClient) return;
-    fetchData({ publicClient }).then(setData);
+    fetchData({ publicClient, borrower: address }).then(setData);
   };
 
   return (
