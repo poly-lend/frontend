@@ -155,8 +155,12 @@ export default function LenderLoansTable({
           onValueChange={(value) => setDataType(value as "my" | "all")}
         >
           <TabsList>
-            <TabsTrigger value="my">My Loans</TabsTrigger>
-            <TabsTrigger value="all">All Loans</TabsTrigger>
+            <TabsTrigger value="my" className="cursor-pointer">
+              My Loans
+            </TabsTrigger>
+            <TabsTrigger value="all" className="cursor-pointer">
+              All Loans
+            </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
