@@ -5,6 +5,7 @@ import { theme } from "@/app/theme";
 import Bottom from "@/components/bottom";
 import Nav from "@/components/nav";
 import Top from "@/components/top";
+import { Toaster } from "@/components/ui/sonner";
 import { queryClient, wagmiConfig } from "@/utils/wagmi";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -28,6 +29,7 @@ export default function Children({ children }: { children: React.ReactNode }) {
               {children}
             </div>
             <Bottom />
+            <Toaster closeButton />
           </QueryClientProvider>
         </WagmiProvider>
       </BalanceRefreshContext.Provider>

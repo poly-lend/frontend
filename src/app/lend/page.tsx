@@ -6,10 +6,10 @@ import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { Alert, Snackbar } from "@mui/material";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient } from "wagmi";
+import { toast } from "sonner";
 
 export default function Lend() {
   const { address, status } = useAccount();
@@ -22,6 +22,14 @@ export default function Lend() {
     if (!publicClient) return;
     fetchData({ publicClient }).then(setData);
   }, [publicClient, address]);
+
+  useEffect(() => {
+    if (!!successText) {
+      toast.success(successText);
+    } else if (!!errorText) {
+      toast.error(errorText);
+    }
+  }, [successText, errorText]);
 
   const handleRequestSuccess = async (successText: string) => {
     setSuccessText(successText);
@@ -44,28 +52,6 @@ export default function Lend() {
       >
         Lend
       </h1>
-      {(errorText || successText) && (
-        <Snackbar
-          open={!!successText || !!errorText}
-          autoHideDuration={4000}
-          onClose={() => {
-            setSuccessText("");
-            setErrorText("");
-          }}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => {
-              setSuccessText("");
-              setErrorText("");
-            }}
-            severity={errorText ? "error" : "success"}
-            sx={{ width: "100%" }}
-          >
-            {errorText || successText}
-          </Alert>
-        </Snackbar>
-      )}
 
       <WalletGuard
         isDataReady={!!data}

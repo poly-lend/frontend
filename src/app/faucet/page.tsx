@@ -7,7 +7,6 @@ import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, Snackbar } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import {
   BaseError,
@@ -15,6 +14,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
+import { toast } from "sonner";
 
 export default function Faucet() {
   const { address } = useAccount();
@@ -64,6 +64,14 @@ export default function Faucet() {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (!!successText) {
+      toast.success(successText);
+    } else if (!!errorText) {
+      toast.error(errorText);
+    }
+  }, [successText, errorText]);
+
   return (
     <div className="flex flex-col gap-2">
       <h1
@@ -77,29 +85,6 @@ export default function Faucet() {
       >
         Faucet
       </h1>
-
-      {(errorText || successText) && (
-        <Snackbar
-          open={!!successText || !!errorText}
-          autoHideDuration={4000}
-          onClose={() => {
-            setSuccessText("");
-            setErrorText("");
-          }}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => {
-              setSuccessText("");
-              setErrorText("");
-            }}
-            severity={errorText ? "error" : "success"}
-            sx={{ width: "100%" }}
-          >
-            {errorText || successText}
-          </Alert>
-        </Snackbar>
-      )}
 
       <WalletGuard>
         <div className="mt-6 w-full max-w-md mx-auto rounded-xl border border-slate-900 bg-slate-950/80 p-6 space-y-4">
