@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -30,20 +30,19 @@ import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function LenderLoansTable({
   lender,
   title,
   data,
-  onActionSuccess,
-  onActionError,
+  onDataRefresh,
 }: {
   lender: `0x${string}`;
   data: AllLoanData;
   title?: string;
   borrower?: `0x${string}`;
-  onActionSuccess?: (successText: string) => void;
-  onActionError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const [dataType, setDataType] = useState<"my" | "all">("my");
   let loans = data.loans;
@@ -77,7 +76,8 @@ export default function LenderLoansTable({
 
   useEffect(() => {
     if (isCallConfirmed) {
-      onActionSuccess?.("Loan called successfully");
+      toast.success("Loan called successfully");
+      onDataRefresh();
       setCallingLoanId(null);
       setCallTxHash(undefined);
     }
@@ -85,7 +85,8 @@ export default function LenderLoansTable({
 
   useEffect(() => {
     if (isReclaimConfirmed) {
-      onActionSuccess?.("Collateral reclaimed successfully");
+      toast.success("Collateral reclaimed successfully");
+      onDataRefresh();
       setReclaimingLoanId(null);
       setReclaimTxHash(undefined);
     }
@@ -108,7 +109,7 @@ export default function LenderLoansTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setCallingLoanId(null);
     } finally {
       setIsCalling(false);
@@ -132,7 +133,7 @@ export default function LenderLoansTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setReclaimingLoanId(null);
     } finally {
       setIsReclaiming(false);
@@ -282,8 +283,7 @@ export default function LenderLoansTable({
                         <TransferDialog
                           loanId={loan.loanId}
                           callTime={loan.callTime}
-                          onSuccess={(text: string) => onActionSuccess?.(text)}
-                          onError={(text: string) => onActionError?.(text)}
+                          onDataRefresh={onDataRefresh}
                         />
                       </>
                     )}

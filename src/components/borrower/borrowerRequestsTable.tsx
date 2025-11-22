@@ -30,19 +30,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { toast } from "sonner";
 
 export default function BorrowerRequestsTable({
   address,
   title,
   data,
-  onActionSuccess,
-  onActionError,
+  onDataRefresh,
 }: {
   address?: `0x${string}`;
   title?: string;
   data: AllLoanData;
-  onActionSuccess?: (successText: string) => void;
-  onActionError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const requests = data.requests;
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
@@ -78,7 +77,7 @@ export default function BorrowerRequestsTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setCancellingRequestId(null);
     } finally {
       setIsCancelling(false);
@@ -112,7 +111,7 @@ export default function BorrowerRequestsTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setAcceptingOfferId(null);
     } finally {
       setIsAccepting(false);
@@ -121,19 +120,21 @@ export default function BorrowerRequestsTable({
 
   useEffect(() => {
     if (isCancelConfirmed) {
-      onActionSuccess?.("Request canceled successfully");
+      toast.success("Request canceled successfully");
       selectRequest(null);
       setCancellingRequestId(null);
       setCancelTxHash(undefined);
+      onDataRefresh();
     }
   }, [isCancelConfirmed]);
 
   useEffect(() => {
     if (isAcceptConfirmed) {
-      onActionSuccess?.("Offer accepted successfully");
+      toast.success("Offer accepted successfully");
       selectRequest(null);
       setAcceptingOfferId(null);
       setAcceptTxHash(undefined);
+      onDataRefresh();
     }
   }, [isAcceptConfirmed]);
   return (

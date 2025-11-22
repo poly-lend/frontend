@@ -24,17 +24,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
 
 export type RepayDialogProps = {
   loanId: bigint;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 };
 
 export default function RepayDialog({
   loanId,
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: RepayDialogProps) {
   const [open, setOpen] = useState(false);
   const timestamp = BigInt(Math.floor(Date.now() / 1000));
@@ -95,9 +94,10 @@ export default function RepayDialog({
   useEffect(() => {
     if (isRepayConfirmed) {
       setOpen(false);
-      onSuccess?.("Repayment submitted successfully");
+      toast.success("Repayment submitted successfully");
+      onDataRefresh();
     }
-  }, [isRepayConfirmed, onSuccess]);
+  }, [isRepayConfirmed]);
 
   const handleApproval = async (amount: bigint) => {
     if (!walletClient || !publicClient) return;
@@ -115,7 +115,7 @@ export default function RepayDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -137,7 +137,7 @@ export default function RepayDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsRepaying(false);
     }

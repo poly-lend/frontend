@@ -18,18 +18,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-export default function RequestsListTable({
+export default function LenderRequestsTable({
   title,
   data,
   userAddress,
-  onRequestSuccess,
-  onRequestError,
+  onDataRefresh,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: string | undefined;
-  onRequestSuccess?: (successText: string) => void;
-  onRequestError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   let requests = data.requests;
   requests = requests.filter(
@@ -123,10 +121,7 @@ export default function RequestsListTable({
                         <OfferDialog
                           requestId={request.requestId}
                           loanDuration={Number(request.minimumDuration)}
-                          onSuccess={(successText: string) =>
-                            onRequestSuccess?.(successText)
-                          }
-                          onError={onRequestError}
+                          onDataRefresh={onDataRefresh}
                         />
                       </TableCell>
                     </TableRow>

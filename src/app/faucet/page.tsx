@@ -20,12 +20,7 @@ export default function Faucet() {
   const { address } = useAccount();
   const [amount, setAmount] = useState(1000);
   const { setBalanceRefresh } = useContext(BalanceRefreshContext);
-  const [successText, setSuccessText] = useState("");
-  const [errorText, setErrorText] = useState("");
   const [submittedAmount, setSubmittedAmount] = useState<number | null>(null);
-  const [lastNotifiedHash, setLastNotifiedHash] = useState<
-    `0x${string}` | undefined
-  >(undefined);
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -44,14 +39,12 @@ export default function Faucet() {
   };
 
   useEffect(() => {
-    if (isConfirmed && hash && hash !== lastNotifiedHash) {
+    if (isConfirmed && hash) {
       setBalanceRefresh(true);
       const minted = (submittedAmount ?? amount).toLocaleString();
-      setSuccessText(`Minted ${minted} pfUSDC`);
-      setErrorText("");
-      setLastNotifiedHash(hash);
+      toast.success(`Minted ${minted} pfUSDC`);
     }
-  }, [isConfirmed, hash, lastNotifiedHash, setBalanceRefresh, submittedAmount]);
+  }, [isConfirmed, hash, setBalanceRefresh, submittedAmount]);
 
   useEffect(() => {
     if (error) {
@@ -59,18 +52,9 @@ export default function Faucet() {
         (error as BaseError)?.shortMessage ||
         (error as Error)?.message ||
         "Transaction failed";
-      setErrorText(message);
-      setSuccessText("");
+      toast.error(message);
     }
   }, [error]);
-
-  useEffect(() => {
-    if (!!successText) {
-      toast.success(successText);
-    } else if (!!errorText) {
-      toast.error(errorText);
-    }
-  }, [successText, errorText]);
 
   return (
     <div className="flex flex-col gap-2">

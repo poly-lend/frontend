@@ -29,13 +29,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
 
 export default function RequestDialog({
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: {
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -102,7 +101,8 @@ export default function RequestDialog({
   useEffect(() => {
     if (isRequestConfirmed) {
       setOpen(false);
-      onSuccess?.("Loan request submitted successfully");
+      toast.success("Loan request submitted successfully");
+      onDataRefresh();
     }
   }, [isRequestConfirmed]);
 
@@ -130,7 +130,7 @@ export default function RequestDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsRequesting(false);
     }
@@ -159,7 +159,7 @@ export default function RequestDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }

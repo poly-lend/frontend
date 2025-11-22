@@ -24,15 +24,13 @@ import { Badge } from "@/components/ui/badge";
 export default function BorrowerLoansTable({
   title,
   data,
-  onActionSuccess,
-  onActionError,
+  onDataRefresh,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
   title?: string;
   data: AllLoanData;
-  onActionSuccess?: (successText: string) => void;
-  onActionError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const loans = data.loans;
 
@@ -113,11 +111,7 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="center">
-                    <RepayDialog
-                      loanId={loan.loanId}
-                      onSuccess={(text: string) => onActionSuccess?.(text)}
-                      onError={(text: string) => onActionError?.(text)}
-                    />
+                    <RepayDialog loanId={loan.loanId} onDataRefresh={onDataRefresh} />
                   </TableCell>
                 </TableRow>
               ))}

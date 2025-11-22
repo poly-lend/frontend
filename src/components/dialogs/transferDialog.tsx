@@ -26,19 +26,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
 
 export type TransferDialogProps = {
   loanId: bigint;
   callTime: bigint;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 };
 
 export default function TransferDialog({
   loanId,
   callTime,
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: TransferDialogProps) {
   const [open, setOpen] = useState(false);
   const [newRate, setNewRate] = useState<number>(0);
@@ -56,7 +55,6 @@ export default function TransferDialog({
     `0x${string}` | undefined
   >(undefined);
   const [inputError, setInputError] = useState<string | undefined>(undefined);
-  const hasCalledSuccessRef = useRef<string | undefined>(undefined);
 
   const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
     useWaitForTransactionReceipt({ hash: approvalTxHash });
@@ -95,21 +93,16 @@ export default function TransferDialog({
       setTransferTxHash(undefined);
       setNewRate(0);
       setInputError(undefined);
-      hasCalledSuccessRef.current = undefined;
     }
   }, [open]);
 
   useEffect(() => {
-    if (
-      isTransferConfirmed &&
-      transferTxHash &&
-      hasCalledSuccessRef.current !== transferTxHash
-    ) {
-      hasCalledSuccessRef.current = transferTxHash;
+    if (isTransferConfirmed && transferTxHash) {
       setOpen(false);
-      onSuccess?.("Transfer submitted successfully");
+      toast.success("Transfer submitted successfully");
+      onDataRefresh();
     }
-  }, [isTransferConfirmed, transferTxHash, onSuccess]);
+  }, [isTransferConfirmed, transferTxHash]);
 
   const handleApproval = async () => {
     if (!walletClient || !publicClient) return;
@@ -127,7 +120,7 @@ export default function TransferDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -155,7 +148,7 @@ export default function TransferDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsTransferring(false);
     }

@@ -3,7 +3,7 @@ import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { toDuration, toSPYWAI } from "@/utils/convertors";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
   usePublicClient,
@@ -26,17 +26,16 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { HandCoinsIcon } from "lucide-react";
 import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
 
 export default function OfferDialog({
   requestId,
   loanDuration,
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: {
   requestId: bigint;
   loanDuration: number;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState(1);
@@ -49,7 +48,6 @@ export default function OfferDialog({
   const [offerTxHash, setOfferTxHash] = useState<`0x${string}` | undefined>(
     undefined
   );
-  const hasCalledSuccessRef = useRef<string | undefined>(undefined);
 
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
@@ -72,21 +70,16 @@ export default function OfferDialog({
       setOfferTxHash(undefined);
       setLoanAmount(1);
       setRate(20);
-      hasCalledSuccessRef.current = undefined;
     }
   }, [open]);
 
   useEffect(() => {
-    if (
-      isOfferConfirmed &&
-      offerTxHash &&
-      hasCalledSuccessRef.current !== offerTxHash
-    ) {
-      hasCalledSuccessRef.current = offerTxHash;
+    if (isOfferConfirmed && offerTxHash) {
       setOpen(false);
-      onSuccess?.("Offer submitted successfully");
+      toast.success("Offer submitted successfully");
+      onDataRefresh();
     }
-  }, [isOfferConfirmed, offerTxHash, onSuccess]);
+  }, [isOfferConfirmed, offerTxHash]);
 
   const handleApproval = async () => {
     if (!publicClient || !walletClient) return;
@@ -104,7 +97,7 @@ export default function OfferDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -128,7 +121,7 @@ export default function OfferDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsOffering(false);
     }

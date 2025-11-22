@@ -5,9 +5,7 @@ import Address from "../widgets/address";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,

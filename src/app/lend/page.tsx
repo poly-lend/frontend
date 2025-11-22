@@ -9,34 +9,20 @@ import { fetchData } from "@/utils/fetchData";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient } from "wagmi";
-import { toast } from "sonner";
 
 export default function Lend() {
-  const { address, status } = useAccount();
+  const { address } = useAccount();
   const publicClient = usePublicClient();
   const [data, setData] = useState<AllLoanData | null>(null);
-  const [successText, setSuccessText] = useState("");
-  const [errorText, setErrorText] = useState("");
 
   useEffect(() => {
     if (!publicClient) return;
     fetchData({ publicClient }).then(setData);
   }, [publicClient, address]);
 
-  useEffect(() => {
-    if (!!successText) {
-      toast.success(successText);
-    } else if (!!errorText) {
-      toast.error(errorText);
-    }
-  }, [successText, errorText]);
-
-  const handleRequestSuccess = async (successText: string) => {
-    setSuccessText(successText);
-    setErrorText("");
+  const handleRefreshData = () => {
     if (!publicClient) return;
-    const fresh = await fetchData({ publicClient });
-    setData(fresh);
+    fetchData({ publicClient }).then(setData);
   };
 
   return (
@@ -52,13 +38,7 @@ export default function Lend() {
                 title="All Requests"
                 data={data as AllLoanData}
                 userAddress={undefined}
-                onRequestSuccess={(successText: string) =>
-                  handleRequestSuccess(successText)
-                }
-                onRequestError={(text: string) => {
-                  setErrorText(text);
-                  setSuccessText("");
-                }}
+                onDataRefresh={handleRefreshData}
               />
             </>
           ) : (
@@ -73,35 +53,19 @@ export default function Lend() {
             title="All Requests"
             data={data as AllLoanData}
             userAddress={address as `0x${string}`}
-            onRequestSuccess={(successText: string) =>
-              handleRequestSuccess(successText)
-            }
-            onRequestError={(text: string) => {
-              setErrorText(text);
-              setSuccessText("");
-            }}
+            onDataRefresh={handleRefreshData}
           />
           <LenderOffersTable
             title="Lender Offers"
             data={data as AllLoanData}
             userAddress={address as `0x${string}`}
-            onCancelOfferSuccess={(successText: string) =>
-              handleRequestSuccess(successText)
-            }
-            onCancelOfferError={(text: string) => {
-              setErrorText(text);
-              setSuccessText("");
-            }}
+            onDataRefresh={handleRefreshData}
           />
           <LenderLoansTable
             lender={address as `0x${string}`}
             title="Lender Loans"
             data={data as AllLoanData}
-            onActionSuccess={(text: string) => handleRequestSuccess(text)}
-            onActionError={(text: string) => {
-              setErrorText(text);
-              setSuccessText("");
-            }}
+            onDataRefresh={handleRefreshData}
           />
         </>
       </WalletGuard>

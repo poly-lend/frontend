@@ -12,8 +12,6 @@ import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function Borrow() {
   const [data, setData] = useState<AllLoanData | null>(null);
-  const [successText, setSuccessText] = useState("");
-  const [errorText, setErrorText] = useState("");
 
   const { address } = useAccount();
   const publicClient = usePublicClient();
@@ -24,21 +22,10 @@ export default function Borrow() {
     fetchData({ publicClient, borrower: address }).then(setData);
   }, [publicClient, walletClient, address]);
 
-  const handleRequestSuccess = async (successText: string) => {
-    setSuccessText(successText);
-    setErrorText("");
-    if (!publicClient || !walletClient) return;
-    const fresh = await fetchData({ publicClient, borrower: address });
-    setData(fresh);
+  const handleRefreshData = () => {
+    if (!publicClient) return;
+    fetchData({ publicClient }).then(setData);
   };
-
-  useEffect(() => {
-    if (!!successText) {
-      toast.success(successText);
-    } else if (!!errorText) {
-      toast.error(errorText);
-    }
-  }, [successText, errorText]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -47,35 +34,19 @@ export default function Borrow() {
       <WalletGuard isDataReady={!!data}>
         <>
           <div className="flex justify-center">
-            <RequestDialog
-              onSuccess={(successText: string) =>
-                handleRequestSuccess(successText)
-              }
-              onError={(text: string) => {
-                setErrorText(text);
-                setSuccessText("");
-              }}
-            />
+            <RequestDialog onDataRefresh={handleRefreshData} />
           </div>
           <BorrowerRequestsTable
             address={address as `0x${string}`}
             title="Borrower Requests"
             data={data as AllLoanData}
-            onActionSuccess={(text: string) => handleRequestSuccess(text)}
-            onActionError={(text: string) => {
-              setErrorText(text);
-              setSuccessText("");
-            }}
+            onDataRefresh={handleRefreshData}
           />
           <BorrowerLoansTable
             borrower={address as `0x${string}`}
             title="Borrower Loans"
             data={data as AllLoanData}
-            onActionSuccess={(text: string) => handleRequestSuccess(text)}
-            onActionError={(text: string) => {
-              setErrorText(text);
-              setSuccessText("");
-            }}
+            onDataRefresh={handleRefreshData}
           />
         </>
       </WalletGuard>

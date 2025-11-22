@@ -27,19 +27,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "../ui/badge";
+import { toast } from "sonner";
 
 export default function LenderOffersTable({
   title,
   data,
   userAddress,
-  onCancelOfferSuccess,
-  onCancelOfferError,
+  onDataRefresh,
 }: {
   title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
-  onCancelOfferSuccess?: (successText: string) => void;
-  onCancelOfferError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   let offers = data.offers;
   offers = offers.filter((offer) => offer.lender === userAddress);
@@ -59,7 +58,8 @@ export default function LenderOffersTable({
 
   useEffect(() => {
     if (isCancelConfirmed) {
-      onCancelOfferSuccess?.("Offer canceled successfully");
+      toast.success("Offer canceled successfully");
+      onDataRefresh();
       setCancellingOfferId(null);
       setCancelTxHash(undefined);
     }
@@ -82,7 +82,7 @@ export default function LenderOffersTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onCancelOfferError?.(message);
+      toast.error(message);
       setCancellingOfferId(null);
     } finally {
       setIsCancelling(false);
