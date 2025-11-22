@@ -1,8 +1,8 @@
-import GitHubIcon from "@mui/icons-material/GitHub";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import XIcon from "@mui/icons-material/X";
 import Link from "next/link";
 import DexScreenerIcon from "./svgs/dexscreenerIcon";
+import GithubIcon from "./svgs/githubIcon";
+import TelegramIcon from "./svgs/telegramIcon";
+import XIcon from "./svgs/xIcon";
 
 export default function Bottom() {
   return (
@@ -10,16 +10,9 @@ export default function Bottom() {
       <div className="flex-1"></div>
       <div className="flex items-center justify-center gap-4 mr-4">
         <DexScreenerIcon />
-        <Link target="_blank" href="https://github.com/poly-lend/">
-          <GitHubIcon />
-        </Link>
-        <Link target="_blank" href="https://t.me/poly_lend">
-          <TelegramIcon />
-        </Link>
-
-        <Link target="_blank" href="https://x.com/poly_lend">
-          <XIcon />
-        </Link>
+        <GithubIcon />
+        <TelegramIcon />
+        <XIcon />
       </div>
     </footer>
   );
