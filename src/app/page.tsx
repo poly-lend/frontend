@@ -9,7 +9,7 @@ import WhySection from "@/components/home/whySection";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center gap-1 px-4 mb-8 sm:px-6 lg:px-8 mx-auto ">
+    <div className="flex flex-col items-center justify-center gap-1 px-4 sm:px-6 lg:px-8 mx-auto ">
       <HeroSection />
       <main className="space-y-10">
         <WhySection />

@@ -23,7 +23,7 @@ const HeroSection = () => {
   return (
     <section
       id="product"
-      className="grid flex-1 grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]"
+      className="grid flex-1 grid-cols-1 gap-8 mb-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]"
     >
       <div className="flex flex-col justify-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-slate-600/80 bg-linear-to-r from-(--brand-yellow-15) via-transparent to-transparent px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-slate-300">

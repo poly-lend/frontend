@@ -33,38 +33,34 @@ export default function Nav() {
     <nav className="sticky z-10 top-0 w-full bg-background">
       <div className="w-full max-w-7xl mx-auto flex items-center h-16 px-4 justify-between">
         <NavigationMenu viewport={false}>
-          <NavigationMenuList className="gap-8 items-center flex">
-            <NavigationMenuItem>
+          <NavigationMenuList className="gap-1 items-center flex">
+            <NavigationMenuItem className="mr-6">
               <Link href="/" className="flex items-center">
                 <img src="logo.png" alt="logo" className="h-12 w-auto" />
               </Link>
             </NavigationMenuItem>
-            <div className="flex items-center">
-              {links.map((link) => {
-                return (
-                  <NavigationMenuItem key={link.id}>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        href={link.href}
-                        target={link.external ? "_blank" : undefined}
-                        rel={link.external ? "noopener noreferrer" : undefined}
-                        className={cn(
-                          navigationMenuTriggerStyle(),
-                          pathname === link.href && "text-primary"
-                        )}
-                      >
-                        <div className="flex items-center gap-1.5 text-base font-bold">
-                          {link.label}
-                          {link.external && (
-                            <ExternalLink className="h-4 w-4" />
-                          )}
-                        </div>
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                );
-              })}
-            </div>
+            {links.map((link) => {
+              return (
+                <NavigationMenuItem key={link.id}>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        pathname === link.href && "text-primary"
+                      )}
+                    >
+                      <div className="flex items-center gap-1.5 text-base font-bold">
+                        {link.label}
+                        {link.external && <ExternalLink className="h-4 w-4" />}
+                      </div>
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              );
+            })}
           </NavigationMenuList>
         </NavigationMenu>
 

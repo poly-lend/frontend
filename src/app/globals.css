@@ -9,6 +9,12 @@
   /* existing brand tokens */
   --brand-navy: #091926;
   --brand-yellow: #d7ad4d;
+  --brand-yellow-soft: #f3d59b;
+  --brand-yellow-10: rgba(215, 173, 77, 0.08);
+  --brand-yellow-15: rgba(215, 173, 77, 0.12);
+  --brand-yellow-50: rgba(215, 173, 77, 0.4);
+  --brand-yellow-60: rgba(215, 173, 77, 0.6);
+  --brand-yellow-90: rgba(215, 173, 77, 0.85);
   --surface-1: #0c2233;
   --surface-2: #0f2b43;
   --text-primary: #ededed;
@@ -96,7 +102,7 @@ body {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
