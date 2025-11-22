@@ -13,7 +13,7 @@ export default function ConnectChain() {
     <div className="mr-4">
       <Button
         variant="outline"
-        className="text-destructive hover:bg-destructive/20"
+        className="text-destructive hover:bg-destructive/20 hover:text-destructive"
         onClick={() => switchChain({ chainId: chain.id })}
       >
         Switch Chain
