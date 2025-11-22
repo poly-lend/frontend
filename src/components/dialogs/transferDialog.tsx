@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export type TransferDialogProps = {
   loanId: bigint;
@@ -222,21 +223,20 @@ export default function TransferDialog({
             </DialogClose>
             <div className="flex items-center gap-2">
               {!transferIsEnabled && !isAllowanceLoading && (
-                <Button
+                <LoadingActionButton
                   onClick={handleApproval}
                   disabled={
                     isApproving ||
                     isApprovalConfirming ||
                     amountAtCall === BigInt(0)
                   }
+                  loading={isApproving || isApprovalConfirming}
                 >
-                  {isApproving || isApprovalConfirming
-                    ? "Approving..."
-                    : "Approve"}
-                </Button>
+                  Approve
+                </LoadingActionButton>
               )}
 
-              <Button
+              <LoadingActionButton
                 onClick={handleTransfer}
                 disabled={
                   isTransferring ||
@@ -245,11 +245,10 @@ export default function TransferDialog({
                   !!inputError ||
                   !transferIsEnabled
                 }
+                loading={isTransferring || isTransferConfirming}
               >
-                {isTransferring || isTransferConfirming
-                  ? "Transferring..."
-                  : "Transfer"}
-              </Button>
+                Transfer
+              </LoadingActionButton>
             </div>
           </DialogFooter>
         </DialogContent>

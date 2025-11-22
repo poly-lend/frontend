@@ -28,6 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function RequestDialog({
   open,
@@ -250,19 +251,18 @@ export default function RequestDialog({
             </DialogClose>
             <div className="flex items-center gap-2">
               {!requestIsEnabled && !isOperatorApprovalLoading && (
-                <Button
+                <LoadingActionButton
                   onClick={giveApproval}
                   disabled={
                     !proxyAddress || isApproving || isApprovalConfirming
                   }
+                  loading={isApproving || isApprovalConfirming}
                 >
-                  {isApproving || isApprovalConfirming
-                    ? "Approving..."
-                    : "Approve"}
-                </Button>
+                  Approve
+                </LoadingActionButton>
               )}
 
-              <Button
+              <LoadingActionButton
                 onClick={requestLoan}
                 disabled={
                   !selectedPosition ||
@@ -271,11 +271,10 @@ export default function RequestDialog({
                   isRequestConfirming ||
                   !requestIsEnabled
                 }
+                loading={isRequesting || isRequestConfirming}
               >
-                {isRequesting || isRequestConfirming
-                  ? "Requesting..."
-                  : "Request a Loan"}
-              </Button>
+                Request a Loan
+              </LoadingActionButton>
             </div>
           </DialogFooter>
         </DialogContent>

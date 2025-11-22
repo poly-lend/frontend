@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export type RepayDialogProps = {
   loanId: bigint;
@@ -183,24 +184,24 @@ export default function RepayDialog({
             </DialogClose>
             <div className="flex items-center gap-2">
               {!repayIsEnabled && !isAllowanceLoading && (
-                <Button
+                <LoadingActionButton
                   onClick={() => handleApproval(amount)}
                   disabled={
                     isApproving || isApprovalConfirming || amount === BigInt(0)
                   }
+                  loading={isApproving || isApprovalConfirming}
                 >
-                  {isApproving || isApprovalConfirming
-                    ? "Approving..."
-                    : "Approve"}
-                </Button>
+                  Approve
+                </LoadingActionButton>
               )}
 
-              <Button
+              <LoadingActionButton
                 onClick={() => handleRepay(loanId, timestamp)}
                 disabled={isRepaying || isRepayConfirming || !repayIsEnabled}
+                loading={isRepaying || isRepayConfirming}
               >
-                {isRepaying || isRepayConfirming ? "Repaying..." : "Repay"}
-              </Button>
+                Repay
+              </LoadingActionButton>
             </div>
           </DialogFooter>
         </DialogContent>

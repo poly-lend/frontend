@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { HandCoinsIcon } from "lucide-react";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function OfferDialog({
   requestId,
@@ -221,26 +222,26 @@ export default function OfferDialog({
             </DialogClose>
             <div className="flex items-center gap-2">
               {!offerIsEnabled && !isAllowanceLoading && (
-                <Button
+                <LoadingActionButton
                   onClick={handleApproval}
                   disabled={
                     loanAmount <= 0 || isApproving || isApprovalConfirming
                   }
+                  loading={isApproving || isApprovalConfirming}
                 >
-                  {isApproving || isApprovalConfirming
-                    ? "Approving..."
-                    : "Approve"}
-                </Button>
+                  Approve
+                </LoadingActionButton>
               )}
-              <Button
+              <LoadingActionButton
                 color="primary"
                 onClick={handleOffer}
                 disabled={
                   loanAmount <= 0 || rate <= 0 || isOffering || !offerIsEnabled
                 }
+                loading={isOffering || isOfferConfirming}
               >
-                {isOffering || isOfferConfirming ? "Offering..." : "Offer"}
-              </Button>
+                Offer
+              </LoadingActionButton>
             </div>
           </DialogFooter>
         </DialogContent>

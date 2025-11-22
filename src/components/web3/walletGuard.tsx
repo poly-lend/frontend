@@ -2,11 +2,11 @@
 
 import ClientOnly from "@/utils/clientOnly";
 import { chain } from "@/utils/wagmi";
-import { CircularProgress } from "@mui/material";
 import { ReactNode } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import ConnectWidget from "./connectWidget";
 import SwitchWidget from "./switchWidget";
+import { Spinner } from "../ui/spinner";
 
 type WalletGuardProps = {
   children: ReactNode;
@@ -43,7 +43,7 @@ export default function WalletGuard({
         {showSwitch && <SwitchWidget />}
         {showSpinner && (
           <div className="flex justify-center py-6">
-            <CircularProgress />
+            <Spinner className="size-12 text-primary" />
           </div>
         )}
       </div>

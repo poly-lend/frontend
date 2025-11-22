@@ -6,7 +6,8 @@ import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { Alert, CircularProgress, Snackbar } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
+import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient } from "wagmi";
 
@@ -86,7 +87,7 @@ export default function Lend() {
             </>
           ) : (
             <div className="flex justify-center py-6">
-              <CircularProgress />
+              <Spinner className="size-12 text-primary" />
             </div>
           )
         }
