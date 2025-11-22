@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 const heroSteps = [
   {
@@ -46,22 +46,12 @@ const HeroSection = () => {
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Button
-            component={Link}
-            variant="contained"
-            color="primary"
-            href="/borrow"
-          >
-            Borrow now
-          </Button>
-          <Button
-            href="https://docs.polylend.com"
-            variant="outlined"
-            color="primary"
-            target="_blank"
-          >
-            View docs
-          </Button>
+          <Link href="/borrow">
+            <Button variant="default">Borrow now</Button>
+          </Link>
+          <Link href="https://docs.polylend.com" target="_blank">
+            <Button variant="outline">View docs</Button>
+          </Link>
         </div>
 
         <p className="mt-3 text-xs text-slate-400">

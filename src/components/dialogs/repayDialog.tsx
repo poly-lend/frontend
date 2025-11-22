@@ -146,7 +146,12 @@ export default function RepayDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">Repay</Button>
+          <Button
+            variant="outline"
+            className="text-primary hover:bg-primary/20"
+          >
+            Repay
+          </Button>
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-[425px]">
@@ -172,7 +177,9 @@ export default function RepayDialog({
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="hover:text-destructive">
+                Cancel
+              </Button>
             </DialogClose>
             <div className="flex items-center gap-2">
               {!repayIsEnabled && !isAllowanceLoading && (

@@ -11,7 +11,7 @@ export function ConnectButton() {
     return (
       <Button
         key={connector.uid}
-        className="bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+        className="cursor-pointer"
         onClick={() => connect({ connector })}
       >
         Connect

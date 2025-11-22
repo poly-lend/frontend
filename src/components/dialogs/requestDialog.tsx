@@ -176,7 +176,12 @@ export default function RequestDialog({
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">Request a Loan</Button>
+          <Button
+            variant="outline"
+            className="text-primary hover:bg-primary/20"
+          >
+            Request a Loan
+          </Button>
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-[425px]">
@@ -239,7 +244,9 @@ export default function RequestDialog({
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="hover:text-destructive">
+                Cancel
+              </Button>
             </DialogClose>
             <div className="flex items-center gap-2">
               {!requestIsEnabled && !isOperatorApprovalLoading && (
