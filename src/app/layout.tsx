@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en" className={roboto.className}>
       <body className="min-h-screen flex flex-col">
         <Children>{children}</Children>
-        <Toaster closeButton />
+        <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );
