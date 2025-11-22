@@ -234,8 +234,7 @@ export default function RequestDialog({
                 inputMode="numeric"
               />
             </div>
-            {open &&
-              !requestIsEnabled &&
+            {!requestIsEnabled &&
               proxyAddress &&
               !isOperatorApprovalLoading && (
                 <InfoAlert text="You need to approve the contract to transfer your Polymarket positions before you can request a loan. Click 'Approve' first, then 'Request a Loan' once the approval is confirmed." />
@@ -249,7 +248,7 @@ export default function RequestDialog({
               </Button>
             </DialogClose>
             <div className="flex items-center gap-2">
-              {open && !requestIsEnabled && !isOperatorApprovalLoading && (
+              {!requestIsEnabled && !isOperatorApprovalLoading && (
                 <LoadingActionButton
                   onClick={giveApproval}
                   disabled={

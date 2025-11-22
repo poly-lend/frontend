@@ -201,12 +201,9 @@ export default function OfferDialog({
                 </AlertDescription>
               </Alert>
             )}
-            {open &&
-              !offerIsEnabled &&
-              loanAmount > 0 &&
-              !isAllowanceLoading && (
-                <InfoAlert text="You need to approve the contract to spend your tokens before you can make an offer. Click 'Approve' first, then 'Offer' once the approval is confirmed." />
-              )}
+            {!offerIsEnabled && loanAmount > 0 && !isAllowanceLoading && (
+              <InfoAlert text="You need to approve the contract to spend your tokens before you can make an offer. Click 'Approve' first, then 'Offer' once the approval is confirmed." />
+            )}
           </div>
 
           {/* Buttons */}
@@ -217,7 +214,7 @@ export default function OfferDialog({
               </Button>
             </DialogClose>
             <div className="flex items-center gap-2">
-              {open && !offerIsEnabled && !isAllowanceLoading && (
+              {!offerIsEnabled && !isAllowanceLoading && (
                 <LoadingActionButton
                   onClick={handleApproval}
                   disabled={

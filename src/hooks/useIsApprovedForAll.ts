@@ -19,10 +19,13 @@ export default function useIsApprovedForAll(
 
   const refresh = useCallback(async () => {
     const { owner, tokenAddress, operator, abi } = params;
-    if (!enabled || !publicClient || !owner) {
+    // Keep the last known approval state when the hook is disabled,
+    // but reset to false if we truly lack the data to check (no client/owner).
+    if (!publicClient || !owner) {
       setIsApproved(false);
       return;
     }
+    if (!enabled) return;
     try {
       setIsLoading(true);
       const approved = (await publicClient.readContract({

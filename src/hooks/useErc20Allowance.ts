@@ -14,10 +14,11 @@ export default function useErc20Allowance(
   const [isLoading, setIsLoading] = useState(false);
 
   const refresh = useCallback(async () => {
-    if (!enabled || !publicClient || !address) {
+    if (!publicClient || !address) {
       setAllowance(BigInt(0));
       return;
     }
+    if (!enabled) return;
     try {
       setIsLoading(true);
       const value = await readAllowance(

@@ -171,12 +171,9 @@ export default function RepayDialog({
               />
             </div>
 
-            {open &&
-              !repayIsEnabled &&
-              amount > BigInt(0) &&
-              !isAllowanceLoading && (
-                <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
-              )}
+            {!repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
+              <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
+            )}
           </div>
 
           <DialogFooter>
@@ -186,7 +183,7 @@ export default function RepayDialog({
               </Button>
             </DialogClose>
             <div className="flex items-center gap-2">
-              {open && !repayIsEnabled && !isAllowanceLoading && (
+              {!repayIsEnabled && !isAllowanceLoading && (
                 <LoadingActionButton
                   onClick={() => handleApproval(amount)}
                   disabled={
