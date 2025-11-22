@@ -31,16 +31,14 @@ import { Label } from "@/components/ui/label";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function RequestDialog({
-  open,
-  close,
   onSuccess,
   onError,
 }: {
-  open: boolean;
-  close: () => void;
   onSuccess?: (successText: string) => void;
   onError?: (errorText: string) => void;
 }) {
+  const [open, setOpen] = useState(false);
+
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(
     null
   );
@@ -103,7 +101,7 @@ export default function RequestDialog({
   // When loan request confirms: close dialog and notify parent
   useEffect(() => {
     if (isRequestConfirmed) {
-      close();
+      setOpen(false);
       onSuccess?.("Loan request submitted successfully");
     }
   }, [isRequestConfirmed]);
@@ -174,7 +172,7 @@ export default function RequestDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
           <Button

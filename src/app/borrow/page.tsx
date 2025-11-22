@@ -12,7 +12,6 @@ import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function Borrow() {
   const [data, setData] = useState<AllLoanData | null>(null);
-  const [openRequestDialog, setOpenRequestDialog] = useState(false);
   const [successText, setSuccessText] = useState("");
   const [errorText, setErrorText] = useState("");
 
@@ -49,8 +48,6 @@ export default function Borrow() {
         <>
           <div className="flex justify-center">
             <RequestDialog
-              open={openRequestDialog}
-              close={() => setOpenRequestDialog(false)}
               onSuccess={(successText: string) =>
                 handleRequestSuccess(successText)
               }
