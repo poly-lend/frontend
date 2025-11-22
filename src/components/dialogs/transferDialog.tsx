@@ -203,7 +203,7 @@ export default function TransferDialog({
               </div>
             </div>
 
-            {!transferIsEnabled && !isAllowanceLoading && (
+            {open && !transferIsEnabled && !isAllowanceLoading && (
               <InfoAlert text="You need to approve the contract to spend your tokens before you can transfer the loan. Click 'Approve' first, then 'Transfer' once the approval is confirmed." />
             )}
           </div>
@@ -215,7 +215,7 @@ export default function TransferDialog({
               </Button>
             </DialogClose>
             <div className="flex items-center gap-2">
-              {!transferIsEnabled && !isAllowanceLoading && (
+              {open && !transferIsEnabled && !isAllowanceLoading && (
                 <LoadingActionButton
                   onClick={handleApproval}
                   disabled={
