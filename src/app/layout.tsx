@@ -1,7 +1,13 @@
-import "@fontsource/roboto/700.css";
 import type { Metadata } from "next";
 import Children from "./children";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "PolyLend",
@@ -18,9 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={roboto.className}>
       <body className="min-h-screen flex flex-col">
         <Children>{children}</Children>
+        <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );

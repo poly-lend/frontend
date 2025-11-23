@@ -9,16 +9,15 @@ import {
   toUSDCString,
 } from "@/utils/convertors";
 import {
-  Button,
-  Chip,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  TableHeader,
   TableRow,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -30,26 +29,22 @@ import TransferDialog from "../dialogs/transferDialog";
 import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function LenderLoansTable({
   lender,
   title,
   data,
-  onActionSuccess,
-  onActionError,
+  onDataRefresh,
 }: {
   lender: `0x${string}`;
   data: AllLoanData;
   title?: string;
   borrower?: `0x${string}`;
-  onActionSuccess?: (successText: string) => void;
-  onActionError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const [dataType, setDataType] = useState<"my" | "all">("my");
-  const [transferringLoan, setTransferringLoan] = useState<{
-    loanId: bigint;
-    callTime: bigint;
-  } | null>(null);
   let loans = data.loans;
 
   loans = loans.filter((loan: Loan) => loan.borrower !== lender);
@@ -81,7 +76,8 @@ export default function LenderLoansTable({
 
   useEffect(() => {
     if (isCallConfirmed) {
-      onActionSuccess?.("Loan called successfully");
+      toast.success("Loan called successfully");
+      onDataRefresh();
       setCallingLoanId(null);
       setCallTxHash(undefined);
     }
@@ -89,7 +85,8 @@ export default function LenderLoansTable({
 
   useEffect(() => {
     if (isReclaimConfirmed) {
-      onActionSuccess?.("Collateral reclaimed successfully");
+      toast.success("Collateral reclaimed successfully");
+      onDataRefresh();
       setReclaimingLoanId(null);
       setReclaimTxHash(undefined);
     }
@@ -112,7 +109,7 @@ export default function LenderLoansTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setCallingLoanId(null);
     } finally {
       setIsCalling(false);
@@ -136,7 +133,7 @@ export default function LenderLoansTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setReclaimingLoanId(null);
     } finally {
       setIsReclaiming(false);
@@ -151,50 +148,41 @@ export default function LenderLoansTable({
         </h2>
       </div>
 
-      {transferringLoan !== null && (
-        <TransferDialog
-          loanId={transferringLoan.loanId}
-          callTime={transferringLoan.callTime}
-          open={transferringLoan !== null}
-          close={() => setTransferringLoan(null)}
-          onSuccess={(text: string) => onActionSuccess?.(text)}
-          onError={(text: string) => onActionError?.(text)}
-        />
-      )}
+      <div className="w-full flex justify-center mt-4 mb-2">
+        <Tabs
+          defaultValue="my"
+          className="w-fit"
+          onValueChange={(value) => setDataType(value as "my" | "all")}
+        >
+          <TabsList>
+            <TabsTrigger value="my" className="cursor-pointer">
+              My Loans
+            </TabsTrigger>
+            <TabsTrigger value="all" className="cursor-pointer">
+              All Loans
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
 
-      <ToggleButtonGroup
-        className="w-full flex justify-center mt-4"
-        color="primary"
-        size="small"
-        value={dataType}
-        exclusive
-        onChange={(_, value) => setDataType(value)}
-        aria-label="text alignment"
-      >
-        <ToggleButton value="my">My Loans</ToggleButton>
-        <ToggleButton value="all">All Loans</ToggleButton>
-      </ToggleButtonGroup>
-      {loans.length === 0 && (
-        <div className="text-center mt-4">No loans found</div>
-      )}
       {loans.length > 0 && (
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
-              <TableCell align="center">Borrower</TableCell>
-              <TableCell align="center">Market</TableCell>
-              <TableCell align="center"> Side </TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Shares</TableCell>
-              <TableCell align="right">Collateral</TableCell>
-              <TableCell align="right">Lent</TableCell>
-              <TableCell align="right">Owed</TableCell>
-              <TableCell align="right">Duration</TableCell>
-              <TableCell align="right">Time Left</TableCell>
-              <TableCell align="right">Rate</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableHead className="text-center">Borrower</TableHead>
+              <TableHead className="text-center">Market</TableHead>
+              <TableHead className="text-center"> Side </TableHead>
+              <TableHead className="text-right">Status</TableHead>
+              <TableHead className="text-right">Shares</TableHead>
+              <TableHead className="text-right">Collateral</TableHead>
+              <TableHead className="text-right">Lent</TableHead>
+              <TableHead className="text-right">Owed</TableHead>
+              <TableHead className="text-right">Duration</TableHead>
+              <TableHead className="text-right">Time Left</TableHead>
+              <TableHead className="text-right">Rate</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
           <TableBody>
             {loans.map((loan) => (
               <TableRow key={loan.loanId}>
@@ -202,20 +190,16 @@ export default function LenderLoansTable({
                   <Address address={loan.borrower} />
                 </TableCell>
                 <TableCell align="center">
-                  <Market market={loan.market} />
+                  <Market market={loan.market} truncateWidth={200} />
                 </TableCell>
                 <TableCell align="center">
-                  <Chip
-                    label={loan.market.outcome}
-                    size="small"
-                    color={loan.market.outcome === "Yes" ? "success" : "error"}
-                  />
+                  <Badge variant={loan.market.outcome === "Yes" ? "yes" : "no"}>
+                    {loan.market.outcome}
+                  </Badge>
                 </TableCell>
                 <TableCell
                   align="right"
-                  sx={{
-                    color: loan.callTime > 0 ? "red" : "",
-                  }}
+                  className={cn(loan.callTime > 0 ? "text-red-500" : "")}
                 >
                   {loan.callTime > 0 ? "Called" : "Active"}
                 </TableCell>
@@ -261,8 +245,8 @@ export default function LenderLoansTable({
                     {dataType === "my" ? (
                       <>
                         <LoadingActionButton
-                          variant="outlined"
-                          color="primary"
+                          variant="outline"
+                          className="text-primary hover:bg-primary/20"
                           disabled={
                             Number(loan.minimumDuration) -
                               (Date.now() / 1000 - Number(loan.startTime)) >=
@@ -280,8 +264,8 @@ export default function LenderLoansTable({
                           Call
                         </LoadingActionButton>
                         <LoadingActionButton
-                          variant="outlined"
-                          color="primary"
+                          variant="outline"
+                          className="text-primary hover:bg-primary/20"
                           disabled={
                             Number(loan.callTime) === 0 ||
                             Number(loan.callTime) + 24 * 60 * 60 >
@@ -300,19 +284,11 @@ export default function LenderLoansTable({
                       </>
                     ) : (
                       <>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          disabled={Number(loan.callTime) == 0}
-                          onClick={() =>
-                            setTransferringLoan({
-                              loanId: loan.loanId,
-                              callTime: loan.callTime,
-                            })
-                          }
-                        >
-                          Transfer
-                        </Button>
+                        <TransferDialog
+                          loanId={loan.loanId}
+                          callTime={loan.callTime}
+                          onDataRefresh={onDataRefresh}
+                        />
                       </>
                     )}
                   </div>

@@ -3,16 +3,6 @@ import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { toDuration, toSPYWAI } from "@/utils/convertors";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-} from "@mui/material";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -21,23 +11,33 @@ import {
   useWalletClient,
 } from "wagmi";
 import InfoAlert from "../widgets/infoAlert";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { HandCoinsIcon } from "lucide-react";
 import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
 
 export default function OfferDialog({
   requestId,
   loanDuration,
-  open,
-  close,
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: {
   requestId: bigint;
   loanDuration: number;
-  open: boolean;
-  close: () => void;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
+  const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState(1);
   const [rate, setRate] = useState(20);
   const [isApproving, setIsApproving] = useState(false);
@@ -74,11 +74,12 @@ export default function OfferDialog({
   }, [open]);
 
   useEffect(() => {
-    if (isOfferConfirmed) {
-      close();
-      onSuccess?.("Offer submitted successfully");
+    if (isOfferConfirmed && offerTxHash) {
+      setOpen(false);
+      toast.success("Offer submitted successfully");
+      onDataRefresh();
     }
-  }, [isOfferConfirmed]);
+  }, [isOfferConfirmed, offerTxHash]);
 
   const handleApproval = async () => {
     if (!publicClient || !walletClient) return;
@@ -96,7 +97,7 @@ export default function OfferDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -120,7 +121,7 @@ export default function OfferDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsOffering(false);
     }
@@ -139,107 +140,105 @@ export default function OfferDialog({
     !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   return (
-    <Dialog
-      open={open}
-      fullWidth
-      maxWidth="xs"
-      className="bg-gray-900/30 backdrop-blur-xs"
-      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
-    >
-      <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">Make an Offer</p>
-        <IconButton
-          onClick={close}
-          size="small"
-          className="text-gray-400 hover:text-white"
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <div className="flex flex-col gap-5 py-1.5">
-          <TextField
-            fullWidth
-            label="Loan Amount (pfUSDC)"
-            type="number"
-            value={loanAmount.toString()}
-            onChange={(e) => setLoanAmount(Number(e.target.value))}
-            slotProps={{
-              input: {
-                inputProps: {
-                  min: 0,
-                },
-              },
-            }}
-          />
-          <TextField
-            fullWidth
-            label="Rate (APY)"
-            type="number"
-            value={rate.toString()}
-            onChange={(e) => setRate(Number(e.target.value))}
-            slotProps={{
-              input: {
-                inputProps: {
-                  min: 0,
-                },
-              },
-            }}
-          />
-        </div>
-        {loanAmount > 0 && rate > 0 && (
-          <div className="mt-3 rounded-lg border border-gray-700/50 bg-gray-800/30 px-3 py-2.5">
-            <p className="text-sm text-gray-300">
-              You will receive{" "}
-              <span className="font-semibold text-[#d7ad4d]">
-                {(
-                  loanAmount +
-                  (loanAmount * rate * loanDuration) / (100 * 31536000)
-                ).toFixed(2)}{" "}
-                pfUSDC
-              </span>{" "}
-              after the {toDuration(loanDuration)} loan duration (principal +
-              interest).
-            </p>
-          </div>
-        )}
-        {!offerIsEnabled && loanAmount > 0 && !isAllowanceLoading && (
-          <InfoAlert text="You need to approve the contract to spend your tokens before you can make an offer. Click 'Approve' first, then 'Offer' once the approval is confirmed." />
-        )}
-      </DialogContent>
-      <DialogActions
-        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
-      >
-        <Button variant="outlined" color="secondary" onClick={close}>
-          Cancel
-        </Button>
-
-        <div className="flex items-center gap-2">
-          {!offerIsEnabled && !isAllowanceLoading && (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={handleApproval}
-              loading={isApproving || isApprovalConfirming}
-              disabled={loanAmount <= 0 || isApproving || isApprovalConfirming}
-            >
-              Approve
-            </LoadingActionButton>
-          )}
-
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={handleOffer}
-            loading={isOffering || isOfferConfirming}
-            disabled={
-              loanAmount <= 0 || rate <= 0 || isOffering || !offerIsEnabled
-            }
+    <Dialog open={open} onOpenChange={setOpen}>
+      <form>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="text-primary hover:bg-primary/20"
           >
             Offer
-          </LoadingActionButton>
-        </div>
-      </DialogActions>
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Make an Offer</DialogTitle>
+          </DialogHeader>
+
+          {/* Inputs for loan amount and rate */}
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="amount">Loan Amount (pfUSDC)</Label>
+              <Input
+                id="amount"
+                name="amount"
+                type="number"
+                value={loanAmount.toString()}
+                onChange={(e) => setLoanAmount(Number(e.target.value))}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="rate">Rate (APY)</Label>
+              <Input
+                id="rate"
+                name="rate"
+                type="number"
+                value={rate.toString()}
+                onChange={(e) => setRate(Number(e.target.value))}
+              />
+            </div>
+          </div>
+
+          {/* Info boxes */}
+          <div className="flex flex-col gap-2">
+            {loanAmount > 0 && rate > 0 && (
+              <Alert>
+                <HandCoinsIcon />
+                <AlertDescription className="flex text-gray-300">
+                  <p>
+                    You will receive{" "}
+                    <span className="text-primary">
+                      {(
+                        loanAmount +
+                        (loanAmount * rate * loanDuration) / (100 * 31536000)
+                      ).toFixed(2)}{" "}
+                      pfUSDC
+                    </span>{" "}
+                    after the {toDuration(loanDuration)} loan duration
+                    (principal + interest).
+                  </p>
+                </AlertDescription>
+              </Alert>
+            )}
+            {!offerIsEnabled && loanAmount > 0 && !isAllowanceLoading && (
+              <InfoAlert text="You need to approve the contract to spend your tokens before you can make an offer. Click 'Approve' first, then 'Offer' once the approval is confirmed." />
+            )}
+          </div>
+
+          {/* Buttons */}
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" className="hover:text-destructive">
+                Cancel
+              </Button>
+            </DialogClose>
+            <div className="flex items-center gap-2">
+              {!offerIsEnabled && !isAllowanceLoading && (
+                <LoadingActionButton
+                  onClick={handleApproval}
+                  disabled={
+                    loanAmount <= 0 || isApproving || isApprovalConfirming
+                  }
+                  loading={isApproving || isApprovalConfirming}
+                >
+                  Approve
+                </LoadingActionButton>
+              )}
+              <LoadingActionButton
+                color="primary"
+                onClick={handleOffer}
+                disabled={
+                  loanAmount <= 0 || rate <= 0 || isOffering || !offerIsEnabled
+                }
+                loading={isOffering || isOfferConfirming}
+              >
+                Offer
+              </LoadingActionButton>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </form>
     </Dialog>
   );
 }

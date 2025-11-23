@@ -3,17 +3,6 @@ import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -22,23 +11,31 @@ import {
   useWalletClient,
 } from "wagmi";
 import InfoAlert from "../widgets/infoAlert";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
 
 export type RepayDialogProps = {
   loanId: bigint;
-  open: boolean;
-  close: () => void;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 };
 
 export default function RepayDialog({
   loanId,
-  open,
-  close,
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: RepayDialogProps) {
+  const [open, setOpen] = useState(false);
   const timestamp = BigInt(Math.floor(Date.now() / 1000));
   const [amount, setAmount] = useState<bigint>(BigInt(0));
   const publicClient = usePublicClient();
@@ -74,7 +71,7 @@ export default function RepayDialog({
 
   useEffect(() => {
     const getAmountOwed = async () => {
-      if (!publicClient) return;
+      if (!publicClient || !open) return;
       const amount = await fetchAmountOwed({
         publicClient,
         loanId,
@@ -83,12 +80,22 @@ export default function RepayDialog({
       setAmount(amount);
     };
     getAmountOwed();
-  }, []);
+  }, [open, publicClient, loanId, timestamp]);
+
+  useEffect(() => {
+    if (open) {
+      setIsApproving(false);
+      setApprovalTxHash(undefined);
+      setIsRepaying(false);
+      setRepayTxHash(undefined);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (isRepayConfirmed) {
-      close();
-      onSuccess?.("Repayment submitted successfully");
+      setOpen(false);
+      toast.success("Repayment submitted successfully");
+      onDataRefresh();
     }
   }, [isRepayConfirmed]);
 
@@ -108,7 +115,7 @@ export default function RepayDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -130,76 +137,75 @@ export default function RepayDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsRepaying(false);
     }
   };
 
   return (
-    <Dialog
-      open={open}
-      fullWidth
-      maxWidth="xs"
-      className="bg-gray-900/30 backdrop-blur-xs"
-      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
-    >
-      <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">Repay Loan</p>
-        <IconButton
-          onClick={close}
-          size="small"
-          className="text-gray-400 hover:text-white"
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2.5} className="py-1.5">
-          <TextField
-            label="Amount Owed"
-            type="number"
-            value={(Number(amount) / 10 ** usdcDecimals).toFixed(6)}
-            disabled
-            fullWidth
-          />
-        </Stack>
-        {!repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
-          <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
-        )}
-      </DialogContent>
-      <DialogActions
-        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
-      >
-        <Button variant="outlined" color="secondary" onClick={close}>
-          Cancel
-        </Button>
-        <div className="flex items-center gap-2">
-          {!repayIsEnabled && !isAllowanceLoading && (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={() => handleApproval(amount)}
-              loading={isApproving || isApprovalConfirming}
-              disabled={
-                isApproving || isApprovalConfirming || amount === BigInt(0)
-              }
-            >
-              Approve
-            </LoadingActionButton>
-          )}
-
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={() => handleRepay(loanId, timestamp)}
-            loading={isRepaying || isRepayConfirming}
-            disabled={isRepaying || isRepayConfirming || !repayIsEnabled}
+    <Dialog open={open} onOpenChange={setOpen}>
+      <form>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="text-primary hover:bg-primary/20"
           >
             Repay
-          </LoadingActionButton>
-        </div>
-      </DialogActions>
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Repay a Loan</DialogTitle>
+          </DialogHeader>
+
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="amountOwed">Amount Owed</Label>
+              <Input
+                id="amountOwed"
+                type="text"
+                value={(Number(amount) / 10 ** usdcDecimals).toFixed(6)}
+                disabled
+              />
+            </div>
+
+            {!repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
+              <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
+            )}
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" className="hover:text-destructive">
+                Cancel
+              </Button>
+            </DialogClose>
+            <div className="flex items-center gap-2">
+              {!repayIsEnabled && !isAllowanceLoading && (
+                <LoadingActionButton
+                  onClick={() => handleApproval(amount)}
+                  disabled={
+                    isApproving || isApprovalConfirming || amount === BigInt(0)
+                  }
+                  loading={isApproving || isApprovalConfirming}
+                >
+                  Approve
+                </LoadingActionButton>
+              )}
+
+              <LoadingActionButton
+                onClick={() => handleRepay(loanId, timestamp)}
+                disabled={isRepaying || isRepayConfirming || !repayIsEnabled}
+                loading={isRepaying || isRepayConfirming}
+              >
+                Repay
+              </LoadingActionButton>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </form>
     </Dialog>
   );
 }

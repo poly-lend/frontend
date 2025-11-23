@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 const heroSteps = [
   {
@@ -23,7 +23,7 @@ const HeroSection = () => {
   return (
     <section
       id="product"
-      className="grid flex-1 grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]"
+      className="grid flex-1 grid-cols-1 gap-8 mb-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]"
     >
       <div className="flex flex-col justify-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-slate-600/80 bg-linear-to-r from-(--brand-yellow-15) via-transparent to-transparent px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-slate-300">
@@ -46,22 +46,12 @@ const HeroSection = () => {
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Button
-            component={Link}
-            variant="contained"
-            color="primary"
-            href="/borrow"
-          >
-            Borrow now
-          </Button>
-          <Button
-            href="https://docs.polylend.com"
-            variant="outlined"
-            color="primary"
-            target="_blank"
-          >
-            View docs
-          </Button>
+          <Link href="/borrow">
+            <Button variant="default">Borrow now</Button>
+          </Link>
+          <Link href="https://docs.polylend.com" target="_blank">
+            <Button variant="outline">View docs</Button>
+          </Link>
         </div>
 
         <p className="mt-3 text-xs text-slate-400">

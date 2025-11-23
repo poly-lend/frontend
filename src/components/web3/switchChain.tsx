@@ -1,6 +1,6 @@
 import { chain } from "@/utils/wagmi";
+import { Button } from "../ui/button";
 
-import { Button } from "@mui/material";
 import { useAccount, useSwitchChain } from "wagmi";
 
 export default function ConnectChain() {
@@ -12,8 +12,8 @@ export default function ConnectChain() {
   return address && !isPolygon ? (
     <div className="mr-4">
       <Button
-        color="error"
-        variant="outlined"
+        variant="outline"
+        className="text-destructive hover:bg-destructive/20 hover:text-destructive"
         onClick={() => switchChain({ chainId: chain.id })}
       >
         Switch Chain

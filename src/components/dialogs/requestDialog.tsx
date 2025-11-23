@@ -5,18 +5,7 @@ import useIsApprovedForAll from "@/hooks/useIsApprovedForAll";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
 import { execSafeTransaction } from "@/utils/proxy";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
+
 import { useEffect, useState } from "react";
 import { BaseError, encodeFunctionData } from "viem";
 import {
@@ -25,20 +14,30 @@ import {
   useWalletClient,
 } from "wagmi";
 import InfoAlert from "../widgets/infoAlert";
-import LoadingActionButton from "../widgets/loadingActionButton";
 import PositionSelect from "../widgets/positionSelect";
 
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import LoadingActionButton from "../widgets/loadingActionButton";
+import { toast } from "sonner";
+
 export default function RequestDialog({
-  open,
-  close,
-  onSuccess,
-  onError,
+  onDataRefresh,
 }: {
-  open: boolean;
-  close: () => void;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
+  const [open, setOpen] = useState(false);
+
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(
     null
   );
@@ -93,14 +92,17 @@ export default function RequestDialog({
     if (open) {
       setIsApproving(false);
       setApprovalTxHash(undefined);
+      setIsRequesting(false);
+      setRequestTxHash(undefined);
     }
   }, [open]);
 
   // When loan request confirms: close dialog and notify parent
   useEffect(() => {
     if (isRequestConfirmed) {
-      close();
-      onSuccess?.("Loan request submitted successfully");
+      setOpen(false);
+      toast.success("Loan request submitted successfully");
+      onDataRefresh();
     }
   }, [isRequestConfirmed]);
 
@@ -128,7 +130,7 @@ export default function RequestDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsRequesting(false);
     }
@@ -157,7 +159,7 @@ export default function RequestDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -170,107 +172,111 @@ export default function RequestDialog({
   };
 
   return (
-    <Dialog
-      open={open}
-      maxWidth="xs"
-      fullWidth
-      className="bg-gray-900/30 backdrop-blur-xs"
-      slotProps={{ paper: { sx: { borderRadius: "8px" } } }}
-    >
-      <DialogTitle className="flex items-center justify-between">
-        <p className="text-xl font-medium">Request a Loan</p>
-        <IconButton
-          onClick={close}
-          size="small"
-          className="text-gray-400 hover:text-white"
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={3} className="py-1.5">
-          {proxyAddress && (
-            <PositionSelect
-              address={proxyAddress}
-              selectedPosition={selectedPosition}
-              onPositionSelect={setSelectedPosition}
-            />
-          )}
-
-          <>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Shares"
-                value={shares}
-                onChange={handleSharesChange}
-              />
-              <TextField
-                fullWidth
-                type="number"
-                label="Value"
-                value={value.toFixed(2)}
-                disabled
-              />
-            </Box>
-          </>
-
-          <TextField
-            fullWidth
-            type="number"
-            label="Minimum Duration Days"
-            value={minimumDuration}
-            onChange={(e) => setMinimumDuration(Number(e.target.value))}
-            slotProps={{
-              input: {
-                inputProps: {
-                  min: 0,
-                },
-              },
-            }}
-          />
-        </Stack>
-        {!requestIsEnabled && proxyAddress && !isOperatorApprovalLoading && (
-          <InfoAlert text="You need to approve the contract to transfer your Polymarket positions before you can request a loan. Click 'Approve' first, then 'Request a Loan' once the approval is confirmed." />
-        )}
-      </DialogContent>
-      <DialogActions
-        sx={{ justifyContent: "space-between", px: 3, pb: 3, pt: 0 }}
-      >
-        <Button variant="outlined" color="secondary" onClick={close}>
-          Cancel
-        </Button>
-        <div className="flex items-center gap-2">
-          {!requestIsEnabled && !isOperatorApprovalLoading && (
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={giveApproval}
-              loading={isApproving || isApprovalConfirming}
-              disabled={!proxyAddress || isApproving || isApprovalConfirming}
-            >
-              Approve
-            </LoadingActionButton>
-          )}
-
-          <LoadingActionButton
-            variant="contained"
-            color="primary"
-            onClick={requestLoan}
-            loading={isRequesting || isRequestConfirming}
-            disabled={
-              !selectedPosition ||
-              shares <= 0 ||
-              isRequesting ||
-              isRequestConfirming ||
-              !requestIsEnabled
-            }
+    <Dialog open={open} onOpenChange={setOpen}>
+      <form>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="text-primary hover:bg-primary/20"
           >
             Request a Loan
-          </LoadingActionButton>
-        </div>
-      </DialogActions>
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Request a Loan</DialogTitle>
+          </DialogHeader>
+
+          <div className="grid gap-4">
+            {proxyAddress && (
+              <PositionSelect
+                address={proxyAddress}
+                selectedPosition={selectedPosition}
+                onPositionSelect={setSelectedPosition}
+              />
+            )}
+
+            <div className="flex gap-2">
+              <div className="grid gap-3">
+                <Label htmlFor="shares">Shares</Label>
+                <Input
+                  className="w-full rounded-md"
+                  type="number"
+                  placeholder="Shares"
+                  value={shares}
+                  onChange={handleSharesChange}
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="value">Value</Label>
+                <Input
+                  className="w-full"
+                  type="number"
+                  placeholder="Value"
+                  value={value.toFixed(2)}
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-3">
+              <Label htmlFor="minimumDuration">Minimum Duration Days</Label>
+              <Input
+                className="w-full"
+                type="number"
+                placeholder="Minimum Duration Days"
+                value={minimumDuration}
+                onChange={(e) => setMinimumDuration(Number(e.target.value))}
+                min={0}
+                max={1000}
+                step={1}
+                inputMode="numeric"
+              />
+            </div>
+            {!requestIsEnabled &&
+              proxyAddress &&
+              !isOperatorApprovalLoading && (
+                <InfoAlert text="You need to approve the contract to transfer your Polymarket positions before you can request a loan. Click 'Approve' first, then 'Request a Loan' once the approval is confirmed." />
+              )}
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" className="hover:text-destructive">
+                Cancel
+              </Button>
+            </DialogClose>
+            <div className="flex items-center gap-2">
+              {!requestIsEnabled && !isOperatorApprovalLoading && (
+                <LoadingActionButton
+                  onClick={giveApproval}
+                  disabled={
+                    !proxyAddress || isApproving || isApprovalConfirming
+                  }
+                  loading={isApproving || isApprovalConfirming}
+                >
+                  Approve
+                </LoadingActionButton>
+              )}
+
+              <LoadingActionButton
+                onClick={requestLoan}
+                disabled={
+                  !selectedPosition ||
+                  shares <= 0 ||
+                  isRequesting ||
+                  isRequestConfirming ||
+                  !requestIsEnabled
+                }
+                loading={isRequesting || isRequestConfirming}
+              >
+                Request a Loan
+              </LoadingActionButton>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </form>
     </Dialog>
   );
 }

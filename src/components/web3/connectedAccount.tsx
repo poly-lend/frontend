@@ -1,6 +1,6 @@
 import { truncateAddress } from "@/utils/convertors";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { Button } from "@mui/material";
+import { LogOut } from "lucide-react";
+import { Button } from "../ui/button";
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from "wagmi";
 
 export function ConnectedAccount() {
@@ -20,8 +20,12 @@ export function ConnectedAccount() {
         </div>
       )}
 
-      <Button variant="contained" color="primary" onClick={() => disconnect()}>
-        <LogoutIcon />
+      <Button
+        variant="default"
+        onClick={() => disconnect()}
+        className="cursor-pointer"
+      >
+        <LogOut className="size-5 stroke-[2.5px]" />
       </Button>
     </div>
   );

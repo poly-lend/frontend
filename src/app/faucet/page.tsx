@@ -5,7 +5,8 @@ import WalletGuard from "@/components/web3/walletGuard";
 import LoadingActionButton from "@/components/widgets/loadingActionButton";
 import { usdcDecimals } from "@/configs";
 import { usdcConfig } from "@/contracts/usdc";
-import { Alert, Input, Snackbar } from "@mui/material";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useContext, useEffect, useState } from "react";
 import {
   BaseError,
@@ -13,17 +14,13 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
+import { toast } from "sonner";
 
 export default function Faucet() {
   const { address } = useAccount();
   const [amount, setAmount] = useState(1000);
   const { setBalanceRefresh } = useContext(BalanceRefreshContext);
-  const [successText, setSuccessText] = useState("");
-  const [errorText, setErrorText] = useState("");
   const [submittedAmount, setSubmittedAmount] = useState<number | null>(null);
-  const [lastNotifiedHash, setLastNotifiedHash] = useState<
-    `0x${string}` | undefined
-  >(undefined);
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -42,14 +39,12 @@ export default function Faucet() {
   };
 
   useEffect(() => {
-    if (isConfirmed && hash && hash !== lastNotifiedHash) {
+    if (isConfirmed && hash) {
       setBalanceRefresh(true);
       const minted = (submittedAmount ?? amount).toLocaleString();
-      setSuccessText(`Minted ${minted} pfUSDC`);
-      setErrorText("");
-      setLastNotifiedHash(hash);
+      toast.success(`Minted ${minted} pfUSDC`);
     }
-  }, [isConfirmed, hash, lastNotifiedHash, setBalanceRefresh, submittedAmount]);
+  }, [isConfirmed, hash, setBalanceRefresh, submittedAmount]);
 
   useEffect(() => {
     if (error) {
@@ -57,66 +52,60 @@ export default function Faucet() {
         (error as BaseError)?.shortMessage ||
         (error as Error)?.message ||
         "Transaction failed";
-      setErrorText(message);
-      setSuccessText("");
+      toast.error(message);
     }
   }, [error]);
 
   return (
     <div className="flex flex-col gap-2">
-      <h1
-        style={{
-          fontSize: 36,
-          fontWeight: 800,
-          paddingTop: 50,
-          paddingBottom: 20,
-          textAlign: "center",
-        }}
-      >
-        Faucet
-      </h1>
-
-      {(errorText || successText) && (
-        <Snackbar
-          open={!!successText || !!errorText}
-          autoHideDuration={4000}
-          onClose={() => {
-            setSuccessText("");
-            setErrorText("");
-          }}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => {
-              setSuccessText("");
-              setErrorText("");
-            }}
-            severity={errorText ? "error" : "success"}
-            sx={{ width: "100%" }}
-          >
-            {errorText || successText}
-          </Alert>
-        </Snackbar>
-      )}
+      <h1 className="font-bold text-center text-4xl mb-4">Faucet</h1>
 
       <WalletGuard>
-        <div className="flex flex-col gap-4 mt-4">
-          <div className="flex items-center gap-4">
-            <Input
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              placeholder="Amount"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
-            />
-            <LoadingActionButton
-              variant="contained"
-              color="primary"
-              onClick={() => mintUSDC()}
-              loading={isPending || isConfirming}
-              disabled={isPending || isConfirming}
-            >
-              Mint pfUSDC
-            </LoadingActionButton>
+        <div className="mt-6 w-full max-w-md mx-auto rounded-xl border border-slate-900 bg-slate-950/80 p-6 space-y-4">
+          <div className="space-y-1">
+            <h2 className="text-base font-semibold text-slate-50">
+              Mint test pfUSDC
+            </h2>
+            <p className="text-xs text-slate-300">
+              Request test pfUSDC for experimenting with PolyLend. Funds are for
+              testing only and have no real-world value.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label
+                htmlFor="faucet-amount"
+                className="text-xs font-medium text-slate-200"
+              >
+                Amount to mint
+              </Label>
+              <div className="flex items-center gap-3">
+                <Input
+                  id="faucet-amount"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  type="number"
+                  placeholder="1000"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                  className="flex-1"
+                />
+                <LoadingActionButton
+                  variant="default"
+                  onClick={() => mintUSDC()}
+                  loading={isPending || isConfirming}
+                  disabled={isPending || isConfirming}
+                  className="min-w-30"
+                >
+                  {isPending || isConfirming ? "Minting..." : "Mint pfUSDC"}
+                </LoadingActionButton>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-slate-400">
+              Transaction may take a few moments to confirm on-chain.
+            </p>
           </div>
         </div>
       </WalletGuard>

@@ -7,16 +7,6 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
-import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
-import {
-  Button,
-  Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -25,21 +15,33 @@ import {
   useWalletClient,
 } from "wagmi";
 import Address from "../widgets/address";
-import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
+
+import LoadingActionButton from "../widgets/loadingActionButton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { toast } from "sonner";
 
 export default function BorrowerRequestsTable({
   address,
   title,
   data,
-  onActionSuccess,
-  onActionError,
+  onDataRefresh,
 }: {
   address?: `0x${string}`;
   title?: string;
   data: AllLoanData;
-  onActionSuccess?: (successText: string) => void;
-  onActionError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const requests = data.requests;
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
@@ -75,7 +77,7 @@ export default function BorrowerRequestsTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setCancellingRequestId(null);
     } finally {
       setIsCancelling(false);
@@ -109,7 +111,7 @@ export default function BorrowerRequestsTable({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onActionError?.(message);
+      toast.error(message);
       setAcceptingOfferId(null);
     } finally {
       setIsAccepting(false);
@@ -118,19 +120,21 @@ export default function BorrowerRequestsTable({
 
   useEffect(() => {
     if (isCancelConfirmed) {
-      onActionSuccess?.("Request canceled successfully");
+      toast.success("Request canceled successfully");
       selectRequest(null);
       setCancellingRequestId(null);
       setCancelTxHash(undefined);
+      onDataRefresh();
     }
   }, [isCancelConfirmed]);
 
   useEffect(() => {
     if (isAcceptConfirmed) {
-      onActionSuccess?.("Offer accepted successfully");
+      toast.success("Offer accepted successfully");
       selectRequest(null);
       setAcceptingOfferId(null);
       setAcceptTxHash(undefined);
+      onDataRefresh();
     }
   }, [isAcceptConfirmed]);
   return (
@@ -142,18 +146,18 @@ export default function BorrowerRequestsTable({
         <div className="text-center">No requests found</div>
       )}
       {requests.length > 0 && (
-        <Table size="small">
-          <TableHead>
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell align="center">Market</TableCell>
-              <TableCell align="center"> Side </TableCell>
-              <TableCell align="right">Shares</TableCell>
-              <TableCell align="right">Collateral</TableCell>
-              <TableCell align="right">Duration</TableCell>
-              <TableCell align="right">Offers</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableHead className="text-center">Market</TableHead>
+              <TableHead className="text-center"> Side </TableHead>
+              <TableHead className="text-right">Shares</TableHead>
+              <TableHead className="text-right">Collateral</TableHead>
+              <TableHead className="text-right">Duration</TableHead>
+              <TableHead className="text-right">Offers</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
           <TableBody>
             {requests.map((request) => (
               <Fragment key={request.requestId.toString()}>
@@ -162,13 +166,13 @@ export default function BorrowerRequestsTable({
                     <Market market={request.market} />
                   </TableCell>
                   <TableCell align="center">
-                    <Chip
-                      label={request.market.outcome}
-                      size="small"
-                      color={
-                        request.market.outcome === "Yes" ? "success" : "error"
+                    <Badge
+                      variant={
+                        request.market.outcome === "Yes" ? "yes" : "destructive"
                       }
-                    />
+                    >
+                      {request.market.outcome}
+                    </Badge>
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(request.collateralAmount)}
@@ -189,8 +193,8 @@ export default function BorrowerRequestsTable({
                     <div className="flex gap-2 justify-center">
                       <Button
                         disabled={request.offers.length === 0}
-                        variant="outlined"
-                        color="primary"
+                        variant="outline"
+                        className="hover:text-neutral-300"
                         onClick={() => {
                           if (
                             selectedRequest &&
@@ -204,14 +208,14 @@ export default function BorrowerRequestsTable({
                       >
                         Offers
                         {selectedRequest?.requestId === request.requestId ? (
-                          <ArrowDropUp />
+                          <ChevronUp />
                         ) : (
-                          <ArrowDropDown />
+                          <ChevronDown />
                         )}
                       </Button>
                       <LoadingActionButton
-                        variant="outlined"
-                        color="error"
+                        variant="outline"
+                        className="text-destructive hover:bg-destructive/20 hover:text-destructive"
                         onClick={() => cancelRequest(request.requestId)}
                         loading={
                           cancellingRequestId === request.requestId &&
@@ -226,63 +230,57 @@ export default function BorrowerRequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={7} sx={{ p: 0.5 }}>
-                        <div style={{ width: "92%", margin: "0 auto" }}>
-                          <Table
-                            size="small"
-                            sx={{
-                              "& td, & th": { fontSize: "0.8rem", py: 0.5 },
-                            }}
-                          >
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="right">Offer ID</TableCell>
-                                <TableCell align="right">Lender</TableCell>
-                                <TableCell align="right">Amount</TableCell>
-                                <TableCell align="right">Rate</TableCell>
-                                <TableCell align="center">Actions</TableCell>
+                      <TableCell colSpan={7}>
+                        <Table>
+                          <TableHeader className="border-b">
+                            <TableRow>
+                              <TableHead className="text-right">
+                                Offer ID
+                              </TableHead>
+                              <TableHead className="text-right">
+                                Lender
+                              </TableHead>
+                              <TableHead className="text-right">
+                                Amount
+                              </TableHead>
+                              <TableHead className="text-right">Rate</TableHead>
+                              <TableHead className="text-center">
+                                Actions
+                              </TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {request.offers.map((offer) => (
+                              <TableRow key={offer.offerId}>
+                                <TableCell align="right">
+                                  {offer.offerId}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Address address={offer.lender} />
+                                </TableCell>
+                                <TableCell align="right">
+                                  {toUSDCString(offer.loanAmount)}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {toAPYText(offer.rate)}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <LoadingActionButton
+                                    variant="outline"
+                                    className="text-primary hover:bg-primary/20 hover:text-primary"
+                                    onClick={() => acceptOffer(offer.offerId)}
+                                    loading={
+                                      acceptingOfferId === offer.offerId &&
+                                      (isAccepting || isAcceptConfirming)
+                                    }
+                                  >
+                                    Accept
+                                  </LoadingActionButton>
+                                </TableCell>
                               </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {request.offers.map((offer) => (
-                                <TableRow
-                                  key={offer.offerId}
-                                  sx={{
-                                    "&:last-child td, &:last-child th": {
-                                      border: 0,
-                                    },
-                                  }}
-                                >
-                                  <TableCell align="right">
-                                    {offer.offerId}
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    <Address address={offer.lender} />
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    {toUSDCString(offer.loanAmount)}
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    {toAPYText(offer.rate)}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    <LoadingActionButton
-                                      variant="outlined"
-                                      color="primary"
-                                      onClick={() => acceptOffer(offer.offerId)}
-                                      loading={
-                                        acceptingOfferId === offer.offerId &&
-                                        (isAccepting || isAcceptConfirming)
-                                      }
-                                    >
-                                      Accept
-                                    </LoadingActionButton>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
+                            ))}
+                          </TableBody>
+                        </Table>
                       </TableCell>
                     </TableRow>
                   )}

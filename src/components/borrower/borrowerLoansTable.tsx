@@ -6,36 +6,33 @@ import {
   toSharesText,
   toUSDCString,
 } from "@/utils/convertors";
-import {
-  Button,
-  Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import { useState } from "react";
 import RepayDialog from "../dialogs/repayDialog";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import { Badge } from "@/components/ui/badge";
+
 export default function BorrowerLoansTable({
   title,
   data,
-  onActionSuccess,
-  onActionError,
+  onDataRefresh,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
   title?: string;
   data: AllLoanData;
-  onActionSuccess?: (successText: string) => void;
-  onActionError?: (errorText: string) => void;
+  onDataRefresh: () => void;
 }) {
   const loans = data.loans;
-
-  const [selectedLoan, selectLoan] = useState<bigint | null>(null);
 
   return (
     <div>
@@ -44,34 +41,26 @@ export default function BorrowerLoansTable({
           {title ? title : "Loans"}
         </h2>
       </div>
-      {selectedLoan !== null && (
-        <RepayDialog
-          loanId={selectedLoan}
-          open={selectLoan != null}
-          close={() => selectLoan(null)}
-          onSuccess={(text: string) => onActionSuccess?.(text)}
-          onError={(text: string) => onActionError?.(text)}
-        />
-      )}
+
       {loans.length === 0 && <div className="text-center">No loans found</div>}
       {loans.length > 0 && (
         <div>
           <Table>
-            <TableHead>
+            <TableHeader>
               <TableRow>
-                <TableCell align="center">Lender</TableCell>
-                <TableCell align="center">Market</TableCell>
-                <TableCell align="center"> Side </TableCell>
-                <TableCell align="right">Shares</TableCell>
-                <TableCell align="right">Collateral</TableCell>
-                <TableCell align="right">Borrowed</TableCell>
-                <TableCell align="right">Owed</TableCell>
-                <TableCell align="right">Duration</TableCell>
-                <TableCell align="right">Time Left</TableCell>
-                <TableCell align="right">Rate</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableHead className="text-center">Lender</TableHead>
+                <TableHead className="text-center">Market</TableHead>
+                <TableHead className="text-center"> Side </TableHead>
+                <TableHead className="text-right">Shares</TableHead>
+                <TableHead className="text-right">Collateral</TableHead>
+                <TableHead className="text-right">Borrowed</TableHead>
+                <TableHead className="text-right">Owed</TableHead>
+                <TableHead className="text-right">Duration</TableHead>
+                <TableHead className="text-right">Time Left</TableHead>
+                <TableHead className="text-right">Rate</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
-            </TableHead>
+            </TableHeader>
             <TableBody>
               {loans.map((loan) => (
                 <TableRow key={loan.loanId}>
@@ -82,13 +71,13 @@ export default function BorrowerLoansTable({
                     <Market market={loan.market} />
                   </TableCell>
                   <TableCell align="center">
-                    <Chip
-                      label={loan.market.outcome}
-                      size="small"
-                      color={
-                        loan.market.outcome === "Yes" ? "success" : "error"
+                    <Badge
+                      variant={
+                        loan.market.outcome === "Yes" ? "yes" : "destructive"
                       }
-                    />
+                    >
+                      {loan.market.outcome}
+                    </Badge>
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(loan.collateralAmount)}
@@ -122,13 +111,7 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="center">
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => selectLoan(loan.loanId)}
-                    >
-                      Repay
-                    </Button>
+                    <RepayDialog loanId={loan.loanId} onDataRefresh={onDataRefresh} />
                   </TableCell>
                 </TableRow>
               ))}
