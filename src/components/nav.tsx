@@ -96,7 +96,9 @@ export default function Nav() {
                 <SwitchChain />
               </ClientOnly>
               <ClientOnly>
-                <Balance />
+                <div className="text-right">
+                  <Balance />
+                </div>
               </ClientOnly>
               <ClientOnly>
                 <ConnectWallet />
