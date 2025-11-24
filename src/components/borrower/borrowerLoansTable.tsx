@@ -48,7 +48,7 @@ export default function BorrowerLoansTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center">Lender</TableHead>
+                <TableHead className="text-right">Lender</TableHead>
                 <TableHead className="text-center">Market</TableHead>
                 <TableHead className="text-center"> Side </TableHead>
                 <TableHead className="text-right">Shares</TableHead>
@@ -58,7 +58,7 @@ export default function BorrowerLoansTable({
                 <TableHead className="text-right">Duration</TableHead>
                 <TableHead className="text-right">Time Left</TableHead>
                 <TableHead className="text-right">Rate</TableHead>
-                <TableHead className="text-center">Actions</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -110,8 +110,11 @@ export default function BorrowerLoansTable({
                     )}
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
-                  <TableCell align="center">
-                    <RepayDialog loanId={loan.loanId} onDataRefresh={onDataRefresh} />
+                  <TableCell align="right">
+                    <RepayDialog
+                      loanId={loan.loanId}
+                      onDataRefresh={onDataRefresh}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

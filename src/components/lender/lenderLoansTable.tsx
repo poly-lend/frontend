@@ -169,7 +169,7 @@ export default function LenderLoansTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Borrower</TableHead>
+              <TableHead className="text-right">Borrower</TableHead>
               <TableHead className="text-center">Market</TableHead>
               <TableHead className="text-center"> Side </TableHead>
               <TableHead className="text-right">Status</TableHead>
@@ -180,13 +180,13 @@ export default function LenderLoansTable({
               <TableHead className="text-right">Duration</TableHead>
               <TableHead className="text-right">Time Left</TableHead>
               <TableHead className="text-right">Rate</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loans.map((loan) => (
               <TableRow key={loan.loanId}>
-                <TableCell align="center">
+                <TableCell align="right">
                   <Address address={loan.borrower} />
                 </TableCell>
                 <TableCell align="center">

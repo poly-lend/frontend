@@ -103,7 +103,7 @@ export default function LenderOffersTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Lender</TableHead>
+              <TableHead className="text-right">Lender</TableHead>
               <TableHead className="text-center">Market</TableHead>
               <TableHead className="text-center"> Side </TableHead>
               <TableHead className="text-right">Shares</TableHead>
@@ -111,13 +111,13 @@ export default function LenderOffersTable({
               <TableHead className="text-right">Amount</TableHead>
               <TableHead className="text-right">Duration</TableHead>
               <TableHead className="text-right">Rate</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {offers.map((offer) => (
               <TableRow key={offer.offerId.toString()}>
-                <TableCell align="center">
+                <TableCell align="right">
                   <Address address={offer.lender} />
                 </TableCell>
                 <TableCell align="center">
@@ -146,7 +146,7 @@ export default function LenderOffersTable({
                   {toDuration(Number(offer.request!.minimumDuration))}
                 </TableCell>
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
-                <TableCell align="center">
+                <TableCell align="right">
                   <LoadingActionButton
                     variant="outline-destructive"
                     onClick={() => cancelOffer(offer.offerId)}

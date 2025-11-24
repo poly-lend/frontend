@@ -155,7 +155,7 @@ export default function BorrowerRequestsTable({
               <TableHead className="text-right">Collateral</TableHead>
               <TableHead className="text-right">Duration</TableHead>
               <TableHead className="text-right">Offers</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -190,7 +190,7 @@ export default function BorrowerRequestsTable({
                     {request.offers.length.toString()}
                   </TableCell>
                   <TableCell align="right">
-                    <div className="flex gap-2 justify-center">
+                    <div className="flex gap-2 justify-end">
                       <Button
                         disabled={request.offers.length === 0}
                         variant="outline"
@@ -228,13 +228,10 @@ export default function BorrowerRequestsTable({
                 {selectedRequest &&
                   selectedRequest.requestId === request.requestId && (
                     <TableRow>
-                      <TableCell colSpan={7}>
+                      <TableCell colSpan={7} className="p-0">
                         <Table>
                           <TableHeader className="border-b">
                             <TableRow>
-                              <TableHead className="text-right">
-                                Offer ID
-                              </TableHead>
                               <TableHead className="text-right">
                                 Lender
                               </TableHead>
@@ -242,7 +239,7 @@ export default function BorrowerRequestsTable({
                                 Amount
                               </TableHead>
                               <TableHead className="text-right">Rate</TableHead>
-                              <TableHead className="text-center">
+                              <TableHead className="text-right">
                                 Actions
                               </TableHead>
                             </TableRow>
@@ -250,9 +247,6 @@ export default function BorrowerRequestsTable({
                           <TableBody>
                             {request.offers.map((offer) => (
                               <TableRow key={offer.offerId}>
-                                <TableCell align="right">
-                                  {offer.offerId}
-                                </TableCell>
                                 <TableCell align="right">
                                   <Address address={offer.lender} />
                                 </TableCell>
@@ -262,7 +256,7 @@ export default function BorrowerRequestsTable({
                                 <TableCell align="right">
                                   {toAPYText(offer.rate)}
                                 </TableCell>
-                                <TableCell align="center">
+                                <TableCell align="right">
                                   <LoadingActionButton
                                     variant="outline-primary"
                                     onClick={() => acceptOffer(offer.offerId)}

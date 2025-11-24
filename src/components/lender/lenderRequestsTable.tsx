@@ -68,7 +68,7 @@ export default function LenderRequestsTable({
                 <TableHead className="text-right">Collateral</TableHead>
                 <TableHead className="text-right">Duration</TableHead>
                 <TableHead className="text-right">Offers</TableHead>
-                <TableHead className="text-center">Actions</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -117,7 +117,7 @@ export default function LenderRequestsTable({
                           <span>{request.offers.length}</span>
                         </div>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell align="right">
                         <OfferDialog
                           requestId={request.requestId}
                           loanDuration={Number(request.minimumDuration)}
