@@ -12,8 +12,7 @@ export default function ConnectChain() {
   return address && !isPolygon ? (
     <div className="mr-4">
       <Button
-        variant="outline"
-        className="text-destructive hover:bg-destructive/20 hover:text-destructive"
+        variant="outline-destructive"
         onClick={() => switchChain({ chainId: chain.id })}
       >
         Switch Chain

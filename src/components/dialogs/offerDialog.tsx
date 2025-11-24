@@ -143,12 +143,7 @@ export default function OfferDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="text-primary hover:bg-primary/20"
-          >
-            Offer
-          </Button>
+          <Button variant="outline-primary">Offer</Button>
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-[425px]">
@@ -209,9 +204,7 @@ export default function OfferDialog({
           {/* Buttons */}
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" className="hover:text-destructive">
-                Cancel
-              </Button>
+              <Button variant="outline-destructive">Cancel</Button>
             </DialogClose>
             <div className="flex items-center gap-2">
               {!offerIsEnabled && !isAllowanceLoading && (
@@ -226,7 +219,6 @@ export default function OfferDialog({
                 </LoadingActionButton>
               )}
               <LoadingActionButton
-                color="primary"
                 onClick={handleOffer}
                 disabled={
                   loanAmount <= 0 || rate <= 0 || isOffering || !offerIsEnabled

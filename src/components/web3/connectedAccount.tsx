@@ -20,11 +20,7 @@ export function ConnectedAccount() {
         </div>
       )}
 
-      <Button
-        variant="default"
-        onClick={() => disconnect()}
-        className="cursor-pointer"
-      >
+      <Button onClick={() => disconnect()}>
         <LogOut className="size-5 stroke-[2.5px]" />
       </Button>
     </div>

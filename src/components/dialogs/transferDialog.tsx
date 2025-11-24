@@ -159,11 +159,7 @@ export default function TransferDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="text-primary hover:bg-primary/20"
-            disabled={Number(callTime) === 0}
-          >
+          <Button variant="outline-primary" disabled={Number(callTime) === 0}>
             Transfer
           </Button>
         </DialogTrigger>
@@ -210,9 +206,7 @@ export default function TransferDialog({
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" className="hover:text-destructive">
-                Cancel
-              </Button>
+              <Button variant="outline-destructive">Cancel</Button>
             </DialogClose>
             <div className="flex items-center gap-2">
               {!transferIsEnabled && !isAllowanceLoading && (

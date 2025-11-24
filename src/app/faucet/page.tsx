@@ -92,7 +92,6 @@ export default function Faucet() {
                   className="flex-1"
                 />
                 <LoadingActionButton
-                  variant="default"
                   onClick={() => mintUSDC()}
                   loading={isPending || isConfirming}
                   disabled={isPending || isConfirming}

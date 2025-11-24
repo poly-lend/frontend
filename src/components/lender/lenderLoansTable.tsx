@@ -245,8 +245,7 @@ export default function LenderLoansTable({
                     {dataType === "my" ? (
                       <>
                         <LoadingActionButton
-                          variant="outline"
-                          className="text-primary hover:bg-primary/20"
+                          variant="outline-primary"
                           disabled={
                             Number(loan.minimumDuration) -
                               (Date.now() / 1000 - Number(loan.startTime)) >=
@@ -264,8 +263,7 @@ export default function LenderLoansTable({
                           Call
                         </LoadingActionButton>
                         <LoadingActionButton
-                          variant="outline"
-                          className="text-primary hover:bg-primary/20"
+                          variant="outline-primary"
                           disabled={
                             Number(loan.callTime) === 0 ||
                             Number(loan.callTime) + 24 * 60 * 60 >

@@ -9,11 +9,7 @@ export function ConnectButton() {
       return null;
     }
     return (
-      <Button
-        key={connector.uid}
-        className="cursor-pointer"
-        onClick={() => connect({ connector })}
-      >
+      <Button key={connector.uid} onClick={() => connect({ connector })}>
         Connect
       </Button>
     );

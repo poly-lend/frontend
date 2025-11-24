@@ -194,7 +194,6 @@ export default function BorrowerRequestsTable({
                       <Button
                         disabled={request.offers.length === 0}
                         variant="outline"
-                        className="hover:text-neutral-300"
                         onClick={() => {
                           if (
                             selectedRequest &&
@@ -214,8 +213,7 @@ export default function BorrowerRequestsTable({
                         )}
                       </Button>
                       <LoadingActionButton
-                        variant="outline"
-                        className="text-destructive hover:bg-destructive/20 hover:text-destructive"
+                        variant="outline-destructive"
                         onClick={() => cancelRequest(request.requestId)}
                         loading={
                           cancellingRequestId === request.requestId &&
@@ -266,8 +264,7 @@ export default function BorrowerRequestsTable({
                                 </TableCell>
                                 <TableCell align="center">
                                   <LoadingActionButton
-                                    variant="outline"
-                                    className="text-primary hover:bg-primary/20 hover:text-primary"
+                                    variant="outline-primary"
                                     onClick={() => acceptOffer(offer.offerId)}
                                     loading={
                                       acceptingOfferId === offer.offerId &&

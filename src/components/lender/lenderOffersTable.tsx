@@ -148,8 +148,7 @@ export default function LenderOffersTable({
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                 <TableCell align="center">
                   <LoadingActionButton
-                    variant="outline"
-                    className="text-destructive hover:bg-destructive/20 hover:text-destructive"
+                    variant="outline-destructive"
                     onClick={() => cancelOffer(offer.offerId)}
                     loading={
                       cancellingOfferId === offer.offerId &&
