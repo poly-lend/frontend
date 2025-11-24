@@ -17,7 +17,7 @@ export default function RequestOffersNestedTable({
   offers: LoanOffer[];
 }) {
   return (
-    <div style={{ width: "92%", margin: "0 auto" }}>
+    <div className="w-full">
       <Table className="text-xs">
         <TableHeader className="border-b">
           <TableRow>
