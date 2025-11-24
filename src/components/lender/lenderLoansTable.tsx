@@ -190,7 +190,7 @@ export default function LenderLoansTable({
                   <Address address={loan.borrower} />
                 </TableCell>
                 <TableCell align="center" className="whitespace-normal">
-                  <Market market={loan.market} truncateWidth={100} />
+                  <Market market={loan.market} />
                 </TableCell>
                 <TableCell align="center">
                   <Badge variant={loan.market.outcome === "Yes" ? "yes" : "no"}>
