@@ -80,7 +80,7 @@ export default function LenderRequestsTable({
                       <TableCell align="right">
                         <Address address={request.borrower} />
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" className="whitespace-normal">
                         <Market market={request.market} />
                       </TableCell>
                       <TableCell align="center">

@@ -3,7 +3,7 @@ import { ExternalLink } from "lucide-react";
 
 const Market = ({
   market,
-  truncateWidth = 400,
+  truncateWidth = 200,
 }: {
   market: any;
   truncateWidth?: number;
@@ -23,10 +23,10 @@ const Market = ({
       />
 
       <div className="flex items-center gap-1 text-sm text-left mr-1">
-        <p className={`max-w-[${truncateWidth}px] truncate`}>
+        <p className={`max-w-[${truncateWidth}px] line-clamp-2 min-w-0`}>
           {market.market.question}
         </p>
-        <ExternalLink className="w-4 h-4" />
+        <ExternalLink className="w-4 h-4 shrink-0" />
       </div>
     </Link>
   );

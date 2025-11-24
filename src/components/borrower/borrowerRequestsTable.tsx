@@ -162,7 +162,7 @@ export default function BorrowerRequestsTable({
             {requests.map((request) => (
               <Fragment key={request.requestId.toString()}>
                 <TableRow>
-                  <TableCell align="center">
+                  <TableCell align="center" className="whitespace-normal">
                     <Market market={request.market} />
                   </TableCell>
                   <TableCell align="center">

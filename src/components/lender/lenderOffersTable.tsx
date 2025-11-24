@@ -120,7 +120,7 @@ export default function LenderOffersTable({
                 <TableCell align="right">
                   <Address address={offer.lender} />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" className="whitespace-normal">
                   <Market market={offer.market} />
                 </TableCell>
                 <TableCell align="center">

@@ -67,7 +67,7 @@ export default function BorrowerLoansTable({
                   <TableCell align="center">
                     <Address address={loan.lender} />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className="whitespace-normal">
                     <Market market={loan.market} />
                   </TableCell>
                   <TableCell align="center">
