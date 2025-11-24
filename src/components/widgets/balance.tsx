@@ -29,7 +29,7 @@ export default function Balance() {
   return (
     address &&
     isPolygon && (
-      <div className="mr-4 font-bold">
+      <div className="mr-4 font-bold text-right">
         {(balance ? Number(balance) / 10 ** usdcDecimals : 0).toFixed(2)} pfUSDC
       </div>
     )
