@@ -37,7 +37,7 @@ export default function Nav() {
   return (
     <nav
       className={cn(
-        "sticky z-20 top-0 w-full bg-background/95 backdrop-blur border-b border-border shadow-sm",
+        "sticky z-20 top-0 w-full bg-background/95 backdrop-blur",
         mobileOpen && "shadow-md"
       )}
     >
