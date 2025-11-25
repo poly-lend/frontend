@@ -1,14 +1,6 @@
 "use client";
 
-import { ExternalLink, Menu, X } from "lucide-react";
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import ClientOnly from "../utils/clientOnly";
-import ConnectWallet from "./web3/connectWallet";
-import SwitchChain from "./web3/switchChain";
-import Balance from "./widgets/balance";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -17,6 +9,14 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { ExternalLink, Menu, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import ClientOnly from "../utils/clientOnly";
+import ConnectWallet from "./web3/connectWallet";
+import SwitchChain from "./web3/switchChain";
+import Balance from "./widgets/balance";
 
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -46,7 +46,7 @@ export default function Nav() {
           <div className="flex items-center gap-4">
             {/* Mobile logo */}
             <Link href="/" className="flex items-center md:hidden">
-              <img src="logo.png" alt="logo" className="h-10 w-auto" />
+              <img src="/logo.png" alt="logo" className="h-10 w-auto" />
             </Link>
 
             {/* Desktop nav */}
@@ -55,7 +55,7 @@ export default function Nav() {
                 <NavigationMenuList className="gap-1 items-center flex">
                   <NavigationMenuItem className="mr-2 lg:mr-6">
                     <Link href="/" className="flex items-center">
-                      <img src="logo.png" alt="logo" className="h-12 w-auto" />
+                      <img src="/logo.png" alt="logo" className="h-12 w-auto" />
                     </Link>
                   </NavigationMenuItem>
                   {links.map((link) => {

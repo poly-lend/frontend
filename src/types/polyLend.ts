@@ -37,6 +37,7 @@ export type Loan = {
 };
 
 export type AllLoanData = {
+  events: any[];
   requests: LoanRequest[];
   offers: LoanOffer[];
   markets: Map<string, any>;

@@ -1,4 +1,5 @@
 import { AllLoanData } from "@/types/polyLend";
+import fetchEvents from "./fetchEvents";
 import { fetchLoans } from "./fetchLoans";
 import fetchMarkets from "./fetchMarkets";
 import { fetchOffers } from "./fetchOffers";
@@ -12,7 +13,7 @@ export const fetchData = async (params: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
 }): Promise<AllLoanData> => {
-  const [requests, offers, loans] = await Promise.all([
+  const [requests, offers, loans, events] = await Promise.all([
     fetchRequests({
       publicClient: params.publicClient,
       address: params.borrower,
@@ -26,6 +27,7 @@ export const fetchData = async (params: {
       borrower: params.borrower,
       lender: params.lender,
     }),
+    fetchEvents(),
   ]);
 
   let positionIds = [
@@ -49,5 +51,6 @@ export const fetchData = async (params: {
     requests: hydratedRequests,
     offers: hydratedOffers,
     loans: hydratedLoans,
+    events,
   };
 };
