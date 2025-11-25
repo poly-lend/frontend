@@ -43,11 +43,7 @@ export default function OfferDetails() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-2">
-      <Button disabled={selectedMarkets.length === 0} onClick={handleSendOffer}>
-        Send Offer
-      </Button>
-
+    <div>
       <h1 className="font-bold text-center text-4xl mb-4 flex items-center gap-2">
         <Checkbox
           checked={selectedMarkets.length === markets?.length}
@@ -63,6 +59,12 @@ export default function OfferDetails() {
         />
         <img width={40} height={40} src={event?.icon} alt={event?.title} />
         <span className="flex-1">{event?.title}</span>
+        <Button
+          disabled={selectedMarkets.length === 0}
+          onClick={handleSendOffer}
+        >
+          Send Offer
+        </Button>
       </h1>
       <div className="flex flex-col gap-2">
         {markets?.map((market) => (
