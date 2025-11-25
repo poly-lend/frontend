@@ -25,7 +25,7 @@ export default function OfferDetails() {
       acc.push(...JSON.parse(market));
       return acc;
     }, []);
-    console.log(markets);
+    alert(`You are about to send an offer for ${markets.length} markets`);
   };
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function OfferDetails() {
 
   return (
     <div>
-      <h1 className="font-bold text-center text-4xl mb-4 flex items-center gap-2">
+      <h1 className="font-bold text-4xl mb-4 flex items-center gap-2">
         <Checkbox
           checked={selectedMarkets.length === markets?.length}
           onCheckedChange={(checked) => {
