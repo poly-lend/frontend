@@ -13,3 +13,7 @@ www.polylend.cc {
 polylend.cc {
     redir https://polylend.com
 }
+
+docs.polylend.cc {
+    redir https://docs.polylend.com
+}
