@@ -12,7 +12,7 @@ import fetchEvents from "@/utils/fetchEvents";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function Offer() {
+export default function Markets() {
   const [data, setData] = useState<any[] | null>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function Offer() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="font-bold text-center text-4xl mb-4">Offer</h1>
+      <h1 className="font-bold text-center text-4xl mb-4">Markets</h1>
       <div className="flex gap-2">
         {data?.map((event) => (
           <Card className="w-full max-w-sm">
@@ -59,7 +59,9 @@ export default function Offer() {
             </CardContent>
             <CardFooter className="flex-col gap-2">
               <Button type="submit" className="w-full" asChild>
-                <Link href={`/event/${event.slug}`}>Check Market</Link>
+                <Link href={`/event/${event.slug}`}>
+                  Check Market & Create Offer
+                </Link>
               </Button>
             </CardFooter>
           </Card>
