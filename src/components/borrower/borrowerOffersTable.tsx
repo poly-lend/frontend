@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 
-export default function BorrowerRequestsTable({
+export default function BorrowerOffersTable({
   address,
   title,
   data,
@@ -43,7 +43,7 @@ export default function BorrowerRequestsTable({
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
-  const requests = data.requests;
+  const requests = [];
   const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();

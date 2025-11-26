@@ -1,6 +1,7 @@
 "use client";
 
 import BorrowerLoansTable from "@/components/borrower/borrowerLoansTable";
+import BorrowerOffersTable from "@/components/borrower/borrowerOffersTable";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
@@ -30,6 +31,12 @@ export default function Borrow() {
 
       <WalletGuard isDataReady={!!data}>
         <>
+          <BorrowerOffersTable
+            address={address as `0x${string}`}
+            title="Borrower Requests"
+            data={data as AllLoanData}
+            onDataRefresh={handleRefreshData}
+          />
           <BorrowerLoansTable
             borrower={address as `0x${string}`}
             title="Borrower Loans"
