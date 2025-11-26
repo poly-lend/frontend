@@ -1,12 +1,6 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
-import {
-  toAPYText,
-  toDuration,
-  toSharesText,
-  toUSDCString,
-} from "@/utils/convertors";
 import { Fragment, useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -14,8 +8,6 @@ import {
   useWaitForTransactionReceipt,
   useWalletClient,
 } from "wagmi";
-import Address from "../widgets/address";
-import Market from "../widgets/market";
 
 import {
   Table,
@@ -25,12 +17,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import LoadingActionButton from "../widgets/loadingActionButton";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import useProxyAddress from "@/hooks/useProxyAddress";
+import { Position } from "@/types/polymarketPosition";
+import { toAPYText, toUSDCString } from "@/utils/convertors";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
+import Address from "../widgets/address";
+import LoadingActionButton from "../widgets/loadingActionButton";
+import Market from "../widgets/market";
+import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function BorrowerOffersTable({
   address,
@@ -43,8 +41,32 @@ export default function BorrowerOffersTable({
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
-  const requests = [];
-  const [selectedRequest, selectRequest] = useState<LoanRequest | null>(null);
+  const { data: proxyAddress } = useProxyAddress();
+  const { data: positions, isLoading } = useQuery({
+    queryKey: ["positions", proxyAddress],
+    queryFn: async () => {
+      if (!proxyAddress) return [];
+      const r = await fetch(
+        `https://data-api.polymarket.com/positions?user=${proxyAddress}`
+      );
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const result = (await r.json()) as Position[];
+      result.forEach((position) => {
+        position.market = data.markets.get(position.asset.toString());
+        position.offers = [];
+        data.offers.forEach((offer) => {
+          if (offer.positionIds.includes(BigInt(position.asset))) {
+            position.offers.push(offer);
+          }
+        });
+      });
+      console.log(result);
+      return result;
+    },
+    staleTime: 60_000,
+  });
+
+  const [selectedPosition, selectPosition] = useState<Position | null>(null);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
@@ -85,7 +107,7 @@ export default function BorrowerOffersTable({
   useEffect(() => {
     if (isAcceptConfirmed) {
       toast.success("Offer accepted successfully");
-      selectRequest(null);
+      selectPosition(null);
       setAcceptingOfferId(null);
       setAcceptTxHash(undefined);
       onDataRefresh();
@@ -96,10 +118,10 @@ export default function BorrowerOffersTable({
       <h2 className="text-2xl font-bold w-full text-center mt-8">
         {title ? title : "Requests"}
       </h2>
-      {requests.length === 0 && (
+      {positions && positions?.length === 0 && (
         <div className="text-center">No requests found</div>
       )}
-      {requests.length > 0 && (
+      {positions && positions?.length > 0 && (
         <Table>
           <TableHeader>
             <TableRow>
@@ -113,54 +135,48 @@ export default function BorrowerOffersTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.map((request) => (
-              <Fragment key={request.requestId.toString()}>
+            {positions?.map((position) => (
+              <Fragment key={position.asset.toString()}>
                 <TableRow>
                   <TableCell align="center" className="whitespace-normal">
-                    <Market market={request.market} />
+                    <Market market={position.market} />
                   </TableCell>
                   <TableCell align="center">
-                    <Badge
-                      variant={
-                        request.market.outcome === "Yes" ? "yes" : "destructive"
-                      }
-                    >
-                      {request.market.outcome}
-                    </Badge>
+                    <OutcomeBadge outcome={position.market.outcome} />
                   </TableCell>
                   <TableCell align="right">
-                    {toSharesText(request.collateralAmount)}
+                    {/* {toSharesText(request.collateralAmount)} */}
                   </TableCell>
                   <TableCell align="right">
-                    {toUSDCString(
+                    {/* {toUSDCString(
                       Number(request.market.outcomePrice) *
                         Number(request.collateralAmount)
-                    )}
+                    )} */}
                   </TableCell>
                   <TableCell align="right">
-                    {toDuration(request.minimumDuration)}
+                    {/* {toDuration(request.minimumDuration)} */}
                   </TableCell>
                   <TableCell align="right">
-                    {request.offers.length.toString()}
+                    {position.offers?.length ?? 0}
                   </TableCell>
                   <TableCell align="right">
                     <div className="flex gap-2 justify-end">
                       <Button
-                        disabled={request.offers.length === 0}
+                        disabled={position.offers.length === 0}
                         variant="outline"
                         onClick={() => {
                           if (
-                            selectedRequest &&
-                            selectedRequest.requestId === request.requestId
+                            selectedPosition &&
+                            selectedPosition.asset === position.asset
                           ) {
-                            selectRequest(null);
+                            selectPosition(null);
                           } else {
-                            selectRequest(request);
+                            selectPosition(position);
                           }
                         }}
                       >
                         Offers
-                        {selectedRequest?.requestId === request.requestId ? (
+                        {selectedPosition?.asset === position.asset ? (
                           <ChevronUp />
                         ) : (
                           <ChevronDown />
@@ -169,8 +185,8 @@ export default function BorrowerOffersTable({
                     </div>
                   </TableCell>
                 </TableRow>
-                {selectedRequest &&
-                  selectedRequest.requestId === request.requestId && (
+                {selectedPosition &&
+                  selectedPosition.asset === position.asset && (
                     <TableRow>
                       <TableCell colSpan={7} className="p-0">
                         <Table>
@@ -189,7 +205,7 @@ export default function BorrowerOffersTable({
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {request.offers.map((offer) => (
+                            {position.offers.map((offer) => (
                               <TableRow key={offer.offerId}>
                                 <TableCell align="right">
                                   <Address address={offer.lender} />
@@ -203,7 +219,9 @@ export default function BorrowerOffersTable({
                                 <TableCell align="right">
                                   <LoadingActionButton
                                     variant="outline-primary"
-                                    onClick={() => acceptOffer(offer.offerId)}
+                                    onClick={() =>
+                                      acceptOffer(offer.offerId, position.asset)
+                                    }
                                     loading={
                                       acceptingOfferId === offer.offerId &&
                                       (isAccepting || isAcceptConfirming)

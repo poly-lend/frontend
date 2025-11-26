@@ -1,3 +1,5 @@
+import { LoanOffer } from "./polyLend";
+
 export type Position = {
   proxyWallet: `0x${string}`;
   asset: bigint;
@@ -23,4 +25,6 @@ export type Position = {
   oppositeAsset: `0x${string}`;
   endDate: string;
   negativeRisk: boolean;
+  market: any;
+  offers: LoanOffer[];
 };
