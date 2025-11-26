@@ -3,21 +3,15 @@ import fetchEvents from "./fetchEvents";
 import { fetchLoans } from "./fetchLoans";
 import fetchMarkets from "./fetchMarkets";
 import { fetchOffers } from "./fetchOffers";
-import { fetchRequests } from "./fetchRequests";
 import { hydrateLoans } from "./hydrateLoans";
 import { hydrateOffers } from "./hydrateOffers";
-import { hydrateRequests } from "./hydrateRequests";
 
 export const fetchData = async (params: {
   publicClient: any;
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
 }): Promise<AllLoanData> => {
-  const [requests, offers, loans, events] = await Promise.all([
-    fetchRequests({
-      publicClient: params.publicClient,
-      address: params.borrower,
-    }),
+  const [offers, loans, events] = await Promise.all([
     fetchOffers({
       publicClient: params.publicClient,
       address: params.lender,
@@ -30,27 +24,22 @@ export const fetchData = async (params: {
     fetchEvents(),
   ]);
 
-  let positionIds = [
-    ...new Set([
-      ...requests.map((request) => request.positionId.toString()),
-      ...loans.map((loan) => loan.positionId.toString()),
-    ]),
-  ];
+  let positionIds = loans.map((loan) => loan.positionId.toString());
+  offers.forEach((offer) => {
+    offer.positionIds.forEach((positionId) => {
+      positionIds.push(positionId.toString());
+    });
+  });
+
   const markets = await fetchMarkets(positionIds);
-
-  const hydratedRequests = hydrateRequests(requests, offers, markets);
-  const hydratedOffers = hydrateOffers(offers, requests, markets).filter(
-    (offer) => offer.request
-  );
-
+  const hydratedOffers = hydrateOffers(offers, markets);
   const hydratedLoans = hydrateLoans(loans, markets);
-
-  console.log(hydratedRequests);
-  return {
+  const data = {
     markets,
-    requests: hydratedRequests,
     offers: hydratedOffers,
     loans: hydratedLoans,
     events,
   };
+  console.log(data);
+  return data;
 };

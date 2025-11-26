@@ -1,22 +1,15 @@
-export type LoanRequest = {
-  requestId: bigint;
-  borrower: `0x${string}`;
-  borrowerWallet: `0x${string}`;
-  positionId: bigint;
-  collateralAmount: bigint;
-  minimumDuration: bigint;
-  offers: LoanOffer[];
-  market: any;
-};
-
 export type LoanOffer = {
   offerId: bigint;
-  requestId: bigint;
   lender: `0x${string}`;
   loanAmount: bigint;
   rate: bigint;
-  market: any;
-  request?: LoanRequest;
+  borrowedAmount: bigint;
+  positionIds: bigint[];
+  collateralAmount: bigint;
+  minimumLoanAmount: bigint;
+  duration: bigint;
+  startTime: bigint;
+  perpetual: boolean;
 };
 
 export type Loan = {
@@ -31,14 +24,12 @@ export type Loan = {
   startTime: bigint;
   callTime: bigint;
   minimumDuration: bigint;
-  request: LoanRequest;
   offer: LoanOffer;
   market: any;
 };
 
 export type AllLoanData = {
   events: any[];
-  requests: LoanRequest[];
   offers: LoanOffer[];
   markets: Map<string, any>;
   loans: Loan[];

@@ -13,10 +13,16 @@ export const fetchOffers = async (params: {
 
   let offers: LoanOffer[] = offersData.map((offer: any, index: number) => ({
     offerId: BigInt(offer._id),
-    requestId: BigInt(offer.requestId),
     lender: offer.lender as `0x${string}`,
     loanAmount: BigInt(offer.loanAmount),
     rate: BigInt(offer.rate),
+    borrowedAmount: BigInt(offer.borrowedAmount),
+    positionIds: offer.positionIds.map((positionId: any) => BigInt(positionId)),
+    collateralAmount: BigInt(offer.collateralAmount),
+    minimumLoanAmount: BigInt(offer.minimumLoanAmount),
+    duration: BigInt(offer.duration),
+    startTime: BigInt(offer.startTime),
+    perpetual: offer.perpetual,
   }));
   if (params.address) {
     offers = offers.filter(

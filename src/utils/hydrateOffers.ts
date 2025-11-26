@@ -1,17 +1,13 @@
-import { LoanOffer, LoanRequest } from "@/types/polyLend";
+import { LoanOffer } from "@/types/polyLend";
 
 export const hydrateOffers = (
   offers: LoanOffer[],
-  requests: LoanRequest[],
   markets: Map<string, any>
 ): LoanOffer[] => {
   return offers.map((offer) => {
-    const request = requests.find(
-      (request) => request.requestId === offer.requestId
-    );
-    const market = request
-      ? markets.get(request.positionId.toString())
-      : undefined;
-    return { ...offer, request, market };
+    return {
+      ...offer,
+      market: markets.get(offer.positionIds[0].toString()),
+    };
   });
 };
