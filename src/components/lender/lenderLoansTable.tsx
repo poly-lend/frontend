@@ -1,13 +1,3 @@
-import { polylendAddress } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
-import { AllLoanData, Loan } from "@/types/polyLend";
-import { calculateAmountOwed } from "@/utils/calculations";
-import {
-  toAPYText,
-  toDuration,
-  toSharesText,
-  toUSDCString,
-} from "@/utils/convertors";
 import {
   Table,
   TableBody,
@@ -16,9 +6,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { polylendAddress } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
+import { cn } from "@/lib/utils";
+import { AllLoanData, Loan } from "@/types/polyLend";
+import { calculateAmountOwed } from "@/utils/calculations";
+import {
+  toAPYText,
+  toDuration,
+  toSharesText,
+  toUSDCString,
+} from "@/utils/convertors";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { BaseError } from "viem";
 import {
   usePublicClient,
@@ -29,8 +30,7 @@ import TransferDialog from "../dialogs/transferDialog";
 import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function LenderLoansTable({
   lender,
@@ -193,9 +193,7 @@ export default function LenderLoansTable({
                   <Market market={loan.market} />
                 </TableCell>
                 <TableCell align="center">
-                  <Badge variant={loan.market.outcome === "Yes" ? "yes" : "no"}>
-                    {loan.market.outcome}
-                  </Badge>
+                  <OutcomeBadge outcome={loan.market.outcome} />
                 </TableCell>
                 <TableCell
                   align="right"

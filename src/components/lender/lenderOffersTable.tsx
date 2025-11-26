@@ -26,7 +26,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "../ui/badge";
 import { toast } from "sonner";
 
 export default function LenderOffersTable({
@@ -124,11 +123,7 @@ export default function LenderOffersTable({
                   <Market market={offer.market} />
                 </TableCell>
                 <TableCell align="center">
-                  <Badge
-                    variant={offer.market.outcome === "Yes" ? "yes" : "no"}
-                  >
-                    {offer.market.outcome}
-                  </Badge>
+                  <OutcomeBadge outcome={offer.market.outcome} />
                 </TableCell>
                 <TableCell align="right">
                   {toSharesText(offer.request!.collateralAmount)}

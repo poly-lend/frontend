@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Badge } from "@/components/ui/badge";
+import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function BorrowerLoansTable({
   title,
@@ -71,13 +71,7 @@ export default function BorrowerLoansTable({
                     <Market market={loan.market} />
                   </TableCell>
                   <TableCell align="center">
-                    <Badge
-                      variant={
-                        loan.market.outcome === "Yes" ? "yes" : "destructive"
-                      }
-                    >
-                      {loan.market.outcome}
-                    </Badge>
+                    <OutcomeBadge outcome={loan.market.outcome} />
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(loan.collateralAmount)}

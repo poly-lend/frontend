@@ -6,6 +6,7 @@ import Address from "../widgets/address";
 import Market from "../widgets/market";
 import RequestOffersNestedTable from "./requestOffersNestedTable";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -14,9 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function LenderRequestsTable({
   title,
@@ -84,13 +84,7 @@ export default function LenderRequestsTable({
                         <Market market={request.market} />
                       </TableCell>
                       <TableCell align="center">
-                        <Badge
-                          variant={
-                            request.market.outcome === "Yes" ? "yes" : "no"
-                          }
-                        >
-                          {request.market.outcome}
-                        </Badge>
+                        <OutcomeBadge outcome={request.market.outcome} />
                       </TableCell>
                       <TableCell className="text-right">
                         {toSharesText(request.collateralAmount)}

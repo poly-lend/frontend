@@ -33,7 +33,7 @@ export default function Borrow() {
         <>
           <BorrowerOffersTable
             address={address as `0x${string}`}
-            title="Borrower Requests"
+            title="Positions & Offers"
             data={data as AllLoanData}
             onDataRefresh={handleRefreshData}
           />
