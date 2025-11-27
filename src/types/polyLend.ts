@@ -1,29 +1,29 @@
 export type LoanOffer = {
-  offerId: bigint;
+  offerId: string;
   lender: `0x${string}`;
-  loanAmount: bigint;
-  rate: bigint;
-  borrowedAmount: bigint;
-  positionIds: bigint[];
-  collateralAmount: bigint;
-  minimumLoanAmount: bigint;
-  duration: bigint;
-  startTime: bigint;
+  loanAmount: string;
+  rate: string;
+  borrowedAmount: string;
+  positionIds: string[];
+  collateralAmount: string;
+  minimumLoanAmount: string;
+  duration: string;
+  startTime: string;
   perpetual: boolean;
 };
 
 export type Loan = {
-  loanId: bigint;
+  loanId: string;
   borrower: `0x${string}`;
   borrowerWallet: `0x${string}`;
   lender: `0x${string}`;
-  positionId: bigint;
-  collateralAmount: bigint;
-  loanAmount: bigint;
-  rate: bigint;
-  startTime: bigint;
-  callTime: bigint;
-  minimumDuration: bigint;
+  positionId: string;
+  collateralAmount: string;
+  loanAmount: string;
+  rate: string;
+  startTime: string;
+  callTime: string;
+  minimumDuration: string;
   offer: LoanOffer;
   market: any;
 };

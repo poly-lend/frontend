@@ -52,7 +52,7 @@ export default function BorrowerOffersTable({
         position.market = data.markets.get(position.asset.toString());
         position.offers = [];
         data.offers.forEach((offer) => {
-          if (offer.positionIds.includes(BigInt(position.asset))) {
+          if (offer.positionIds.includes(position.asset)) {
             position.offers.push(offer);
           }
         });
@@ -67,7 +67,7 @@ export default function BorrowerOffersTable({
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
-  const [acceptingOfferId, setAcceptingOfferId] = useState<bigint | null>(null);
+  const [acceptingOfferId, setAcceptingOfferId] = useState<string | null>(null);
   const [isAccepting, setIsAccepting] = useState(false);
   const [acceptTxHash, setAcceptTxHash] = useState<`0x${string}` | undefined>(
     undefined
@@ -77,7 +77,7 @@ export default function BorrowerOffersTable({
       hash: acceptTxHash,
     });
 
-  const acceptOffer = async (offerId: bigint, positionId: bigint) => {
+  const acceptOffer = async (offerId: string, positionId: string) => {
     if (!publicClient || !walletClient) return;
     try {
       setAcceptingOfferId(offerId);
@@ -86,7 +86,7 @@ export default function BorrowerOffersTable({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
         functionName: "accept",
-        args: [offerId, BigInt(0), BigInt(0), positionId, true],
+        args: [BigInt(offerId), BigInt(0), BigInt(0), BigInt(positionId), true],
       });
       setAcceptTxHash(hash);
     } catch (err) {
@@ -217,7 +217,8 @@ export default function BorrowerOffersTable({
                                       acceptOffer(offer.offerId, position.asset)
                                     }
                                     loading={
-                                      acceptingOfferId === offer.offerId &&
+                                      acceptingOfferId?.toString ===
+                                        offer.offerId &&
                                       (isAccepting || isAcceptConfirming)
                                     }
                                   >

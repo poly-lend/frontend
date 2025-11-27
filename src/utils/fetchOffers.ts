@@ -12,16 +12,16 @@ export const fetchOffers = async (params: {
   const offersData = await response.json();
 
   let offers: LoanOffer[] = offersData.map((offer: any, index: number) => ({
-    offerId: BigInt(offer._id),
+    offerId: offer._id,
     lender: offer.lender as `0x${string}`,
-    loanAmount: BigInt(offer.loanAmount),
-    rate: BigInt(offer.rate),
-    borrowedAmount: BigInt(offer.borrowedAmount),
-    positionIds: offer.positionIds.map((positionId: any) => BigInt(positionId)),
-    collateralAmount: BigInt(offer.collateralAmount),
-    minimumLoanAmount: BigInt(offer.minimumLoanAmount),
-    duration: BigInt(offer.duration),
-    startTime: BigInt(offer.startTime),
+    loanAmount: offer.loanAmount,
+    rate: offer.rate,
+    borrowedAmount: offer.borrowedAmount,
+    positionIds: offer.positionIds.map((positionId: any) => positionId),
+    collateralAmount: offer.collateralAmount,
+    minimumLoanAmount: offer.minimumLoanAmount,
+    duration: offer.duration,
+    startTime: offer.startTime,
     perpetual: offer.perpetual,
   }));
   if (params.address) {

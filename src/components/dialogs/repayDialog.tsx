@@ -1,16 +1,3 @@
-import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
-import { usdcConfig } from "@/contracts/usdc";
-import useErc20Allowance from "@/hooks/useErc20Allowance";
-import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
-import { useEffect, useState } from "react";
-import { BaseError } from "viem";
-import {
-  usePublicClient,
-  useWaitForTransactionReceipt,
-  useWalletClient,
-} from "wagmi";
-import InfoAlert from "../widgets/infoAlert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,11 +10,24 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import LoadingActionButton from "../widgets/loadingActionButton";
+import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
+import { usdcConfig } from "@/contracts/usdc";
+import useErc20Allowance from "@/hooks/useErc20Allowance";
+import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { BaseError } from "viem";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+} from "wagmi";
+import InfoAlert from "../widgets/infoAlert";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export type RepayDialogProps = {
-  loanId: bigint;
+  loanId: string;
   onDataRefresh: () => void;
 };
 
@@ -121,7 +121,7 @@ export default function RepayDialog({
     }
   };
 
-  const handleRepay = async (loanId: bigint, timestamp: bigint) => {
+  const handleRepay = async (loanId: string, timestamp: bigint) => {
     if (!walletClient || !publicClient) return;
     try {
       setIsRepaying(true);
@@ -129,7 +129,7 @@ export default function RepayDialog({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
         functionName: "repay",
-        args: [loanId, timestamp],
+        args: [BigInt(loanId), timestamp],
       });
       setRepayTxHash(hash);
     } catch (err) {

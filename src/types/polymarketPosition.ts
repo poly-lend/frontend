@@ -2,7 +2,7 @@ import { LoanOffer } from "./polyLend";
 
 export type Position = {
   proxyWallet: `0x${string}`;
-  asset: bigint;
+  asset: string;
   conditionId: `0x${string}`;
   size: number;
   avgPrice: number;

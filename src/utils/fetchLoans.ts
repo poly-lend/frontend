@@ -13,17 +13,17 @@ export const fetchLoans = async (params: {
   const loansData = await response.json();
 
   let loans: Loan[] = loansData.map((loan: any) => ({
-    loanId: BigInt(loan._id),
+    loanId: loan._id,
     borrower: loan.borrower as `0x${string}`,
     borrowerWallet: loan.borrowerWallet as `0x${string}`,
     lender: loan.lender as `0x${string}`,
-    positionId: BigInt(loan.positionId),
-    collateralAmount: BigInt(loan.collateralAmount),
+    positionId: loan.positionId,
+    collateralAmount: loan.collateralAmount,
     loanAmount: loan.loanAmount,
-    rate: BigInt(loan.rate),
-    startTime: BigInt(loan.startTime),
-    minimumDuration: BigInt(loan.minimumDuration),
-    callTime: BigInt(loan.callTime),
+    rate: loan.rate,
+    startTime: loan.startTime,
+    minimumDuration: loan.minimumDuration,
+    callTime: loan.callTime,
   }));
 
   if (params.borrower) {
