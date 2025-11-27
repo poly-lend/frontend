@@ -31,6 +31,7 @@ import Market from "../widgets/market";
 import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function BorrowerOffersTable({
+  address,
   data,
   onDataRefresh,
 }: {
@@ -38,6 +39,7 @@ export default function BorrowerOffersTable({
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
+  console.log(data);
   const { data: proxyAddress } = useProxyAddress();
   const { data: positions, isLoading } = useQuery({
     queryKey: ["positions", proxyAddress],

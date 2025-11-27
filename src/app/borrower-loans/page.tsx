@@ -26,7 +26,7 @@ export default function BorrowerLoans() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="font-bold text-center text-4xl mb-4">Borrow</h1>
+      <h1 className="font-bold text-center text-4xl mb-4">Loans</h1>
 
       <WalletGuard isDataReady={!!data}>
         <BorrowerLoansTable

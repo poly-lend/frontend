@@ -24,7 +24,7 @@ export default function Markets() {
       <h1 className="font-bold text-center text-4xl mb-4">Markets</h1>
       <div className="flex gap-2">
         {data?.map((event) => (
-          <Card className="w-full max-w-sm">
+          <Card key={event.slug} className="w-full max-w-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <img
@@ -59,7 +59,7 @@ export default function Markets() {
             </CardContent>
             <CardFooter className="flex-col gap-2">
               <Button type="submit" className="w-full" asChild>
-                <Link href={`/event/${event.slug}`}>
+                <Link href={`/lender-event/${event.slug}`}>
                   Check Market & Create Offer
                 </Link>
               </Button>

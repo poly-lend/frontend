@@ -32,6 +32,25 @@ export const fetchData = async (params: {
   });
 
   const markets = await fetchMarkets(positionIds);
+  events.forEach((event) => {
+    event.markets.forEach((market: any) => {
+      if (!market.active) return;
+      JSON.parse(market.clobTokenIds).forEach(
+        (tokenId: string, index: number) => {
+          const outcome = JSON.parse(market.outcomes)[index];
+          const outcomePrice = JSON.parse(market.outcomePrices)[index];
+          markets.set(tokenId, {
+            market,
+            outcome,
+            outcomePrice,
+            outcomeIndex: index,
+            event,
+          });
+        }
+      );
+    });
+  });
+
   const hydratedOffers = hydrateOffers(offers, markets);
   const hydratedLoans = hydrateLoans(loans, markets);
   const data = {
