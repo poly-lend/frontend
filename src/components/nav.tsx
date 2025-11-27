@@ -79,13 +79,13 @@ export default function Nav() {
                     <NavigationMenuTrigger>Lender</NavigationMenuTrigger>
                     <NavigationMenuContent className="bg-background min-w-[200px]">
                       <NavigationMenuLink asChild>
-                        <Link href="/lend">Markets</Link>
+                        <Link href="/lender-markets">Markets</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/lend">Sent offers</Link>
+                        <Link href="/lender-sent-offers">Sent offers</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/lend">Loans</Link>
+                        <Link href="/lender-loans">Loans</Link>
                       </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
