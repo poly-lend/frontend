@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
@@ -35,7 +37,7 @@ export default function Nav() {
   ];
 
   return (
-    <nav
+    <div
       className={cn(
         "sticky z-20 top-0 w-full bg-background/95 backdrop-blur",
         mobileOpen && "shadow-md"
@@ -52,13 +54,70 @@ export default function Nav() {
             {/* Desktop nav */}
             <div className="hidden md:block">
               <NavigationMenu viewport={false}>
-                <NavigationMenuList className="gap-1 items-center flex">
+                <NavigationMenuList className="gap-4 items-center flex">
                   <NavigationMenuItem className="mr-2 lg:mr-6">
                     <Link href="/" className="flex items-center">
                       <img src="/logo.png" alt="logo" className="h-12 w-auto" />
                     </Link>
                   </NavigationMenuItem>
-                  {links.map((link) => {
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="/"
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          pathname === "/" && "text-primary"
+                        )}
+                      >
+                        <div className="flex items-center gap-1.5 text-base font-bold">
+                          Home
+                        </div>
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Lender</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-background min-w-[200px]">
+                      <NavigationMenuLink asChild>
+                        <Link href="/lend">Markets</Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/lend">Sent offers</Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/lend">Loans</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Borrower</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-background min-w-[200px]">
+                      <NavigationMenuLink asChild>
+                        <Link href="/borrower-positions">
+                          Positions & Offers
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/borrower-loans">Loans</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="https://docs.polylend.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="flex items-center gap-1.5 text-base font-bold">
+                          Docs
+                          <ExternalLink className="h-4 w-4" />
+                        </div>
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  {/* {links.map((link) => {
                     return (
                       <NavigationMenuItem key={link.id}>
                         <NavigationMenuLink asChild>
@@ -83,7 +142,7 @@ export default function Nav() {
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     );
-                  })}
+                  })} */}
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
@@ -160,6 +219,6 @@ export default function Nav() {
           </div>
         )}
       </div>
-    </nav>
+    </div>
   );
 }

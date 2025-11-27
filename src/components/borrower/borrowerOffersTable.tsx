@@ -31,13 +31,10 @@ import Market from "../widgets/market";
 import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function BorrowerOffersTable({
-  address,
-  title,
   data,
   onDataRefresh,
 }: {
   address?: `0x${string}`;
-  title?: string;
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
@@ -115,11 +112,8 @@ export default function BorrowerOffersTable({
   }, [isAcceptConfirmed]);
   return (
     <>
-      <h2 className="text-2xl font-bold w-full text-center mt-8">
-        {title ? title : "Requests"}
-      </h2>
       {positions && positions?.length === 0 && (
-        <div className="text-center">No requests found</div>
+        <div className="text-center">No positions found</div>
       )}
       {positions && positions?.length > 0 && (
         <Table>

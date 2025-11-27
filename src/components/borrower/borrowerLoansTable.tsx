@@ -22,13 +22,11 @@ import {
 import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function BorrowerLoansTable({
-  title,
   data,
   onDataRefresh,
 }: {
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
-  title?: string;
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
@@ -36,12 +34,6 @@ export default function BorrowerLoansTable({
 
   return (
     <div>
-      <div>
-        <h2 className="text-2xl font-bold w-full text-center mt-8">
-          {title ? title : "Loans"}
-        </h2>
-      </div>
-
       {loans.length === 0 && <div className="text-center">No loans found</div>}
       {loans.length > 0 && (
         <div>
