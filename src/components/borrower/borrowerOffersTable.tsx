@@ -41,6 +41,7 @@ export default function BorrowerOffersTable({
 }) {
   console.log(data);
   const { data: proxyAddress } = useProxyAddress();
+  const [unsupportedPositions, setUnsupportedPositions] = useState(0);
   const { data: positions, isLoading } = useQuery({
     queryKey: ["positions", proxyAddress],
     queryFn: async () => {
@@ -49,17 +50,25 @@ export default function BorrowerOffersTable({
         `https://data-api.polymarket.com/positions?user=${proxyAddress}`
       );
       if (!r.ok) throw new Error("HTTP " + r.status);
-      const result = (await r.json()) as Position[];
-      result.forEach((position) => {
-        position.market = data.markets.get(position.asset.toString());
+      const positions = (await r.json()) as Position[];
+      const result: Position[] = [];
+      let unsupported = 0;
+      positions.forEach((position) => {
+        if (!data.events.find((event) => event.slug === position.eventSlug)) {
+          unsupported++;
+          return;
+        }
+        position.market = data.markets.get(position.asset);
         position.offers = [];
         data.offers.forEach((offer) => {
           if (offer.positionIds.includes(position.asset)) {
             position.offers.push(offer);
           }
         });
+        result.push(position);
       });
-      console.log(result);
+
+      setUnsupportedPositions(unsupported);
       return result;
     },
     staleTime: 60_000,
@@ -233,6 +242,20 @@ export default function BorrowerOffersTable({
                       </TableCell>
                     </TableRow>
                   )}
+                {unsupportedPositions > 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center text-muted-foreground"
+                    >
+                      You have {unsupportedPositions}
+                      {unsupportedPositions === 1
+                        ? " more position "
+                        : " more positions "}
+                      that has no lenders yet
+                    </TableCell>
+                  </TableRow>
+                )}
               </Fragment>
             ))}
           </TableBody>
