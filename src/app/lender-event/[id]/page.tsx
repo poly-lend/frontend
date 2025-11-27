@@ -51,11 +51,7 @@ export default function OfferDetails() {
         />
         <img width={40} height={40} src={event?.icon} alt={event?.title} />
         <span className="flex-1">{event?.title}</span>
-        <OfferDialog
-          marketIds={selectedMarkets}
-          loanDuration={event?.loanDuration}
-          onDataRefresh={() => {}}
-        />
+        <OfferDialog marketIds={selectedMarkets} onDataRefresh={() => {}} />
       </h1>
       <div className="flex flex-col gap-2">
         {markets?.map((market) => (
