@@ -37,7 +37,7 @@ export default function LenderOffersTable({
   offers = offers.filter((offer) => offer.lender === userAddress);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
-  const [cancellingOfferId, setCancellingOfferId] = useState<bigint | null>(
+  const [cancellingOfferId, setCancellingOfferId] = useState<string | null>(
     null
   );
   const [isCancelling, setIsCancelling] = useState(false);
@@ -58,7 +58,7 @@ export default function LenderOffersTable({
     }
   }, [isCancelConfirmed]);
 
-  const cancelOffer = async (offerId: bigint) => {
+  const cancelOffer = async (offerId: string) => {
     if (!publicClient || !walletClient) return;
     try {
       setCancellingOfferId(offerId);
@@ -67,7 +67,7 @@ export default function LenderOffersTable({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
         functionName: "cancelOffer",
-        args: [offerId],
+        args: [BigInt(offerId)],
       });
       setCancelTxHash(hash);
     } catch (err) {

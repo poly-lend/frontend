@@ -217,8 +217,7 @@ export default function BorrowerOffersTable({
                                       acceptOffer(offer.offerId, position.asset)
                                     }
                                     loading={
-                                      acceptingOfferId?.toString ===
-                                        offer.offerId &&
+                                      acceptingOfferId === offer.offerId &&
                                       (isAccepting || isAcceptConfirming)
                                     }
                                   >

@@ -1,18 +1,3 @@
-import { polylendAddress, usdcAddress } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
-import { usdcConfig } from "@/contracts/usdc";
-import useErc20Allowance from "@/hooks/useErc20Allowance";
-import { calculateMaxTransferRate } from "@/utils/calculations";
-import { toAPYText, toSPYWAI } from "@/utils/convertors";
-import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
-import { useEffect, useRef, useState } from "react";
-import { BaseError } from "viem";
-import {
-  usePublicClient,
-  useWaitForTransactionReceipt,
-  useWalletClient,
-} from "wagmi";
-import InfoAlert from "../widgets/infoAlert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,12 +10,27 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import LoadingActionButton from "../widgets/loadingActionButton";
+import { polylendAddress, usdcAddress } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
+import { usdcConfig } from "@/contracts/usdc";
+import useErc20Allowance from "@/hooks/useErc20Allowance";
+import { calculateMaxTransferRate } from "@/utils/calculations";
+import { toAPYText, toSPYWAI } from "@/utils/convertors";
+import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { BaseError } from "viem";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+} from "wagmi";
+import InfoAlert from "../widgets/infoAlert";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export type TransferDialogProps = {
-  loanId: bigint;
-  callTime: bigint;
+  loanId: string;
+  callTime: string;
   onDataRefresh: () => void;
 };
 
@@ -140,7 +140,7 @@ export default function TransferDialog({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
         functionName: "transfer",
-        args: [loanId, rateInSPY],
+        args: [BigInt(loanId), rateInSPY],
       });
       setTransferTxHash(hash);
     } catch (err) {

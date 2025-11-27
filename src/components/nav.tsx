@@ -82,7 +82,7 @@ export default function Nav() {
                         <Link href="/lender-markets">Markets</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/lender-sent-offers">Sent offers</Link>
+                        <Link href="/lender-offers">Sent offers</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link href="/lender-loans">Loans</Link>

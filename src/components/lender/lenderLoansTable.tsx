@@ -34,13 +34,11 @@ import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function LenderLoansTable({
   lender,
-  title,
   data,
   onDataRefresh,
 }: {
   lender: `0x${string}`;
   data: AllLoanData;
-  title?: string;
   borrower?: `0x${string}`;
   onDataRefresh: () => void;
 }) {
@@ -58,7 +56,7 @@ export default function LenderLoansTable({
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
-  const [callingLoanId, setCallingLoanId] = useState<bigint | null>(null);
+  const [callingLoanId, setCallingLoanId] = useState<string | null>(null);
   const [isCalling, setIsCalling] = useState(false);
   const [callTxHash, setCallTxHash] = useState<`0x${string}` | undefined>(
     undefined
@@ -66,7 +64,7 @@ export default function LenderLoansTable({
   const { isLoading: isCallConfirming, isSuccess: isCallConfirmed } =
     useWaitForTransactionReceipt({ hash: callTxHash });
 
-  const [reclaimingLoanId, setReclaimingLoanId] = useState<bigint | null>(null);
+  const [reclaimingLoanId, setReclaimingLoanId] = useState<string | null>(null);
   const [isReclaiming, setIsReclaiming] = useState(false);
   const [reclaimTxHash, setReclaimTxHash] = useState<`0x${string}` | undefined>(
     undefined
@@ -92,7 +90,7 @@ export default function LenderLoansTable({
     }
   }, [isReclaimConfirmed]);
 
-  const handleCall = async (loanId: bigint) => {
+  const handleCall = async (loanId: string) => {
     if (!walletClient || !publicClient) return;
     try {
       setCallingLoanId(loanId);
@@ -101,7 +99,7 @@ export default function LenderLoansTable({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
         functionName: "call",
-        args: [loanId],
+        args: [BigInt(loanId)],
       });
       setCallTxHash(hash);
     } catch (err) {
@@ -116,7 +114,7 @@ export default function LenderLoansTable({
     }
   };
 
-  const handleReclaim = async (loanId: bigint) => {
+  const handleReclaim = async (loanId: string) => {
     if (!walletClient || !publicClient) return;
     try {
       setReclaimingLoanId(loanId);
@@ -125,7 +123,7 @@ export default function LenderLoansTable({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
         functionName: "reclaim",
-        args: [loanId, true],
+        args: [BigInt(loanId), true],
       });
       setReclaimTxHash(hash);
     } catch (err) {
@@ -142,12 +140,6 @@ export default function LenderLoansTable({
 
   return (
     <div>
-      <div>
-        <h2 className="text-2xl font-bold w-full text-center mt-8">
-          {title ? title : "Loans"}
-        </h2>
-      </div>
-
       <div className="w-full flex justify-center mt-4 mb-2">
         <Tabs
           defaultValue="my"
@@ -197,9 +189,11 @@ export default function LenderLoansTable({
                 </TableCell>
                 <TableCell
                   align="right"
-                  className={cn(loan.callTime > 0 ? "text-red-500" : "")}
+                  className={cn(
+                    BigInt(loan.callTime) > 0 ? "text-red-500" : ""
+                  )}
                 >
-                  {loan.callTime > 0 ? "Called" : "Active"}
+                  {BigInt(loan.callTime) > 0 ? "Called" : "Active"}
                 </TableCell>
                 <TableCell align="right">
                   {toSharesText(loan.collateralAmount)}
@@ -226,7 +220,7 @@ export default function LenderLoansTable({
                   {toDuration(Number(loan.minimumDuration))}
                 </TableCell>
                 <TableCell align="right">
-                  {loan.callTime > 0
+                  {BigInt(loan.callTime) > 0
                     ? toDuration(
                         Number(loan.callTime) +
                           24 * 60 * 60 -

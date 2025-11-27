@@ -1,12 +1,10 @@
 "use client";
 
-import LenderLoansTable from "@/components/lender/lenderLoansTable";
 import LenderOffersTable from "@/components/lender/lenderOffersTable";
-import LenderRequestsTable from "@/components/lender/lenderRequestsTable";
+import { Spinner } from "@/components/ui/spinner";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { useAccount, usePublicClient } from "wagmi";
 
@@ -33,14 +31,7 @@ export default function Lend() {
         isDataReady={!!data}
         disconnectedChildren={
           !!data ? (
-            <>
-              <LenderRequestsTable
-                title="All Requests"
-                data={data as AllLoanData}
-                userAddress={undefined}
-                onDataRefresh={handleRefreshData}
-              />
-            </>
+            "?"
           ) : (
             <div className="flex justify-center py-6">
               <Spinner className="size-12 text-primary" />
@@ -48,26 +39,12 @@ export default function Lend() {
           )
         }
       >
-        <>
-          <LenderRequestsTable
-            title="All Requests"
-            data={data as AllLoanData}
-            userAddress={address as `0x${string}`}
-            onDataRefresh={handleRefreshData}
-          />
-          <LenderOffersTable
-            title="Lender Offers"
-            data={data as AllLoanData}
-            userAddress={address as `0x${string}`}
-            onDataRefresh={handleRefreshData}
-          />
-          <LenderLoansTable
-            lender={address as `0x${string}`}
-            title="Lender Loans"
-            data={data as AllLoanData}
-            onDataRefresh={handleRefreshData}
-          />
-        </>
+        <LenderOffersTable
+          title="Lender Offers"
+          data={data as AllLoanData}
+          userAddress={address as `0x${string}`}
+          onDataRefresh={handleRefreshData}
+        />
       </WalletGuard>
     </div>
   );
