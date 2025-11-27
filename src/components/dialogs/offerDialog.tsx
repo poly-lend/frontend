@@ -12,9 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
+import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
-import { toDuration } from "@/utils/convertors";
+import { toDuration, toSPYWAI } from "@/utils/convertors";
 import { HandCoinsIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -28,11 +29,11 @@ import InfoAlert from "../widgets/infoAlert";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function OfferDialog({
-  requestId,
+  marketIds,
   loanDuration,
   onDataRefresh,
 }: {
-  requestId: bigint;
+  marketIds: string[];
   loanDuration: number;
   onDataRefresh: () => void;
 }) {
@@ -103,27 +104,40 @@ export default function OfferDialog({
   };
 
   const handleOffer = async () => {
-    // if (!publicClient || !walletClient) return;
-    // const rateInSPY = toSPYWAI(rate / 100);
-    // const loanAmountInUSDC = loanAmount * 10 ** usdcDecimals;
-    // try {
-    //   setIsOffering(true);
-    //   const hash = await walletClient.writeContract({
-    //     address: polylendAddress as `0x${string}`,
-    //     abi: polylendConfig.abi,
-    //     functionName: "offer",
-    //     args: [requestId, BigInt(loanAmountInUSDC), rateInSPY],
-    //   });
-    //   setOfferTxHash(hash);
-    // } catch (err) {
-    //   const message =
-    //     (err as BaseError)?.shortMessage ||
-    //     (err as Error)?.message ||
-    //     "Transaction failed";
-    //   toast.error(message);
-    // } finally {
-    //   setIsOffering(false);
-    // }
+    if (!publicClient || !walletClient) return;
+    const rateInSPY = toSPYWAI(rate / 100);
+    const loanAmountInUSDC = loanAmount * 10 ** usdcDecimals;
+    try {
+      const markets = marketIds.reduce((acc: any, market: string) => {
+        acc.push(...JSON.parse(market));
+        return acc;
+      }, []);
+
+      setIsOffering(true);
+      const hash = await walletClient.writeContract({
+        address: polylendAddress as `0x${string}`,
+        abi: polylendConfig.abi,
+        functionName: "offer",
+        args: [
+          BigInt(loanAmountInUSDC),
+          rateInSPY,
+          markets,
+          BigInt(1),
+          BigInt(1),
+          BigInt(1 * 60 * 60 * 24),
+          false,
+        ],
+      });
+      setOfferTxHash(hash);
+    } catch (err) {
+      const message =
+        (err as BaseError)?.shortMessage ||
+        (err as Error)?.message ||
+        "Transaction failed";
+      toast.error(message);
+    } finally {
+      setIsOffering(false);
+    }
   };
 
   const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(
@@ -142,7 +156,7 @@ export default function OfferDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline-primary">Offer</Button>
+          <Button disabled={marketIds.length === 0}>Offer</Button>
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-[425px]">
@@ -160,6 +174,16 @@ export default function OfferDialog({
                 type="number"
                 value={loanAmount.toString()}
                 onChange={(e) => setLoanAmount(Number(e.target.value))}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="amount">Selected Markets</Label>
+              <Input
+                id="amount"
+                name="amount"
+                type="number"
+                disabled
+                value={marketIds.length.toString()}
               />
             </div>
             <div className="grid gap-3">

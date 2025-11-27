@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import OfferDialog from "@/components/dialogs/offerDialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import fetchEvents from "@/utils/fetchEvents";
 import { useParams } from "next/navigation";
@@ -18,14 +18,6 @@ export default function OfferDetails() {
 
   const handleUnselectMarket = (market: string) => {
     setSelectedMarkets(selectedMarkets?.filter((m: string) => m !== market));
-  };
-
-  const handleSendOffer = () => {
-    const markets = selectedMarkets.reduce((acc: any, market: string) => {
-      acc.push(...JSON.parse(market));
-      return acc;
-    }, []);
-    alert(`You are about to send an offer for ${markets.length} markets`);
   };
 
   useEffect(() => {
@@ -59,12 +51,11 @@ export default function OfferDetails() {
         />
         <img width={40} height={40} src={event?.icon} alt={event?.title} />
         <span className="flex-1">{event?.title}</span>
-        <Button
-          disabled={selectedMarkets.length === 0}
-          onClick={handleSendOffer}
-        >
-          Send Offer
-        </Button>
+        <OfferDialog
+          marketIds={selectedMarkets}
+          loanDuration={event?.loanDuration}
+          onDataRefresh={() => {}}
+        />
       </h1>
       <div className="flex flex-col gap-2">
         {markets?.map((market) => (
