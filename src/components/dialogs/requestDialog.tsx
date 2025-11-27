@@ -1,5 +1,4 @@
 import { polylendAddress, polymarketTokensAddress } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import useIsApprovedForAll from "@/hooks/useIsApprovedForAll";
 import useProxyAddress from "@/hooks/useProxyAddress";
@@ -16,6 +15,7 @@ import {
 import InfoAlert from "../widgets/infoAlert";
 import PositionSelect from "../widgets/positionSelect";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -25,11 +25,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import LoadingActionButton from "../widgets/loadingActionButton";
 import { toast } from "sonner";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function RequestDialog({
   onDataRefresh,
@@ -110,30 +109,30 @@ export default function RequestDialog({
     !isOperatorApprovalLoading && (isApprovalConfirmed || isOperatorApproved);
 
   const requestLoan = async () => {
-    if (!walletClient || !publicClient || !selectedPosition) return;
-    try {
-      setIsRequesting(true);
-      const hash = await walletClient.writeContract({
-        address: polylendAddress as `0x${string}`,
-        abi: polylendConfig.abi,
-        functionName: "request",
-        args: [
-          selectedPosition.asset,
-          BigInt(shares * 10 ** 6),
-          BigInt(minimumDuration * 24 * 60 * 60),
-          !!proxyAddress,
-        ],
-      });
-      setRequestTxHash(hash);
-    } catch (err) {
-      const message =
-        (err as BaseError)?.shortMessage ||
-        (err as Error)?.message ||
-        "Transaction failed";
-      toast.error(message);
-    } finally {
-      setIsRequesting(false);
-    }
+    // if (!walletClient || !publicClient || !selectedPosition) return;
+    // try {
+    //   setIsRequesting(true);
+    //   const hash = await walletClient.writeContract({
+    //     address: polylendAddress as `0x${string}`,
+    //     abi: polylendConfig.abi,
+    //     functionName: "request",
+    //     args: [
+    //       selectedPosition.asset,
+    //       BigInt(shares * 10 ** 6),
+    //       BigInt(minimumDuration * 24 * 60 * 60),
+    //       !!proxyAddress,
+    //     ],
+    //   });
+    //   setRequestTxHash(hash);
+    // } catch (err) {
+    //   const message =
+    //     (err as BaseError)?.shortMessage ||
+    //     (err as Error)?.message ||
+    //     "Transaction failed";
+    //   toast.error(message);
+    // } finally {
+    //   setIsRequesting(false);
+    // }
   };
 
   const giveApproval = async () => {

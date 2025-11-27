@@ -1,12 +1,7 @@
 import { polylendAddress } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
-import {
-  toAPYText,
-  toDuration,
-  toSharesText,
-  toUSDCString,
-} from "@/utils/convertors";
+import { toAPYText, toUSDCString } from "@/utils/convertors";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -16,7 +11,6 @@ import {
 } from "wagmi";
 import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
-import Market from "../widgets/market";
 
 import {
   Table,
@@ -120,25 +114,25 @@ export default function LenderOffersTable({
                   <Address address={offer.lender} />
                 </TableCell>
                 <TableCell align="center" className="whitespace-normal">
-                  <Market market={offer.market} />
+                  {/* <Market market={offer.market} /> */}
                 </TableCell>
                 <TableCell align="center">
-                  <OutcomeBadge outcome={offer.market.outcome} />
+                  {/* <OutcomeBadge outcome={offer.market.outcome} /> */}
                 </TableCell>
                 <TableCell align="right">
-                  {toSharesText(offer.request!.collateralAmount)}
+                  {/* {toSharesText(offer.request!.collateralAmount)} */}
                 </TableCell>
                 <TableCell align="right">
-                  {toUSDCString(
+                  {/* {toUSDCString(
                     Number(offer.market.outcomePrice) *
                       Number(offer.request!.collateralAmount)
-                  )}
+                  )} */}
                 </TableCell>
                 <TableCell align="right">
                   {toUSDCString(offer.loanAmount)}
                 </TableCell>
                 <TableCell align="right">
-                  {toDuration(Number(offer.request!.minimumDuration))}
+                  {/* {toDuration(Number(offer.request!.minimumDuration))} */}
                 </TableCell>
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                 <TableCell align="right">

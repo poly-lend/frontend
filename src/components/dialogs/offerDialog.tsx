@@ -1,16 +1,4 @@
-import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
-import { polylendConfig } from "@/contracts/polylend";
-import { usdcConfig } from "@/contracts/usdc";
-import useErc20Allowance from "@/hooks/useErc20Allowance";
-import { toDuration, toSPYWAI } from "@/utils/convertors";
-import { useEffect, useState } from "react";
-import { BaseError } from "viem";
-import {
-  usePublicClient,
-  useWaitForTransactionReceipt,
-  useWalletClient,
-} from "wagmi";
-import InfoAlert from "../widgets/infoAlert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,10 +11,21 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { polylendAddress, usdcAddress, usdcDecimals } from "@/configs";
+import { usdcConfig } from "@/contracts/usdc";
+import useErc20Allowance from "@/hooks/useErc20Allowance";
+import { toDuration } from "@/utils/convertors";
 import { HandCoinsIcon } from "lucide-react";
-import LoadingActionButton from "../widgets/loadingActionButton";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { BaseError } from "viem";
+import {
+  usePublicClient,
+  useWaitForTransactionReceipt,
+  useWalletClient,
+} from "wagmi";
+import InfoAlert from "../widgets/infoAlert";
+import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function OfferDialog({
   requestId,
@@ -104,27 +103,27 @@ export default function OfferDialog({
   };
 
   const handleOffer = async () => {
-    if (!publicClient || !walletClient) return;
-    const rateInSPY = toSPYWAI(rate / 100);
-    const loanAmountInUSDC = loanAmount * 10 ** usdcDecimals;
-    try {
-      setIsOffering(true);
-      const hash = await walletClient.writeContract({
-        address: polylendAddress as `0x${string}`,
-        abi: polylendConfig.abi,
-        functionName: "offer",
-        args: [requestId, BigInt(loanAmountInUSDC), rateInSPY],
-      });
-      setOfferTxHash(hash);
-    } catch (err) {
-      const message =
-        (err as BaseError)?.shortMessage ||
-        (err as Error)?.message ||
-        "Transaction failed";
-      toast.error(message);
-    } finally {
-      setIsOffering(false);
-    }
+    // if (!publicClient || !walletClient) return;
+    // const rateInSPY = toSPYWAI(rate / 100);
+    // const loanAmountInUSDC = loanAmount * 10 ** usdcDecimals;
+    // try {
+    //   setIsOffering(true);
+    //   const hash = await walletClient.writeContract({
+    //     address: polylendAddress as `0x${string}`,
+    //     abi: polylendConfig.abi,
+    //     functionName: "offer",
+    //     args: [requestId, BigInt(loanAmountInUSDC), rateInSPY],
+    //   });
+    //   setOfferTxHash(hash);
+    // } catch (err) {
+    //   const message =
+    //     (err as BaseError)?.shortMessage ||
+    //     (err as Error)?.message ||
+    //     "Transaction failed";
+    //   toast.error(message);
+    // } finally {
+    //   setIsOffering(false);
+    // }
   };
 
   const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(

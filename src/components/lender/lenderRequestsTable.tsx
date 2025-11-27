@@ -1,22 +1,13 @@
-import { AllLoanData, LoanRequest } from "@/types/polyLend";
-import { toDuration, toSharesText, toUSDCString } from "@/utils/convertors";
-import { Fragment, useState } from "react";
-import OfferDialog from "../dialogs/offerDialog";
-import Address from "../widgets/address";
-import Market from "../widgets/market";
-import RequestOffersNestedTable from "./requestOffersNestedTable";
+import { AllLoanData } from "@/types/polyLend";
+import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function LenderRequestsTable({
   title,
@@ -29,10 +20,10 @@ export default function LenderRequestsTable({
   userAddress: string | undefined;
   onDataRefresh: () => void;
 }) {
-  let requests = data.requests;
-  requests = requests.filter(
-    (request: LoanRequest) => request.borrower !== userAddress
-  );
+  // let requests = data.requests;
+  // requests = requests.filter(
+  //   (request: LoanRequest) => request.borrower !== userAddress
+  // );
 
   const [expandedRequestIds, setExpandedRequestIds] = useState<Set<bigint>>(
     new Set()
@@ -54,25 +45,22 @@ export default function LenderRequestsTable({
       <h2 className="text-2xl font-bold w-full text-center">
         {title ? title : "All Borrow Requests"}
       </h2>
-      {requests.length === 0 ? (
-        <div className="text-center mt-4">No requests found</div>
-      ) : (
-        <>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-right">Borrower</TableHead>
-                <TableHead className="text-center">Market</TableHead>
-                <TableHead className="text-center"> Side </TableHead>
-                <TableHead className="text-right">Shares</TableHead>
-                <TableHead className="text-right">Collateral</TableHead>
-                <TableHead className="text-right">Duration</TableHead>
-                <TableHead className="text-right">Offers</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {requests.map((request) => {
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-right">Borrower</TableHead>
+            <TableHead className="text-center">Market</TableHead>
+            <TableHead className="text-center"> Side </TableHead>
+            <TableHead className="text-right">Shares</TableHead>
+            <TableHead className="text-right">Collateral</TableHead>
+            <TableHead className="text-right">Duration</TableHead>
+            <TableHead className="text-right">Offers</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {/* {requests.map((request) => {
                 const isExpanded = expandedRequestIds.has(request.requestId);
                 return (
                   <Fragment key={request.requestId.toString()}>
@@ -128,11 +116,9 @@ export default function LenderRequestsTable({
                     )}
                   </Fragment>
                 );
-              })}
-            </TableBody>
-          </Table>
-        </>
-      )}
+              })} */}
+        </TableBody>
+      </Table>
     </>
   );
 }
