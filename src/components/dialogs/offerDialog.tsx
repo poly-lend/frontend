@@ -40,7 +40,7 @@ export default function OfferDialog({
   const [collateralAmount, setCollateralAmount] = useState(2000);
   const [minimumLoanAmount, setMinimumLoanAmount] = useState(1000);
   const [duration, setDuration] = useState(30);
-  const [perpetual, setPerpetual] = useState(false);
+  const [perpetual, setPerpetual] = useState(true);
   const [rate, setRate] = useState(20);
   const [isApproving, setIsApproving] = useState(false);
   const [approvalTxHash, setApprovalTxHash] = useState<
