@@ -242,7 +242,9 @@ export default function OfferDialog({
                 checked={perpetual}
                 id="perpetual"
                 name="perpetual"
-                onCheckedChange={setPerpetual}
+                onCheckedChange={(checked) =>
+                  setPerpetual(checked === true || checked === "indeterminate")
+                }
               />
             </div>
           </div>
