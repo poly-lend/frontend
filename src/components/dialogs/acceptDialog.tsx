@@ -36,10 +36,7 @@ import LoadingActionButton from "../widgets/loadingActionButton";
 export default function AcceptDialog({
   offer,
   positionId,
-  collateralAmountOwned,
   onDataRefresh,
-  onSuccess,
-  onError,
 }: {
   offer: LoanOffer;
   positionId: string;
@@ -90,7 +87,7 @@ export default function AcceptDialog({
   useEffect(() => {
     if (isAcceptConfirmed && acceptTxHash) {
       setOpen(false);
-      toast.success("Offer submitted successfully");
+      toast.success("Offer accepted successfully");
       onDataRefresh();
     }
   }, [isAcceptConfirmed, acceptTxHash]);
@@ -118,7 +115,7 @@ export default function AcceptDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      onError?.(message);
+      toast.error(message);
     } finally {
       setIsApproving(false);
     }
@@ -243,7 +240,7 @@ export default function AcceptDialog({
                 }
                 loading={isAccepting || isAcceptConfirming}
               >
-                Offer
+                Accept Offer
               </LoadingActionButton>
             </div>
           </DialogFooter>

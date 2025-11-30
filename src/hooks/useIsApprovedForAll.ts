@@ -1,8 +1,6 @@
-import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
+import { readApprovalForAll } from "@/utils/erc1155";
 import { useCallback, useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
-
-type Params = {};
 
 export default function useIsApprovedForAll(
   enabled: boolean,
@@ -25,13 +23,13 @@ export default function useIsApprovedForAll(
     if (!enabled) return;
     try {
       setIsLoading(true);
-      const approved = (await publicClient.readContract({
-        address: tokenAddress,
-        abi: polymarketTokensConfig.abi,
-        functionName: "isApprovedForAll",
-        args: [owner, operator],
-      })) as boolean;
-      setIsApproved(Boolean(approved));
+      const approved = await readApprovalForAll(
+        publicClient,
+        tokenAddress,
+        owner,
+        operator
+      );
+      setIsApproved(approved);
     } catch {
       setIsApproved(false);
     } finally {
