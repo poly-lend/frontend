@@ -14,17 +14,17 @@ import {
   polylendAddress,
   polymarketSharesDecimals,
   polymarketTokensAddress,
-  usdcAddress,
-  usdcDecimals,
 } from "@/configs";
 import { polylendConfig } from "@/contracts/polylend";
-import useErc20Allowance from "@/hooks/useErc20Allowance";
 
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
+import useIsApprovedForAll from "@/hooks/useIsApprovedForAll";
+import useProxyAddress from "@/hooks/useProxyAddress";
 import { LoanOffer } from "@/types/polyLend";
+import { execSafeTransaction } from "@/utils/proxy";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { BaseError } from "viem";
+import { BaseError, encodeFunctionData } from "viem";
 import {
   usePublicClient,
   useWaitForTransactionReceipt,
@@ -38,11 +38,15 @@ export default function AcceptDialog({
   positionId,
   collateralAmountOwned,
   onDataRefresh,
+  onSuccess,
+  onError,
 }: {
   offer: LoanOffer;
   positionId: string;
   collateralAmountOwned: number;
   onDataRefresh: () => void;
+  onSuccess?: (successText: string) => void;
+  onError?: (errorText: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState(1000);
@@ -57,6 +61,7 @@ export default function AcceptDialog({
     undefined
   );
 
+  const { data: proxyAddress } = useProxyAddress();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
 
@@ -91,14 +96,21 @@ export default function AcceptDialog({
   }, [isAcceptConfirmed, acceptTxHash]);
 
   const handleApproval = async () => {
-    if (!publicClient || !walletClient) return;
+    if (!walletClient || !publicClient || !proxyAddress) return;
     try {
       setIsApproving(true);
-      const hash = await walletClient.writeContract({
-        address: polymarketTokensAddress as `0x${string}`,
-        abi: polymarketTokensConfig.abi,
-        functionName: "setApprovalForAll",
-        args: [polylendAddress, true],
+      const { hash } = await execSafeTransaction({
+        safe: proxyAddress as `0x${string}`,
+        tx: {
+          to: polymarketTokensAddress as `0x${string}`,
+          data: encodeFunctionData({
+            abi: polymarketTokensConfig.abi,
+            functionName: "setApprovalForAll",
+            args: [polylendAddress as `0x${string}`, true],
+          }),
+        },
+        walletClient,
+        publicClient,
       });
       setApprovalTxHash(hash);
     } catch (err) {
@@ -106,7 +118,7 @@ export default function AcceptDialog({
         (err as BaseError)?.shortMessage ||
         (err as Error)?.message ||
         "Transaction failed";
-      toast.error(message);
+      onError?.(message);
     } finally {
       setIsApproving(false);
     }
@@ -140,17 +152,12 @@ export default function AcceptDialog({
     }
   };
 
-  const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(
+  const { isApproved, isLoading: isAllowanceLoading } = useIsApprovedForAll(
     open,
-    usdcAddress as `0x${string}`,
-    polylendAddress as `0x${string}`,
-    [isApprovalConfirmed]
+    polymarketTokensAddress as `0x${string}`,
+    proxyAddress as `0x${string}` | undefined,
+    polylendAddress as `0x${string}`
   );
-
-  const requiredAllowance = BigInt(loanAmount * 10 ** usdcDecimals);
-  const hasSufficientAllowance = allowance >= requiredAllowance;
-  const offerIsEnabled =
-    !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -172,13 +179,14 @@ export default function AcceptDialog({
                 id="amount"
                 name="amount"
                 type="number"
+                disabled
                 value={loanAmount.toString()}
                 onChange={(e) => setLoanAmount(Number(e.target.value))}
               />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="collateralAmount">
-                Collateral Amount (pfUSDC)
+                Collateral Amount (Shares)
               </Label>
               <Input
                 id="collateralAmount"
@@ -202,7 +210,7 @@ export default function AcceptDialog({
 
           {/* Info boxes */}
           <div className="flex flex-col gap-2">
-            {!offerIsEnabled && loanAmount > 0 && !isAllowanceLoading && (
+            {!isApproved && loanAmount > 0 && !isAllowanceLoading && (
               <InfoAlert text="You need to approve the contract to spend your tokens before you can make an offer. Click 'Approve' first, then 'Offer' once the approval is confirmed." />
             )}
           </div>
@@ -213,7 +221,7 @@ export default function AcceptDialog({
               <Button variant="outline-destructive">Cancel</Button>
             </DialogClose>
             <div className="flex items-center gap-2">
-              {!offerIsEnabled && !isAllowanceLoading && (
+              {!isApproved && !isAllowanceLoading && (
                 <LoadingActionButton
                   onClick={handleApproval}
                   disabled={
@@ -231,7 +239,7 @@ export default function AcceptDialog({
                   minimumDuration <= 0 ||
                   collateralAmount <= 0 ||
                   isAccepting ||
-                  !offerIsEnabled
+                  !isApproved
                 }
                 loading={isAccepting || isAcceptConfirming}
               >

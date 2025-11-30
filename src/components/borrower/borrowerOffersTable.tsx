@@ -24,9 +24,9 @@ import { toAPYText, toUSDCString } from "@/utils/convertors";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+import AcceptDialog from "../dialogs/acceptDialog";
 import { Button } from "../ui/button";
 import Address from "../widgets/address";
-import LoadingActionButton from "../widgets/loadingActionButton";
 import Market from "../widgets/market";
 import OutcomeBadge from "../widgets/outcomeBadge";
 
@@ -222,18 +222,12 @@ export default function BorrowerOffersTable({
                                   {toAPYText(offer.rate)}
                                 </TableCell>
                                 <TableCell align="right">
-                                  <LoadingActionButton
-                                    variant="outline-primary"
-                                    onClick={() =>
-                                      acceptOffer(offer.offerId, position.asset)
-                                    }
-                                    loading={
-                                      acceptingOfferId === offer.offerId &&
-                                      (isAccepting || isAcceptConfirming)
-                                    }
-                                  >
-                                    Accept
-                                  </LoadingActionButton>
+                                  <AcceptDialog
+                                    offer={offer}
+                                    positionId={position.asset.toString()}
+                                    collateralAmountOwned={0}
+                                    onDataRefresh={onDataRefresh}
+                                  />
                                 </TableCell>
                               </TableRow>
                             ))}

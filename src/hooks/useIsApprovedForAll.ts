@@ -1,16 +1,14 @@
+import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import { useCallback, useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 
-type Params = {
-  tokenAddress: `0x${string}`;
-  owner: `0x${string}` | undefined;
-  operator: `0x${string}`;
-  abi: any;
-};
+type Params = {};
 
 export default function useIsApprovedForAll(
   enabled: boolean,
-  params: Params,
+  tokenAddress: `0x${string}`,
+  owner: `0x${string}` | undefined,
+  operator: `0x${string}`,
   extraDeps: any[] = []
 ) {
   const publicClient = usePublicClient();
@@ -18,7 +16,6 @@ export default function useIsApprovedForAll(
   const [isLoading, setIsLoading] = useState(false);
 
   const refresh = useCallback(async () => {
-    const { owner, tokenAddress, operator, abi } = params;
     // Keep the last known approval state when the hook is disabled,
     // but reset to false if we truly lack the data to check (no client/owner).
     if (!publicClient || !owner) {
@@ -30,7 +27,7 @@ export default function useIsApprovedForAll(
       setIsLoading(true);
       const approved = (await publicClient.readContract({
         address: tokenAddress,
-        abi,
+        abi: polymarketTokensConfig.abi,
         functionName: "isApprovedForAll",
         args: [owner, operator],
       })) as boolean;
@@ -40,14 +37,7 @@ export default function useIsApprovedForAll(
     } finally {
       setIsLoading(false);
     }
-  }, [
-    enabled,
-    publicClient,
-    params.tokenAddress,
-    params.abi,
-    params.operator,
-    params.owner,
-  ]);
+  }, [enabled, publicClient, tokenAddress, operator, owner]);
 
   useEffect(() => {
     // Trigger read on mount or when deps change
