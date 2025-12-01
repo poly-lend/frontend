@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { polylendAddress, usdcAddress, usdcDecimals } from "@/config";
+import {
+  polylendAddress,
+  polymarketSharesDecimals,
+  usdcAddress,
+  usdcDecimals,
+} from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
@@ -123,7 +128,11 @@ export default function OfferDialog({
         const marketOutcome = marketOutcomes.get(id)!;
         const outcomePrice = marketOutcome.outcomePrice * 10 ** usdcDecimals;
 
-        return BigInt(collateralValueInUSDC) / BigInt(outcomePrice);
+        return (
+          (BigInt(collateralValueInUSDC) *
+            BigInt(10 ** polymarketSharesDecimals)) /
+          BigInt(outcomePrice)
+        );
       });
       const hash = await walletClient.writeContract({
         address: polylendAddress as `0x${string}`,
