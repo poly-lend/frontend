@@ -1,20 +1,20 @@
 "use client";
 
 import { BalanceRefreshContext } from "@/app/context";
-import WalletGuard from "@/components/web3/walletGuard";
-import LoadingActionButton from "@/components/widgets/loadingActionButton";
-import { usdcDecimals } from "@/configs";
-import { usdcConfig } from "@/contracts/usdc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import WalletGuard from "@/components/web3/walletGuard";
+import LoadingActionButton from "@/components/widgets/loadingActionButton";
+import { usdcDecimals } from "@/config";
+import { usdcConfig } from "@/contracts/usdc";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   BaseError,
   useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { toast } from "sonner";
 
 export default function Faucet() {
   const { address } = useAccount();

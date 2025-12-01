@@ -1,4 +1,4 @@
-import { usdcAddress } from "@/configs";
+import { usdcAddress } from "@/config";
 
 export const usdcConfig = {
   address: usdcAddress,

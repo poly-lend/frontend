@@ -3,12 +3,12 @@ export type LoanOffer = {
   lender: `0x${string}`;
   loanAmount: string;
   rate: string;
-  borrowedAmount: string;
   positionIds: string[];
-  collateralAmount: string;
+  collateralAmounts: string[];
   minimumLoanAmount: string;
   duration: string;
   startTime: string;
+  borrowedAmount: string;
   perpetual: boolean;
 };
 

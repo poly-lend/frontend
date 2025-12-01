@@ -1,4 +1,4 @@
-import { polylendAddress, polymarketTokensAddress } from "@/configs";
+import { polylendAddress, polymarketTokensAddress } from "@/config";
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import useIsApprovedForAll from "@/hooks/useIsApprovedForAll";
 import useProxyAddress from "@/hooks/useProxyAddress";

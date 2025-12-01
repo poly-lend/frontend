@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { polylendAddress, usdcAddress } from "@/configs";
+import { polylendAddress, usdcAddress } from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
 import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";

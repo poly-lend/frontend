@@ -14,7 +14,7 @@ import {
   polylendAddress,
   polymarketSharesDecimals,
   polymarketTokensAddress,
-} from "@/configs";
+} from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
 
 import { polymarketTokensConfig } from "@/contracts/polymarketTokens";

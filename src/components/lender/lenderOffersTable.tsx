@@ -1,4 +1,4 @@
-import { polylendAddress } from "@/configs";
+import { polylendAddress } from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
 import { toAPYText, toUSDCString } from "@/utils/convertors";

@@ -1,4 +1,4 @@
-import { polymarketTokensAddress } from "@/configs";
+import { polymarketTokensAddress } from "@/config";
 
 export const polymarketTokensConfig = {
   address: polymarketTokensAddress,

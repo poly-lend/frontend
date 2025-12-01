@@ -1,4 +1,4 @@
-import { polylendAddress } from "@/configs";
+import { polylendAddress } from "@/config";
 
 export const polylendConfig = {
   address: polylendAddress,
@@ -26,12 +26,15 @@ export const polylendConfig = {
     { inputs: [], name: "InsufficientCollateralBalance", type: "error" },
     { inputs: [], name: "InsufficientFunds", type: "error" },
     { inputs: [], name: "InvalidCollateralAmount", type: "error" },
+    { inputs: [], name: "InvalidCollateralAmounts", type: "error" },
+    { inputs: [], name: "InvalidDuration", type: "error" },
     { inputs: [], name: "InvalidLoan", type: "error" },
     { inputs: [], name: "InvalidLoanAmount", type: "error" },
     { inputs: [], name: "InvalidMinimumDuration", type: "error" },
     { inputs: [], name: "InvalidMinimumLoanAmount", type: "error" },
     { inputs: [], name: "InvalidOffer", type: "error" },
     { inputs: [], name: "InvalidPosition", type: "error" },
+    { inputs: [], name: "InvalidPositionList", type: "error" },
     { inputs: [], name: "InvalidRate", type: "error" },
     { inputs: [], name: "InvalidRepayTimestamp", type: "error" },
     { inputs: [], name: "InvalidRequest", type: "error" },
@@ -250,7 +253,14 @@ export const polylendConfig = {
     },
     {
       inputs: [{ internalType: "uint256", name: "_offerId", type: "uint256" }],
-      name: "getOffersPositionIds",
+      name: "getOfferCollateralAmounts",
+      outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "uint256", name: "_offerId", type: "uint256" }],
+      name: "getOfferPositionIds",
       outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
       stateMutability: "view",
       type: "function",
@@ -302,7 +312,11 @@ export const polylendConfig = {
         { internalType: "uint256", name: "_loanAmount", type: "uint256" },
         { internalType: "uint256", name: "_rate", type: "uint256" },
         { internalType: "uint256[]", name: "_positionIds", type: "uint256[]" },
-        { internalType: "uint256", name: "_collateralAmount", type: "uint256" },
+        {
+          internalType: "uint256[]",
+          name: "_collateralAmounts",
+          type: "uint256[]",
+        },
         {
           internalType: "uint256",
           name: "_minimumLoanAmount",
@@ -324,11 +338,10 @@ export const polylendConfig = {
         { internalType: "address", name: "lender", type: "address" },
         { internalType: "uint256", name: "loanAmount", type: "uint256" },
         { internalType: "uint256", name: "rate", type: "uint256" },
-        { internalType: "uint256", name: "borrowedAmount", type: "uint256" },
-        { internalType: "uint256", name: "collateralAmount", type: "uint256" },
         { internalType: "uint256", name: "minimumLoanAmount", type: "uint256" },
         { internalType: "uint256", name: "duration", type: "uint256" },
         { internalType: "uint256", name: "startTime", type: "uint256" },
+        { internalType: "uint256", name: "borrowedAmount", type: "uint256" },
         { internalType: "bool", name: "perpetual", type: "bool" },
       ],
       stateMutability: "view",

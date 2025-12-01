@@ -1,4 +1,4 @@
-import { polylendAddress } from "@/configs";
+import { polylendAddress } from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
 
 export const fetchAmountOwed = async (params: {

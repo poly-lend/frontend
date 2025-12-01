@@ -1,4 +1,4 @@
-import { usdcDecimals } from "@/configs";
+import { usdcDecimals } from "@/config";
 import { usdcConfig } from "@/contracts/usdc";
 import { chain } from "@/utils/wagmi";
 import { useContext, useEffect } from "react";

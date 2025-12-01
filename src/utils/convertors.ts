@@ -1,5 +1,5 @@
 import { parseEther } from "viem";
-import { polymarketSharesDecimals, usdcDecimals } from "../configs";
+import { polymarketSharesDecimals, usdcDecimals } from "../config";
 
 const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
 const ETHER = parseEther("1");

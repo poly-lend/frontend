@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { polylendAddress } from "@/configs";
+import { polylendAddress } from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
 import { cn } from "@/lib/utils";
 import { AllLoanData, Loan } from "@/types/polyLend";

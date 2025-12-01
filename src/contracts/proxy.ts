@@ -1,4 +1,4 @@
-import { proxyAddress } from "@/configs";
+import { proxyAddress } from "@/config";
 
 export const proxyConfig = {
   address: proxyAddress,
