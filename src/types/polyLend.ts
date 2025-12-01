@@ -16,15 +16,17 @@ export type MarketOutcome = {
   outcome: string;
   outcomePrice: number;
   outcomeIndex: number;
-  event: any;
+  event: Event | null;
 };
 
 export type Event = {
   slug: string;
   icon: string;
   title: string;
+  liquidity: string;
+  volume: string;
   description: string;
-  markets: Market[];
+  markets: Market[] | null;
 };
 
 export type LoanOffer = {

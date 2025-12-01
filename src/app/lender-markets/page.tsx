@@ -8,22 +8,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import fetchEvents from "@/utils/fetchEvents";
+import { AllLoanData } from "@/types/polyLend";
+import { toUSDString } from "@/utils/convertors";
+import { fetchData } from "@/utils/fetchData";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Markets() {
-  const [data, setData] = useState<any[] | null>(null);
+  const [data, setData] = useState<AllLoanData | null>(null);
 
   useEffect(() => {
-    fetchEvents().then(setData);
+    fetchData({}).then(setData);
   }, []);
 
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-bold text-center text-4xl mb-4">Markets</h1>
       <div className="flex gap-2">
-        {data?.map((event) => (
+        {data?.events.map((event) => (
           <Card key={event.slug} className="w-full max-w-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -41,20 +43,24 @@ export default function Markets() {
               <div className="flex items-center gap-2">
                 <p className="flex-1 text-sm text-gray-500">Liquidity:</p>
                 <p className="text-sm text-gray-500">
-                  ${Number(event.liquidity).toFixed(2)}
+                  {toUSDString(event.liquidity)}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <p className="text-sm flex-1 text-gray-500">Volume:</p>
                 <p className="text-sm text-gray-500">
-                  ${Number(event.volume).toFixed(2)}
+                  {toUSDString(event.volume)}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <p className="text-sm flex-1 text-gray-500">Markets:</p>
                 <p className="text-sm text-gray-500">
-                  {event.markets.filter((market: any) => market.active).length}
+                  {event.markets?.filter((market: any) => market.active).length}
                 </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-sm flex-1 text-gray-500">Offers:</p>
+                <p className="text-sm text-gray-500">{data.offers.length}</p>
               </div>
             </CardContent>
             <CardFooter className="flex-col gap-2">

@@ -8,6 +8,13 @@ export const toUSDCString = (amount: bigint | string | number) => {
   return (Number(amount) / 10 ** usdcDecimals).toFixed(2) + " USDC";
 };
 
+export const toUSDString = (amount: bigint | string | number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(Number(amount));
+};
+
 export const toDuration = (seconds: number | bigint | string) => {
   if (Number(seconds) <= 0) return "0m";
 

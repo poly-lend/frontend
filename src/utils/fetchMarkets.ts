@@ -6,7 +6,9 @@ export function transformMarkets(markets: any[]): Market[] {
     groupItemTitle: market.groupItemTitle,
     clobTokenIds: JSON.parse(market.clobTokenIds),
     outcomes: JSON.parse(market.outcomes),
-    outcomePrices: JSON.parse(market.outcomePrices).map(Number),
+    outcomePrices: market.outcomePrices
+      ? JSON.parse(market.outcomePrices).map(Number)
+      : [],
     events: market.events,
     active: market.active,
     icon: market.icon,
@@ -21,7 +23,7 @@ export function marketToOutcome(market: Market, index: number): MarketOutcome {
     outcome: market.outcomes[index],
     outcomePrice: market.outcomePrices[index],
     outcomeIndex: index,
-    event: market.events[0],
+    event: market.events && market.events.length > 0 ? market.events[0] : null,
   };
 }
 
