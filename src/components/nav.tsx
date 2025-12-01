@@ -102,6 +102,9 @@ export default function Nav() {
                       <NavigationMenuLink asChild>
                         <Link href="/lender-loans">Loans</Link>
                       </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/lender-loans?all">All loans</Link>
+                      </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
