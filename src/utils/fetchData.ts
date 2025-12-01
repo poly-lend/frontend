@@ -1,23 +1,19 @@
-import { AllLoanData } from "@/types/polyLend";
+import { AllLoanData, Market } from "@/types/polyLend";
 import fetchEvents from "./fetchEvents";
 import { fetchLoans } from "./fetchLoans";
-import fetchMarkets from "./fetchMarkets";
+import fetchMarketOutcomes, { marketToOutcome } from "./fetchMarkets";
 import { fetchOffers } from "./fetchOffers";
 import { hydrateLoans } from "./hydrateLoans";
-import { hydrateOffers } from "./hydrateOffers";
 
 export const fetchData = async (params: {
-  publicClient: any;
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
 }): Promise<AllLoanData> => {
   const [offers, loans, events] = await Promise.all([
     fetchOffers({
-      publicClient: params.publicClient,
       address: params.lender,
     }),
     fetchLoans({
-      publicClient: params.publicClient,
       borrower: params.borrower,
       lender: params.lender,
     }),
@@ -31,34 +27,25 @@ export const fetchData = async (params: {
     });
   });
 
-  const markets = await fetchMarkets(positionIds);
+  const marketOutcomes = await fetchMarketOutcomes(positionIds);
+
   events.forEach((event) => {
-    event.markets.forEach((market: any) => {
+    event.markets.forEach((market: Market) => {
       if (!market.active) return;
-      JSON.parse(market.clobTokenIds).forEach(
-        (tokenId: string, index: number) => {
-          const outcome = JSON.parse(market.outcomes)[index];
-          const outcomePrice = JSON.parse(market.outcomePrices)[index];
-          markets.set(tokenId, {
-            market,
-            outcome,
-            outcomePrice,
-            outcomeIndex: index,
-            event,
-          });
-        }
-      );
+      market.clobTokenIds.forEach((tokenId: string, index: number) => {
+        marketOutcomes.set(tokenId, marketToOutcome(market, index));
+      });
     });
   });
 
-  const hydratedOffers = hydrateOffers(offers, markets);
-  const hydratedLoans = hydrateLoans(loans, markets);
+  const hydratedLoans = hydrateLoans(loans, marketOutcomes);
+
   const data = {
-    markets,
-    offers: hydratedOffers,
+    marketOutcomes,
+    offers,
     loans: hydratedLoans,
     events,
   };
-  console.log(data);
+
   return data;
 };

@@ -1,3 +1,32 @@
+export type Market = {
+  id: string;
+  groupItemTitle: string;
+  icon: string;
+  question: string;
+  clobTokenIds: string[];
+  outcomes: string[];
+  outcomePrices: number[];
+  events: Event[];
+  active: boolean;
+  liquidityNum: string;
+};
+
+export type MarketOutcome = {
+  market: Market;
+  outcome: string;
+  outcomePrice: number;
+  outcomeIndex: number;
+  event: any;
+};
+
+export type Event = {
+  slug: string;
+  icon: string;
+  title: string;
+  description: string;
+  markets: Market[];
+};
+
 export type LoanOffer = {
   offerId: string;
   lender: `0x${string}`;
@@ -25,12 +54,12 @@ export type Loan = {
   callTime: string;
   minimumDuration: string;
   offer: LoanOffer;
-  market: any;
+  marketOutcome: MarketOutcome;
 };
 
 export type AllLoanData = {
-  events: any[];
+  events: Event[];
   offers: LoanOffer[];
-  markets: Map<string, any>;
+  marketOutcomes: Map<string, MarketOutcome>;
   loans: Loan[];
 };

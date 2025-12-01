@@ -16,6 +16,7 @@ import { usdcConfig } from "@/contracts/usdc";
 import useErc20Allowance from "@/hooks/useErc20Allowance";
 import { toSPYWAI } from "@/utils/convertors";
 
+import { MarketOutcome } from "@/types/polyLend";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { BaseError } from "viem";
@@ -29,15 +30,17 @@ import InfoAlert from "../widgets/infoAlert";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function OfferDialog({
-  marketIds,
+  marketOutcomeIds,
+  marketOutcomes,
   onDataRefresh,
 }: {
-  marketIds: string[];
+  marketOutcomeIds: string[];
+  marketOutcomes: Map<string, MarketOutcome>;
   onDataRefresh: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState(1000);
-  const [collateralAmount, setCollateralAmount] = useState(2000);
+  const [collateralValue, setCollateralValue] = useState(2000);
   const [minimumLoanAmount, setMinimumLoanAmount] = useState(1000);
   const [duration, setDuration] = useState(30);
   const [perpetual, setPerpetual] = useState(true);
@@ -71,7 +74,7 @@ export default function OfferDialog({
       setIsOffering(false);
       setOfferTxHash(undefined);
       setLoanAmount(1000);
-      setCollateralAmount(2000);
+      setCollateralValue(2000);
       setMinimumLoanAmount(1000);
       setDuration(30);
       setPerpetual(false);
@@ -113,12 +116,15 @@ export default function OfferDialog({
     if (!publicClient || !walletClient) return;
     const rateInSPY = toSPYWAI(rate / 100);
     try {
-      const markets = marketIds.reduce((acc: any, market: string) => {
-        acc.push(...JSON.parse(market));
-        return acc;
-      }, []);
-
       setIsOffering(true);
+
+      const collateralValueInUSDC = collateralValue * 10 ** usdcDecimals;
+      const collateralAmounts = marketOutcomeIds.map((id) => {
+        const marketOutcome = marketOutcomes.get(id)!;
+        const outcomePrice = marketOutcome.outcomePrice * 10 ** usdcDecimals;
+
+        return BigInt(collateralValueInUSDC) / BigInt(outcomePrice);
+      });
       const hash = await walletClient.writeContract({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
@@ -126,8 +132,8 @@ export default function OfferDialog({
         args: [
           BigInt(loanAmount * 10 ** usdcDecimals),
           rateInSPY,
-          markets,
-          BigInt(collateralAmount * 10 ** usdcDecimals),
+          marketOutcomeIds.map((id) => BigInt(id)),
+          collateralAmounts,
           BigInt(minimumLoanAmount * 10 ** usdcDecimals),
           BigInt(duration * 60 * 60 * 24),
           perpetual,
@@ -161,7 +167,7 @@ export default function OfferDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <form className="flex">
         <DialogTrigger asChild>
-          <Button disabled={marketIds.length === 0}>Offer</Button>
+          <Button disabled={marketOutcomeIds.length === 0}>Offer</Button>
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-[425px]">
@@ -188,7 +194,7 @@ export default function OfferDialog({
                 name="markets"
                 type="number"
                 disabled
-                value={marketIds.length.toString()}
+                value={marketOutcomeIds.length.toString()}
               />
             </div>
             <div className="grid gap-3">
@@ -199,8 +205,8 @@ export default function OfferDialog({
                 id="collateralAmount"
                 name="collateralAmount"
                 type="number"
-                value={collateralAmount.toString()}
-                onChange={(e) => setCollateralAmount(Number(e.target.value))}
+                value={collateralValue.toString()}
+                onChange={(e) => setCollateralValue(Number(e.target.value))}
               />
             </div>
 

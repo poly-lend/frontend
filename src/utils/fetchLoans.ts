@@ -1,7 +1,6 @@
 import { Loan } from "@/types/polyLend";
 
 export const fetchLoans = async (params: {
-  publicClient: any;
   borrower?: `0x${string}`;
   lender?: `0x${string}`;
 }): Promise<Loan[]> => {

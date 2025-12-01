@@ -60,17 +60,17 @@ export default function BorrowerLoansTable({
                     <Address address={loan.lender} />
                   </TableCell>
                   <TableCell align="center" className="whitespace-normal">
-                    <Market market={loan.market} />
+                    <Market marketOutcome={loan.marketOutcome} />
                   </TableCell>
                   <TableCell align="center">
-                    <OutcomeBadge outcome={loan.market.outcome} />
+                    <OutcomeBadge outcome={loan.marketOutcome.outcome} />
                   </TableCell>
                   <TableCell align="right">
                     {toSharesText(loan.collateralAmount)}
                   </TableCell>
                   <TableCell align="right">
                     {toUSDCString(
-                      Number(loan.market.outcomePrice) *
+                      Number(loan.marketOutcome.outcomePrice) *
                         Number(loan.collateralAmount)
                     )}
                   </TableCell>

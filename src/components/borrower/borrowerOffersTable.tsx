@@ -58,7 +58,7 @@ export default function BorrowerOffersTable({
           unsupported++;
           return;
         }
-        position.market = data.markets.get(position.asset);
+        position.marketOutcome = data.marketOutcomes.get(position.asset)!;
         position.offers = [];
         data.offers.forEach((offer) => {
           if (offer.positionIds.includes(position.asset)) {
@@ -144,10 +144,10 @@ export default function BorrowerOffersTable({
               <Fragment key={position.asset.toString()}>
                 <TableRow>
                   <TableCell align="center" className="whitespace-normal">
-                    <Market market={position.market} />
+                    <Market marketOutcome={position.marketOutcome} />
                   </TableCell>
                   <TableCell align="center">
-                    <OutcomeBadge outcome={position.market.outcome} />
+                    <OutcomeBadge outcome={position.marketOutcome.outcome} />
                   </TableCell>
                   <TableCell align="right">
                     {/* {toSharesText(request.collateralAmount)} */}

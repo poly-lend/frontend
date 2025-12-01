@@ -1,4 +1,4 @@
-import { LoanOffer } from "./polyLend";
+import { LoanOffer, MarketOutcome } from "./polyLend";
 
 export type Position = {
   proxyWallet: `0x${string}`;
@@ -25,6 +25,6 @@ export type Position = {
   oppositeAsset: `0x${string}`;
   endDate: string;
   negativeRisk: boolean;
-  market: any;
+  marketOutcome: MarketOutcome;
   offers: LoanOffer[];
 };

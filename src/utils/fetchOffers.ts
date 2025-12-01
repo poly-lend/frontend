@@ -1,7 +1,6 @@
 import { LoanOffer } from "@/types/polyLend";
 
 export const fetchOffers = async (params: {
-  publicClient: any;
   address?: `0x${string}`;
 }): Promise<LoanOffer[]> => {
   const url = `https://api.polylend.com/offers`;
