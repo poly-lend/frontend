@@ -75,6 +75,21 @@ export default function Nav() {
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Borrower</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-background min-w-[200px]">
+                      <NavigationMenuLink asChild>
+                        <Link href="/borrower-positions">
+                          Positions & Offers
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/borrower-loans">Loans</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+
                   <NavigationMenuItem>
                     <NavigationMenuTrigger>Lender</NavigationMenuTrigger>
                     <NavigationMenuContent className="bg-background min-w-[200px]">
@@ -89,19 +104,7 @@ export default function Nav() {
                       </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger>Borrower</NavigationMenuTrigger>
-                    <NavigationMenuContent className="bg-background min-w-[200px]">
-                      <NavigationMenuLink asChild>
-                        <Link href="/borrower-positions">
-                          Positions & Offers
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/borrower-loans">Loans</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
+
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
                       <Link
