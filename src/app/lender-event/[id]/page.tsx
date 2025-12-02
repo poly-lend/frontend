@@ -6,6 +6,7 @@ import { Spinner } from "@/components/ui/spinner";
 import ConnectWallet from "@/components/web3/connectWallet";
 import { Event, Market, MarketOutcome } from "@/types/polyLend";
 import ClientOnly from "@/utils/clientOnly";
+import { toUSDString } from "@/utils/convertors";
 import { fetchData } from "@/utils/fetchData";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -118,11 +119,11 @@ export default function OfferDetails() {
                   src={market.icon}
                   alt={market.groupItemTitle}
                 />
-                <p className="font-bold flex-1 flex flex-col gap-2">
+                <p className="font-bold text-lg flex-1 flex flex-col gap-2">
                   {market.groupItemTitle}
                   <span className="text-sm text-gray-500 flex items-center gap-2">
                     <span className="text-sm text-gray-500">Liquidity:</span>
-                    {Number(market.liquidityNum).toFixed(2)}
+                    {toUSDString(market.liquidityNum)}
                   </span>
                 </p>
                 <p className="text-lg">
