@@ -7,11 +7,12 @@ import ConnectWallet from "@/components/web3/connectWallet";
 import { Event, Market, MarketOutcome } from "@/types/polyLend";
 import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 export default function OfferDetails() {
+  const router = useRouter();
   const { id } = useParams();
   const [event, setEvent] = useState<Event | null>(null);
   const [markets, setMarkets] = useState<Market[] | null>(null);
@@ -88,7 +89,9 @@ export default function OfferDetails() {
               <OfferDialog
                 marketOutcomeIds={selectedMarkets}
                 marketOutcomes={marketOutcomes}
-                onDataRefresh={() => {}}
+                onSuccess={async () => {
+                  router.push("/lender-offers");
+                }}
               />
             ) : (
               <ClientOnly>

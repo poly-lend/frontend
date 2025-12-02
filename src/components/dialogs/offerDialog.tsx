@@ -37,11 +37,11 @@ import LoadingActionButton from "../widgets/loadingActionButton";
 export default function OfferDialog({
   marketOutcomeIds,
   marketOutcomes,
-  onDataRefresh,
+  onSuccess,
 }: {
   marketOutcomeIds: string[];
   marketOutcomes: Map<string, MarketOutcome>;
-  onDataRefresh: () => void;
+  onSuccess: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState(1000);
@@ -91,7 +91,7 @@ export default function OfferDialog({
     if (isOfferConfirmed && offerTxHash) {
       setOpen(false);
       toast.success("Offer submitted successfully");
-      onDataRefresh();
+      onSuccess();
     }
   }, [isOfferConfirmed, offerTxHash]);
 
