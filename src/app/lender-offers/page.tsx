@@ -29,7 +29,7 @@ export default function Lend() {
         isDataReady={!!data}
         disconnectedChildren={
           !!data ? (
-            "?"
+            <div className="flex justify-center py-6"></div>
           ) : (
             <div className="flex justify-center py-6">
               <Spinner className="size-12 text-primary" />

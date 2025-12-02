@@ -3,10 +3,10 @@
 import ClientOnly from "@/utils/clientOnly";
 import { chain } from "@/utils/wagmi";
 import { ReactNode } from "react";
-import { useAccount, useSwitchChain } from "wagmi";
+import { useAccount } from "wagmi";
+import { Spinner } from "../ui/spinner";
 import ConnectWidget from "./connectWidget";
 import SwitchWidget from "./switchWidget";
-import { Spinner } from "../ui/spinner";
 
 type WalletGuardProps = {
   children: ReactNode;
@@ -20,7 +20,6 @@ export default function WalletGuard({
   disconnectedChildren,
 }: WalletGuardProps) {
   const { status, address, chain: currentChain } = useAccount();
-  const { switchChain } = useSwitchChain();
 
   const isPolygon = currentChain?.id === chain.id;
   const isWalletLoading = status === "connecting" || status === "reconnecting";
