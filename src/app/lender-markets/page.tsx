@@ -63,7 +63,13 @@ export default function Markets() {
                     {
                       event.markets?.filter((market: any) => market.active)
                         .length
-                    }
+                    }{" "}
+                    Yes{" | "}
+                    {
+                      event.markets?.filter((market: any) => market.active)
+                        .length
+                    }{" "}
+                    No
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

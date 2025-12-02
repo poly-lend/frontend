@@ -100,7 +100,7 @@ export default function Nav() {
                         <Link href="/lender-offers">Sent offers</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/lender-loans">Loans</Link>
+                        <Link href="/lender-loans">My Loans</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link href="/lender-loans?all">All loans</Link>

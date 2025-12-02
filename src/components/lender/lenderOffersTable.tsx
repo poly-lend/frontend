@@ -1,7 +1,7 @@
 import { polylendAddress } from "@/config";
 import { polylendConfig } from "@/contracts/polylend";
-import { AllLoanData } from "@/types/polyLend";
-import { toAPYText, toUSDCString } from "@/utils/convertors";
+import { AllLoanData, LoanOffer } from "@/types/polyLend";
+import { toAPYText, toDuration, toUSDCString } from "@/utils/convertors";
 import { useEffect, useState } from "react";
 import { BaseError } from "viem";
 import {
@@ -9,7 +9,6 @@ import {
   useWaitForTransactionReceipt,
   useWalletClient,
 } from "wagmi";
-import Address from "../widgets/address";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 import {
@@ -21,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
+import EventWidget from "../widgets/event";
 
 export default function LenderOffersTable({
   title,
@@ -82,6 +82,12 @@ export default function LenderOffersTable({
     }
   };
 
+  const getEventFromPositionId = (positionId: string) => {
+    return data.events.find((event) =>
+      event.markets?.some((market) => market.clobTokenIds.includes(positionId))
+    );
+  };
+
   return (
     <div>
       <div>
@@ -96,43 +102,41 @@ export default function LenderOffersTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-right">Lender</TableHead>
-              <TableHead className="text-center">Market</TableHead>
-              <TableHead className="text-center"> Side </TableHead>
-              <TableHead className="text-right">Shares</TableHead>
-              <TableHead className="text-right">Collateral</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-              <TableHead className="text-right">Duration</TableHead>
-              <TableHead className="text-right">Rate</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-center">Event</TableHead>
+              <TableHead className="text-center">Markets</TableHead>
+              <TableHead className="text-center">Collateral Value</TableHead>
+              <TableHead className="text-center">Total Amount</TableHead>
+              <TableHead className="text-center">Minimum Amount</TableHead>
+              <TableHead className="text-center">Borrowed</TableHead>
+              <TableHead className="text-center">Duration</TableHead>
+              <TableHead className="text-center">Rate</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {offers.map((offer) => (
+            {offers.map((offer: LoanOffer) => (
               <TableRow key={offer.offerId.toString()}>
-                <TableCell align="right">
-                  <Address address={offer.lender} />
-                </TableCell>
-                <TableCell align="center" className="whitespace-normal">
-                  {/* <Market market={offer.market} /> */}
-                </TableCell>
                 <TableCell align="center">
-                  {/* <OutcomeBadge outcome={offer.market.outcome} /> */}
+                  <EventWidget
+                    event={getEventFromPositionId(offer.positionIds[0])!}
+                  />
                 </TableCell>
                 <TableCell align="right">
-                  {/* {toSharesText(offer.request!.collateralAmount)} */}
+                  {offer.positionIds.length / 2} Yes |{" "}
+                  {offer.positionIds.length / 2} No
                 </TableCell>
-                <TableCell align="right">
-                  {/* {toUSDCString(
-                    Number(offer.market.outcomePrice) *
-                      Number(offer.request!.collateralAmount)
-                  )} */}
-                </TableCell>
+                <TableCell align="right">Coming Soon</TableCell>
                 <TableCell align="right">
                   {toUSDCString(offer.loanAmount)}
                 </TableCell>
                 <TableCell align="right">
-                  {/* {toDuration(Number(offer.request!.minimumDuration))} */}
+                  {toUSDCString(offer.minimumLoanAmount)}
+                </TableCell>
+                <TableCell align="right">
+                  {toUSDCString(offer.borrowedAmount)}
+                </TableCell>
+                <TableCell align="right">
+                  {toDuration(offer.duration)}
                 </TableCell>
                 <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                 <TableCell align="right">

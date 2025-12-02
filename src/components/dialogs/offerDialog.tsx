@@ -80,9 +80,9 @@ export default function OfferDialog({
       setOfferTxHash(undefined);
       setLoanAmount(1000);
       setCollateralValue(2000);
-      setMinimumLoanAmount(1000);
+      setMinimumLoanAmount(100);
       setDuration(30);
-      setPerpetual(false);
+      setPerpetual(true);
       setRate(20);
     }
   }, [open]);
@@ -187,6 +187,17 @@ export default function OfferDialog({
           {/* Inputs for loan amount and rate */}
           <div className="grid gap-4">
             <div className="grid gap-3">
+              <Label htmlFor="markets">Selected Markets</Label>
+              <Input
+                id="markets"
+                name="markets"
+                disabled
+                value={`${marketOutcomeIds.length / 2} Yes | ${
+                  marketOutcomeIds.length / 2
+                } No`}
+              />
+            </div>
+            <div className="grid gap-3">
               <Label htmlFor="amount">Loan Amount (pfUSDC)</Label>
               <Input
                 id="amount"
@@ -194,16 +205,6 @@ export default function OfferDialog({
                 type="number"
                 value={loanAmount.toString()}
                 onChange={(e) => setLoanAmount(Number(e.target.value))}
-              />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="markets">Selected Markets</Label>
-              <Input
-                id="markets"
-                name="markets"
-                type="number"
-                disabled
-                value={marketOutcomeIds.length.toString()}
               />
             </div>
             <div className="grid gap-3">
@@ -257,9 +258,7 @@ export default function OfferDialog({
                 checked={perpetual}
                 id="perpetual"
                 name="perpetual"
-                onCheckedChange={(checked) =>
-                  setPerpetual(checked === true || checked === "indeterminate")
-                }
+                onCheckedChange={(checked) => setPerpetual(!!checked)}
               />
             </div>
           </div>
