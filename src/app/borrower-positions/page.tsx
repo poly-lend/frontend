@@ -28,7 +28,6 @@ export default function BorrowerPositions() {
 
       <WalletGuard isDataReady={!!data}>
         <BorrowerOffersTable
-          address={address as `0x${string}`}
           data={data as AllLoanData}
           onDataRefresh={handleRefreshData}
         />

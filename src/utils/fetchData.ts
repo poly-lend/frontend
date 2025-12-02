@@ -30,7 +30,7 @@ export const fetchData = async (params: {
   const marketOutcomes = await fetchMarketOutcomes(positionIds);
 
   events.forEach((event) => {
-    event.markets.forEach((market: Market) => {
+    event.markets?.forEach((market: Market) => {
       if (!market.active) return;
       market.clobTokenIds.forEach((tokenId: string, index: number) => {
         marketOutcomes.set(tokenId, marketToOutcome(market, index));
