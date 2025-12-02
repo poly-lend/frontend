@@ -3,16 +3,20 @@
 import OfferDialog from "@/components/dialogs/offerDialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "@/components/ui/spinner";
+import ConnectWallet from "@/components/web3/connectWallet";
 import { Event, Market, MarketOutcome } from "@/types/polyLend";
+import ClientOnly from "@/utils/clientOnly";
 import { fetchData } from "@/utils/fetchData";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
 export default function OfferDetails() {
   const { id } = useParams();
   const [event, setEvent] = useState<Event | null>(null);
   const [markets, setMarkets] = useState<Market[] | null>(null);
   const [selectedMarkets, setSelectedMarkets] = useState<string[]>([]);
+  const { address } = useAccount();
   const [marketOutcomes, setMarketOutcomes] = useState<
     Map<string, MarketOutcome>
   >(new Map());
@@ -80,11 +84,17 @@ export default function OfferDetails() {
             />
             <img width={40} height={40} src={event?.icon} alt={event?.title} />
             <span className="flex-1">{event?.title}</span>
-            <OfferDialog
-              marketOutcomeIds={selectedMarkets}
-              marketOutcomes={marketOutcomes}
-              onDataRefresh={() => {}}
-            />
+            {address ? (
+              <OfferDialog
+                marketOutcomeIds={selectedMarkets}
+                marketOutcomes={marketOutcomes}
+                onDataRefresh={() => {}}
+              />
+            ) : (
+              <ClientOnly>
+                <ConnectWallet />
+              </ClientOnly>
+            )}
           </h1>
           <div className="flex flex-col gap-2">
             {markets?.map((market: Market) => (
