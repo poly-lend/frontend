@@ -5,7 +5,10 @@ const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
 const ETHER = parseEther("1");
 
 export const toUSDCString = (amount: bigint | string | number) => {
-  return (Number(amount) / 10 ** usdcDecimals).toFixed(2) + " USDC";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(Number(amount) / 10 ** usdcDecimals);
 };
 
 export const toUSDString = (amount: bigint | string | number) => {

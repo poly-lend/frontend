@@ -220,7 +220,10 @@ export default function BorrowerOffersTable({
                                 <TableCell align="right">
                                   {toAPYText(offer.rate)}
                                 </TableCell>
-                                <TableCell align="right">
+                                <TableCell
+                                  align="right"
+                                  className="flex justify-end"
+                                >
                                   <AcceptDialog
                                     offer={offer}
                                     positionId={position.asset.toString()}
