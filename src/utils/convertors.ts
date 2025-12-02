@@ -39,10 +39,8 @@ export const truncateAddress = (address: `0x${string}`) => {
   return address.slice(0, 6) + "..." + address.slice(-4);
 };
 
-export const toSharesText = (amount: bigint | string) => {
-  return (Number(amount) / 10 ** polymarketSharesDecimals).toFixed(
-    polymarketSharesDecimals
-  );
+export const toSharesText = (amount: number | bigint | string) => {
+  return (Number(amount) / 10 ** polymarketSharesDecimals).toFixed(1);
 };
 
 export const toSPYWAI = (apy: number): bigint => {

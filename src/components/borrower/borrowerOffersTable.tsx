@@ -10,9 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { polymarketSharesDecimals } from "@/config";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
-import { toAPYText, toUSDCString } from "@/utils/convertors";
+import { toAPYText, toSharesText, toUSDCString } from "@/utils/convertors";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import AcceptDialog from "../dialogs/acceptDialog";
@@ -76,14 +77,13 @@ export default function BorrowerOffersTable({
               <TableHead className="text-center">Market</TableHead>
               <TableHead className="text-center">Side</TableHead>
               <TableHead className="text-right">Shares</TableHead>
-              <TableHead className="text-right">Collateral</TableHead>
-              <TableHead className="text-right">Duration</TableHead>
+              <TableHead className="text-right">Value</TableHead>
               <TableHead className="text-right">Offers</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {positions?.map((position) => (
+            {positions?.map((position: Position) => (
               <Fragment key={position.asset.toString()}>
                 <TableRow>
                   <TableCell align="center" className="whitespace-normal">
@@ -93,16 +93,16 @@ export default function BorrowerOffersTable({
                     <OutcomeBadge outcome={position.marketOutcome.outcome} />
                   </TableCell>
                   <TableCell align="right">
-                    {/* {toSharesText(request.collateralAmount)} */}
+                    {toSharesText(
+                      position.size * 10 ** polymarketSharesDecimals
+                    )}
                   </TableCell>
                   <TableCell align="right">
-                    {/* {toUSDCString(
-                      Number(request.market.outcomePrice) *
-                        Number(request.collateralAmount)
-                    )} */}
-                  </TableCell>
-                  <TableCell align="right">
-                    {/* {toDuration(request.minimumDuration)} */}
+                    {toUSDCString(
+                      Number(position.size) *
+                        Number(position.curPrice) *
+                        10 ** polymarketSharesDecimals
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     {position.offers?.length ?? 0}
