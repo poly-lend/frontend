@@ -1,13 +1,5 @@
-import { polylendAddress } from "@/config";
-import { polylendConfig } from "@/contracts/polylend";
 import { AllLoanData } from "@/types/polyLend";
-import { Fragment, useEffect, useState } from "react";
-import { BaseError } from "viem";
-import {
-  usePublicClient,
-  useWaitForTransactionReceipt,
-  useWalletClient,
-} from "wagmi";
+import { Fragment, useState } from "react";
 
 import {
   Table,
@@ -23,7 +15,6 @@ import { Position } from "@/types/polymarketPosition";
 import { toAPYText, toUSDCString } from "@/utils/convertors";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { toast } from "sonner";
 import AcceptDialog from "../dialogs/acceptDialog";
 import { Button } from "../ui/button";
 import Address from "../widgets/address";
@@ -31,17 +22,15 @@ import Market from "../widgets/market";
 import OutcomeBadge from "../widgets/outcomeBadge";
 
 export default function BorrowerOffersTable({
-  address,
   data,
   onDataRefresh,
 }: {
-  address?: `0x${string}`;
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
   const { data: proxyAddress } = useProxyAddress();
   const [unsupportedPositions, setUnsupportedPositions] = useState(0);
-  const { data: positions, isLoading } = useQuery({
+  const { data: positions } = useQuery({
     queryKey: ["positions", proxyAddress],
     queryFn: async () => {
       if (!proxyAddress) return [];
@@ -74,52 +63,7 @@ export default function BorrowerOffersTable({
   });
 
   const [selectedPosition, selectPosition] = useState<Position | null>(null);
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
 
-  const [acceptingOfferId, setAcceptingOfferId] = useState<string | null>(null);
-  const [isAccepting, setIsAccepting] = useState(false);
-  const [acceptTxHash, setAcceptTxHash] = useState<`0x${string}` | undefined>(
-    undefined
-  );
-  const { isLoading: isAcceptConfirming, isSuccess: isAcceptConfirmed } =
-    useWaitForTransactionReceipt({
-      hash: acceptTxHash,
-    });
-
-  const acceptOffer = async (offerId: string, positionId: string) => {
-    if (!publicClient || !walletClient) return;
-    try {
-      setAcceptingOfferId(offerId);
-      setIsAccepting(true);
-      const hash = await walletClient.writeContract({
-        address: polylendAddress as `0x${string}`,
-        abi: polylendConfig.abi,
-        functionName: "accept",
-        args: [BigInt(offerId), BigInt(0), BigInt(0), BigInt(positionId), true],
-      });
-      setAcceptTxHash(hash);
-    } catch (err) {
-      const message =
-        (err as BaseError)?.shortMessage ||
-        (err as Error)?.message ||
-        "Transaction failed";
-      toast.error(message);
-      setAcceptingOfferId(null);
-    } finally {
-      setIsAccepting(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isAcceptConfirmed) {
-      toast.success("Offer accepted successfully");
-      selectPosition(null);
-      setAcceptingOfferId(null);
-      setAcceptTxHash(undefined);
-      onDataRefresh();
-    }
-  }, [isAcceptConfirmed]);
   return (
     <>
       {positions && positions?.length === 0 && (
