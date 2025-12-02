@@ -125,7 +125,7 @@ export default function LenderOffersTable({
                   {offer.positionIds.length / 2} Yes |{" "}
                   {offer.positionIds.length / 2} No
                 </TableCell>
-                <TableCell align="right">Coming Soon</TableCell>
+                <TableCell align="right">TBD</TableCell>
                 <TableCell align="right">
                   {toUSDCString(offer.loanAmount)}
                 </TableCell>

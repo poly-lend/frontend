@@ -39,7 +39,6 @@ export default function BorrowerOffersTable({
   data: AllLoanData;
   onDataRefresh: () => void;
 }) {
-  console.log(data);
   const { data: proxyAddress } = useProxyAddress();
   const [unsupportedPositions, setUnsupportedPositions] = useState(0);
   const { data: positions, isLoading } = useQuery({
@@ -236,22 +235,22 @@ export default function BorrowerOffersTable({
                       </TableCell>
                     </TableRow>
                   )}
-                {unsupportedPositions > 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={7}
-                      className="text-center text-muted-foreground"
-                    >
-                      You have {unsupportedPositions}
-                      {unsupportedPositions === 1
-                        ? " more position "
-                        : " more positions "}
-                      that has no lenders yet
-                    </TableCell>
-                  </TableRow>
-                )}
               </Fragment>
             ))}
+            {unsupportedPositions > 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={7}
+                  className="text-center text-muted-foreground"
+                >
+                  You have {unsupportedPositions}
+                  {unsupportedPositions === 1
+                    ? " more position "
+                    : " more positions "}
+                  that has no lenders yet
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       )}
