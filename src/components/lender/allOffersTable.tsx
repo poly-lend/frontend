@@ -1,3 +1,5 @@
+"use client";
+
 import { AllLoanData, LoanOffer } from "@/types/polyLend";
 import { toAPYText, toDuration, toUSDCString } from "@/utils/convertors";
 

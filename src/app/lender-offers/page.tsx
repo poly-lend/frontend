@@ -38,7 +38,6 @@ export default function Lend() {
         }
       >
         <LenderOffersTable
-          title="Lender Offers"
           data={data as AllLoanData}
           userAddress={address as `0x${string}`}
           onDataRefresh={handleRefreshData}
