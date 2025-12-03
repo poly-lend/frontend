@@ -5,13 +5,10 @@ import { Spinner } from "@/components/ui/spinner";
 import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 export default function Lend() {
   const [data, setData] = useState<AllLoanData | null>(null);
-  const searchParams = useSearchParams();
-  const eventSlug = searchParams.get("event") ?? undefined;
 
   useEffect(() => {
     fetchData({}).then(setData);
@@ -37,11 +34,9 @@ export default function Lend() {
           )
         }
       >
-        <AllOffersTable
-          eventSlug={eventSlug}
-          data={data as AllLoanData}
-          onDataRefresh={handleRefreshData}
-        />
+        <Suspense fallback={<Spinner className="size-12 text-primary" />}>
+          <AllOffersTable data={data as AllLoanData} />
+        </Suspense>
       </WalletGuard>
     </div>
   );

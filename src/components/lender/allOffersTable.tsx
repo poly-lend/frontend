@@ -1,5 +1,3 @@
-"use client";
-
 import { AllLoanData, LoanOffer } from "@/types/polyLend";
 import { toAPYText, toDuration, toUSDCString } from "@/utils/convertors";
 
@@ -11,18 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useSearchParams } from "next/navigation";
 import Address from "../widgets/address";
 import EventWidget from "../widgets/event";
 
-export default function LenderOffersTable({
-  data,
-  eventSlug,
-}: {
-  data: AllLoanData;
-  onDataRefresh: () => void;
-  eventSlug?: string;
-}) {
+export default function LenderOffersTable({ data }: { data: AllLoanData }) {
   let offers = data.offers;
+
+  const searchParams = useSearchParams();
+  const eventSlug = searchParams.get("event") ?? undefined;
 
   const getEventFromPositionId = (positionId: string) => {
     return data.events.find((event) =>
