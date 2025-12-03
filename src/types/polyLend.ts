@@ -41,6 +41,7 @@ export type LoanOffer = {
   startTime: string;
   borrowedAmount: string;
   perpetual: boolean;
+  event: Event | null;
 };
 
 export type Loan = {

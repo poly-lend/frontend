@@ -14,17 +14,26 @@ import EventWidget from "../widgets/event";
 
 export default function LenderOffersTable({
   data,
+  eventSlug,
 }: {
   data: AllLoanData;
   onDataRefresh: () => void;
+  eventSlug?: string;
 }) {
-  const offers = data.offers;
+  let offers = data.offers;
 
   const getEventFromPositionId = (positionId: string) => {
     return data.events.find((event) =>
       event.markets?.some((market) => market.clobTokenIds.includes(positionId))
     );
   };
+
+  for (const offer of offers) {
+    offer.event = getEventFromPositionId(offer.positionIds[0])!;
+  }
+  if (eventSlug) {
+    offers = offers.filter((offer) => offer.event?.slug === eventSlug);
+  }
 
   return (
     <div>
@@ -53,9 +62,7 @@ export default function LenderOffersTable({
                   <Address address={offer.lender} />
                 </TableCell>
                 <TableCell align="center">
-                  <EventWidget
-                    event={getEventFromPositionId(offer.positionIds[0])!}
-                  />
+                  <EventWidget event={offer.event!} />
                 </TableCell>
                 <TableCell align="right">
                   {offer.positionIds.length / 2} Yes |{" "}
