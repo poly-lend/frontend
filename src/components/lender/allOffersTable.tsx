@@ -47,7 +47,6 @@ export default function LenderOffersTable({
               <TableHead className="text-center">Lender</TableHead>
               <TableHead className="text-center">Event</TableHead>
               <TableHead className="text-center">Markets</TableHead>
-              <TableHead className="text-center">Collateral Value</TableHead>
               <TableHead className="text-center">Total Amount</TableHead>
               <TableHead className="text-center">Minimum Amount</TableHead>
               <TableHead className="text-center">Borrowed</TableHead>
@@ -68,7 +67,6 @@ export default function LenderOffersTable({
                   {offer.positionIds.length / 2} Yes |{" "}
                   {offer.positionIds.length / 2} No
                 </TableCell>
-                <TableCell align="right">TBD</TableCell>
                 <TableCell align="right">
                   {toUSDCString(offer.loanAmount)}
                 </TableCell>
