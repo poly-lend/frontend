@@ -1,0 +1,48 @@
+"use client";
+
+import AllOffersTable from "@/components/lender/allOffersTable";
+import { Spinner } from "@/components/ui/spinner";
+import WalletGuard from "@/components/web3/walletGuard";
+import { AllLoanData } from "@/types/polyLend";
+import { fetchData } from "@/utils/fetchData";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+
+export default function Lend() {
+  const { address } = useAccount();
+
+  const [data, setData] = useState<AllLoanData | null>(null);
+
+  useEffect(() => {
+    fetchData({}).then(setData);
+  }, []);
+
+  const handleRefreshData = () => {
+    fetchData({}).then(setData);
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <h1 className="font-bold text-center text-4xl mb-4">All Offers</h1>
+
+      <WalletGuard
+        isDataReady={!!data}
+        disconnectedChildren={
+          !!data ? (
+            <div className="flex justify-center py-6"></div>
+          ) : (
+            <div className="flex justify-center py-6">
+              <Spinner className="size-12 text-primary" />
+            </div>
+          )
+        }
+      >
+        <AllOffersTable
+          data={data as AllLoanData}
+          userAddress={address as `0x${string}`}
+          onDataRefresh={handleRefreshData}
+        />
+      </WalletGuard>
+    </div>
+  );
+}
