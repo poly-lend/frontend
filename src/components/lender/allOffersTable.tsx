@@ -24,15 +24,13 @@ import EventWidget from "../widgets/event";
 
 export default function LenderOffersTable({
   data,
-  userAddress,
+
   onDataRefresh,
 }: {
   data: AllLoanData;
-  userAddress: `0x${string}`;
   onDataRefresh: () => void;
 }) {
-  let offers = data.offers;
-  offers = offers.filter((offer) => offer.lender === userAddress);
+  const offers = data.offers;
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const [cancellingOfferId, setCancellingOfferId] = useState<string | null>(

@@ -23,12 +23,10 @@ import { toast } from "sonner";
 import EventWidget from "../widgets/event";
 
 export default function LenderOffersTable({
-  title,
   data,
   userAddress,
   onDataRefresh,
 }: {
-  title?: string;
   data: AllLoanData;
   userAddress: `0x${string}`;
   onDataRefresh: () => void;
@@ -90,11 +88,6 @@ export default function LenderOffersTable({
 
   return (
     <div>
-      <div>
-        <h2 className="text-2xl font-bold w-full text-center mt-8">
-          {title ? title : "Offers"}
-        </h2>
-      </div>
       {offers.length === 0 && (
         <div className="text-center mt-4">No offers found</div>
       )}

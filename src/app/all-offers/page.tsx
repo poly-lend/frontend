@@ -6,11 +6,8 @@ import WalletGuard from "@/components/web3/walletGuard";
 import { AllLoanData } from "@/types/polyLend";
 import { fetchData } from "@/utils/fetchData";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 
 export default function Lend() {
-  const { address } = useAccount();
-
   const [data, setData] = useState<AllLoanData | null>(null);
 
   useEffect(() => {
@@ -39,7 +36,6 @@ export default function Lend() {
       >
         <AllOffersTable
           data={data as AllLoanData}
-          userAddress={address as `0x${string}`}
           onDataRefresh={handleRefreshData}
         />
       </WalletGuard>
