@@ -73,8 +73,13 @@ export default function Markets() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm flex-1 text-gray-500">Offers:</p>
-                  <p className="text-sm text-gray-500">{data.offers.length}</p>
+                  <p className="text-sm flex-1 text-primary">Offers:</p>
+                  <Link
+                    href={`/all-offers?event=${event.slug}`}
+                    className="text-sm text-primary underline"
+                  >
+                    {data.offers.length}
+                  </Link>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-primary">My Offers:</p>

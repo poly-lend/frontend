@@ -87,9 +87,6 @@ export default function Nav() {
                       <NavigationMenuLink asChild>
                         <Link href="/borrower-loans">Loans</Link>
                       </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/all-offers">All offers</Link>
-                      </NavigationMenuLink>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
 
@@ -101,6 +98,9 @@ export default function Nav() {
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link href="/lender-offers">Sent offers</Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/all-offers">All offers</Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link href="/lender-loans">My Loans</Link>
