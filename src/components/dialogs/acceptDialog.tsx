@@ -21,6 +21,8 @@ import { polymarketTokensConfig } from "@/contracts/polymarketTokens";
 import useIsApprovedForAll from "@/hooks/useIsApprovedForAll";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { LoanOffer } from "@/types/polyLend";
+import { Position } from "@/types/polymarketPosition";
+import { toSharesText, toUSDCString } from "@/utils/convertors";
 import { execSafeTransaction } from "@/utils/proxy";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -30,24 +32,27 @@ import {
   useWaitForTransactionReceipt,
   useWalletClient,
 } from "wagmi";
+import { Slider } from "../ui/slider";
 import InfoAlert from "../widgets/infoAlert";
 import LoadingActionButton from "../widgets/loadingActionButton";
 
 export default function AcceptDialog({
   offer,
-  positionId,
+  position,
   onDataRefresh,
 }: {
   offer: LoanOffer;
-  positionId: string;
+  position: Position;
   collateralAmountOwned: number;
   onDataRefresh: () => void;
   onSuccess?: (successText: string) => void;
   onError?: (errorText: string) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [loanAmount, setLoanAmount] = useState(1000);
-  const [collateralAmount, setCollateralAmount] = useState(2000);
+  const [loanAmount, setLoanAmount] = useState(0);
+  const [collateralAmount, setCollateralAmount] = useState(0);
+  const [collateralValue, setCollateralValue] = useState(0);
+  const [percentage, setPercentage] = useState(100);
   const [minimumDuration, setMinimumDuration] = useState(30);
   const [isApproving, setIsApproving] = useState(false);
   const [approvalTxHash, setApprovalTxHash] = useState<
@@ -78,11 +83,28 @@ export default function AcceptDialog({
       setApprovalTxHash(undefined);
       setIsAccepting(false);
       setAcceptTxHash(undefined);
-      setLoanAmount(1000);
-      setCollateralAmount(2000);
-      setMinimumDuration(1000);
+      setPercentage(100);
+      setMinimumDuration(Number(BigInt(offer.duration) / BigInt(60 * 60 * 24)));
     }
   }, [open]);
+
+  useEffect(() => {
+    setCollateralAmount(
+      Number(
+        (BigInt(position.size * 10 ** polymarketSharesDecimals) *
+          BigInt(percentage)) /
+          BigInt(100)
+      )
+    );
+    setCollateralValue(
+      Math.round(
+        position.size *
+          10 ** polymarketSharesDecimals *
+          position.curPrice *
+          percentage
+      ) / 100
+    );
+  }, [percentage]);
 
   useEffect(() => {
     if (isAcceptConfirmed && acceptTxHash) {
@@ -133,7 +155,7 @@ export default function AcceptDialog({
           BigInt(offer.offerId),
           BigInt(collateralAmount * 10 ** polymarketSharesDecimals),
           BigInt(minimumDuration * 60 * 60 * 24),
-          BigInt(positionId),
+          BigInt(position.asset),
           true,
         ],
       });
@@ -171,6 +193,15 @@ export default function AcceptDialog({
           {/* Inputs for loan amount and rate */}
           <div className="grid gap-4">
             <div className="grid gap-3">
+              <Slider
+                value={[percentage]}
+                min={0}
+                max={100}
+                step={1}
+                onValueChange={(value) => setPercentage(value[0])}
+              />
+            </div>
+            <div className="grid gap-3">
               <Label htmlFor="amount">Loan Amount (pfUSDC)</Label>
               <Input
                 id="amount"
@@ -189,8 +220,17 @@ export default function AcceptDialog({
                 id="collateralAmount"
                 name="collateralAmount"
                 type="number"
-                value={collateralAmount.toString()}
-                onChange={(e) => setCollateralAmount(Number(e.target.value))}
+                disabled
+                value={toSharesText(collateralAmount)}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="collateralValue">Collateral Value (pfUSDC)</Label>
+              <Input
+                id="collateralValue"
+                name="collateralValue"
+                disabled
+                value={toUSDCString(collateralValue)}
               />
             </div>
             <div className="grid gap-3">

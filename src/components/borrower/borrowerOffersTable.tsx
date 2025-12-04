@@ -13,7 +13,12 @@ import {
 import { polymarketSharesDecimals } from "@/config";
 import useProxyAddress from "@/hooks/useProxyAddress";
 import { Position } from "@/types/polymarketPosition";
-import { toAPYText, toSharesText, toUSDCString } from "@/utils/convertors";
+import {
+  toAPYText,
+  toDuration,
+  toSharesText,
+  toUSDCString,
+} from "@/utils/convertors";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import AcceptDialog from "../dialogs/acceptDialog";
@@ -149,6 +154,12 @@ export default function BorrowerOffersTable({
                               <TableHead className="text-right">
                                 Amount
                               </TableHead>
+                              <TableHead className="text-right">
+                                Minimum Amount
+                              </TableHead>
+                              <TableHead className="text-right">
+                                Duration
+                              </TableHead>
                               <TableHead className="text-right">Rate</TableHead>
                               <TableHead className="text-right">
                                 Actions
@@ -165,6 +176,12 @@ export default function BorrowerOffersTable({
                                   {toUSDCString(offer.loanAmount)}
                                 </TableCell>
                                 <TableCell align="right">
+                                  {toUSDCString(offer.minimumLoanAmount)}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {toDuration(offer.duration)}
+                                </TableCell>
+                                <TableCell align="right">
                                   {toAPYText(offer.rate)}
                                 </TableCell>
                                 <TableCell
@@ -173,7 +190,7 @@ export default function BorrowerOffersTable({
                                 >
                                   <AcceptDialog
                                     offer={offer}
-                                    positionId={position.asset.toString()}
+                                    position={position}
                                     collateralAmountOwned={0}
                                     onDataRefresh={onDataRefresh}
                                   />
