@@ -2,10 +2,17 @@ import { MarketOutcome } from "@/types/polyLend";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 
-const Market = ({ marketOutcome }: { marketOutcome: MarketOutcome }) => {
+const Market = ({
+  marketOutcome,
+  eventSlug,
+}: {
+  marketOutcome: MarketOutcome;
+  eventSlug?: string;
+}) => {
+  const eventSlugParam = eventSlug || marketOutcome?.event?.slug;
   return (
     <Link
-      href={`https://polymarket.com/event/${marketOutcome?.event?.slug}`}
+      href={`https://polymarket.com/event/${eventSlugParam}`}
       target="_blank"
       className="flex items-center hover:underline hover:text-white/80"
     >

@@ -87,7 +87,10 @@ export default function BorrowerOffersTable({
               <Fragment key={position.asset.toString()}>
                 <TableRow>
                   <TableCell align="center" className="whitespace-normal">
-                    <Market marketOutcome={position.marketOutcome} />
+                    <Market
+                      marketOutcome={position.marketOutcome}
+                      eventSlug={position.eventSlug}
+                    />
                   </TableCell>
                   <TableCell align="center">
                     <OutcomeBadge outcome={position.marketOutcome.outcome} />
