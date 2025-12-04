@@ -165,7 +165,7 @@ export default function AcceptDialog({
 
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Make an Offer</DialogTitle>
+            <DialogTitle>Accept an Offer</DialogTitle>
           </DialogHeader>
 
           {/* Inputs for loan amount and rate */}
