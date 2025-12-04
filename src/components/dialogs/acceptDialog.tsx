@@ -94,7 +94,8 @@ export default function AcceptDialog({
         (BigInt(position.size * 10 ** polymarketSharesDecimals) *
           BigInt(percentage)) /
           BigInt(100)
-      )
+      ) /
+        10 ** polymarketSharesDecimals
     );
     setCollateralValue(
       Math.round(
@@ -221,7 +222,9 @@ export default function AcceptDialog({
                 name="collateralAmount"
                 type="number"
                 disabled
-                value={toSharesText(collateralAmount)}
+                value={toSharesText(
+                  collateralAmount * 10 ** polymarketSharesDecimals
+                )}
               />
             </div>
             <div className="grid gap-3">
