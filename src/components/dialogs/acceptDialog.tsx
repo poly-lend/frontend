@@ -49,11 +49,13 @@ export default function AcceptDialog({
   onError?: (errorText: string) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [loanAmount, setLoanAmount] = useState(0);
+  const [loanAmount, setLoanAmount] = useState<bigint>(BigInt(0));
   const [collateralAmount, setCollateralAmount] = useState(0);
   const [collateralValue, setCollateralValue] = useState(0);
   const [percentage, setPercentage] = useState(100);
-  const [minimumDuration, setMinimumDuration] = useState(30);
+  const [minimumDuration, setMinimumDuration] = useState(
+    Number(BigInt(offer.duration) / BigInt(60 * 60 * 24))
+  );
   const [isApproving, setIsApproving] = useState(false);
   const [approvalTxHash, setApprovalTxHash] = useState<
     `0x${string}` | undefined
@@ -89,22 +91,28 @@ export default function AcceptDialog({
   }, [open]);
 
   useEffect(() => {
+    const collateralAmountRaw =
+      (BigInt(position.size * 10 ** polymarketSharesDecimals) *
+        BigInt(percentage)) /
+      BigInt(100);
+
     setCollateralAmount(
-      Number(
-        (BigInt(position.size * 10 ** polymarketSharesDecimals) *
-          BigInt(percentage)) /
-          BigInt(100)
-      ) /
-        10 ** polymarketSharesDecimals
+      Number(collateralAmountRaw) / 10 ** polymarketSharesDecimals
     );
     setCollateralValue(
-      Math.round(
-        position.size *
-          10 ** polymarketSharesDecimals *
-          position.curPrice *
-          percentage
-      ) / 100
+      Math.round(Number(collateralAmountRaw) * position.curPrice * percentage) /
+        100
     );
+
+    const positionIndex = offer.positionIds.indexOf(position.asset);
+    const offerCollateralAmount = offer.collateralAmounts[positionIndex];
+    const offerLoanAmount = offer.loanAmount;
+
+    const loanAmountRaw =
+      (BigInt(offerLoanAmount) * collateralAmountRaw) /
+      BigInt(offerCollateralAmount);
+
+    setLoanAmount(loanAmountRaw);
   }, [percentage]);
 
   useEffect(() => {
@@ -207,10 +215,8 @@ export default function AcceptDialog({
               <Input
                 id="amount"
                 name="amount"
-                type="number"
                 disabled
-                value={loanAmount.toString()}
-                onChange={(e) => setLoanAmount(Number(e.target.value))}
+                value={toUSDCString(loanAmount)}
               />
             </div>
             <div className="grid gap-3">
