@@ -55,6 +55,12 @@ export const polylendConfig = {
           type: "uint256",
         },
         {
+          indexed: true,
+          internalType: "address",
+          name: "borrower",
+          type: "address",
+        },
+        {
           indexed: false,
           internalType: "uint256",
           name: "startTime",
@@ -124,6 +130,12 @@ export const polylendConfig = {
       anonymous: false,
       inputs: [
         { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
+        {
+          indexed: true,
+          internalType: "uint256",
+          name: "offerId",
+          type: "uint256",
+        },
       ],
       name: "LoanRepaid",
       type: "event",
@@ -148,6 +160,12 @@ export const polylendConfig = {
           internalType: "address",
           name: "newLender",
           type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "offerId",
+          type: "uint256",
         },
         {
           indexed: false,
