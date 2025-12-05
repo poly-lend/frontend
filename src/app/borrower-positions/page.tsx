@@ -27,10 +27,7 @@ export default function BorrowerPositions() {
       </h1>
 
       <WalletGuard isDataReady={!!data}>
-        <BorrowerOffersTable
-          data={data as AllLoanData}
-          onDataRefresh={handleRefreshData}
-        />
+        <BorrowerOffersTable data={data as AllLoanData} />
       </WalletGuard>
     </div>
   );

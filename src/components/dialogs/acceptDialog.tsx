@@ -39,14 +39,11 @@ import LoadingActionButton from "../widgets/loadingActionButton";
 export default function AcceptDialog({
   offer,
   position,
-  onDataRefresh,
+  onSuccess,
 }: {
   offer: LoanOffer;
   position: Position;
-  collateralAmountOwned: number;
-  onDataRefresh: () => void;
-  onSuccess?: (successText: string) => void;
-  onError?: (errorText: string) => void;
+  onSuccess: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loanAmount, setLoanAmount] = useState<bigint>(BigInt(0));
@@ -119,7 +116,7 @@ export default function AcceptDialog({
     if (isAcceptConfirmed && acceptTxHash) {
       setOpen(false);
       toast.success("Offer accepted successfully");
-      onDataRefresh();
+      onSuccess();
     }
   }, [isAcceptConfirmed, acceptTxHash]);
 

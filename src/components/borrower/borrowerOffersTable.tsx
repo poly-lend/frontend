@@ -21,19 +21,15 @@ import {
 } from "@/utils/convertors";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useRouter } from "next/navigation";
 import AcceptDialog from "../dialogs/acceptDialog";
 import { Button } from "../ui/button";
 import Address from "../widgets/address";
 import Market from "../widgets/market";
 import OutcomeBadge from "../widgets/outcomeBadge";
 
-export default function BorrowerOffersTable({
-  data,
-  onDataRefresh,
-}: {
-  data: AllLoanData;
-  onDataRefresh: () => void;
-}) {
+export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
+  const router = useRouter();
   const { data: proxyAddress } = useProxyAddress();
   const [unsupportedPositions, setUnsupportedPositions] = useState(0);
   const { data: positions } = useQuery({
@@ -191,8 +187,9 @@ export default function BorrowerOffersTable({
                                   <AcceptDialog
                                     offer={offer}
                                     position={position}
-                                    collateralAmountOwned={0}
-                                    onDataRefresh={onDataRefresh}
+                                    onSuccess={async () => {
+                                      router.push("/borrower-loans");
+                                    }}
                                   />
                                 </TableCell>
                               </TableRow>
