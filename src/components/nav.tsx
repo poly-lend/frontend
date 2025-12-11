@@ -23,18 +23,6 @@ import Balance from "./widgets/balance";
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const links = [
-    { href: "/", label: "Home", id: "home" },
-    { href: "/lend", label: "Lend", id: "lend" },
-    { href: "/borrow", label: "Borrow", id: "borrow" },
-    { href: "/faucet", label: "Faucet", id: "faucet" },
-    {
-      href: "https://docs.polylend.com",
-      label: "Docs",
-      id: "docs",
-      external: true,
-    },
-  ];
 
   return (
     <div
@@ -125,33 +113,6 @@ export default function Nav() {
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
-
-                  {/* {links.map((link) => {
-                    return (
-                      <NavigationMenuItem key={link.id}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={link.href}
-                            target={link.external ? "_blank" : undefined}
-                            rel={
-                              link.external ? "noopener noreferrer" : undefined
-                            }
-                            className={cn(
-                              navigationMenuTriggerStyle(),
-                              pathname === link.href && "text-primary"
-                            )}
-                          >
-                            <div className="flex items-center gap-1.5 text-base font-bold">
-                              {link.label}
-                              {link.external && (
-                                <ExternalLink className="h-4 w-4" />
-                              )}
-                            </div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    );
-                  })} */}
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
@@ -195,25 +156,29 @@ export default function Nav() {
         {mobileOpen && (
           <div className="md:hidden border-t border-border border-b bg-background pb-4 shadow-md">
             <div className="flex flex-col pt-2">
-              {links.map((link) => (
-                <Link
-                  key={link.id}
-                  href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noopener noreferrer" : undefined}
-                  onClick={() => setMobileOpen(false)}
-                  className={cn(
-                    "flex items-center justify-between py-2 text-base font-semibold",
-                    pathname === link.href && "text-primary"
-                  )}
-                >
-                  <span className="flex items-center gap-1.5">
-                    {link.label}
-                    {link.external && <ExternalLink className="h-4 w-4" />}
-                  </span>
-                </Link>
-              ))}
+              <Link
+                href="/borrower-positions"
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center justify-between py-2 text-base font-semibold",
+                  pathname === "/borrower-positions" && "text-primary"
+                )}
+              >
+                <span className="flex items-center gap-1.5">
+                  Positions & Offers
+                </span>
+              </Link>
             </div>
+            <Link
+              href="/borrower-loans"
+              onClick={() => setMobileOpen(false)}
+              className={cn(
+                "flex items-center justify-between py-2 text-base font-semibold",
+                pathname === "/borrower-loans" && "text-primary"
+              )}
+            >
+              <span className="flex items-center gap-1.5">Loans</span>
+            </Link>
             <div className="mt-4 flex flex-col gap-3 font-bold">
               <ClientOnly>
                 <SwitchChain />
