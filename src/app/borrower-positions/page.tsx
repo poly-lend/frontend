@@ -16,10 +16,6 @@ export default function BorrowerPositions() {
     fetchData({ borrower: address }).then(setData);
   }, [address]);
 
-  const handleRefreshData = () => {
-    fetchData({ borrower: address }).then(setData);
-  };
-
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-bold text-center text-4xl mb-4">

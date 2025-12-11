@@ -37,7 +37,7 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
     queryFn: async () => {
       if (!proxyAddress) return [];
       const r = await fetch(
-        `https://data-api.polymarket.com/positions?user=${proxyAddress}`
+        `https://api.polylend.com/positions?address=${proxyAddress}`
       );
       if (!r.ok) throw new Error("HTTP " + r.status);
       const positions = (await r.json()) as Position[];
