@@ -198,7 +198,7 @@ export default function OfferDialog({
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="amount">Loan Amount (pfUSDC)</Label>
+              <Label htmlFor="amount">Loan Amount (USDC)</Label>
               <Input
                 id="amount"
                 name="amount"
@@ -208,9 +208,7 @@ export default function OfferDialog({
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="collateralAmount">
-                Collateral Amount (pfUSDC)
-              </Label>
+              <Label htmlFor="collateralAmount">Collateral Amount (USDC)</Label>
               <Input
                 id="collateralAmount"
                 name="collateralAmount"
@@ -232,7 +230,7 @@ export default function OfferDialog({
             </div>
             <div className="grid gap-3">
               <Label htmlFor="minimumLoanAmount">
-                Minimum Loan Amount (pfUSDC)
+                Minimum Loan Amount (USDC)
               </Label>
               <Input
                 id="minimumLoanAmount"

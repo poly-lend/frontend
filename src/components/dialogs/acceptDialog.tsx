@@ -208,7 +208,7 @@ export default function AcceptDialog({
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="amount">Loan Amount (pfUSDC)</Label>
+              <Label htmlFor="amount">Loan Amount (USDC)</Label>
               <Input
                 id="amount"
                 name="amount"
@@ -231,7 +231,7 @@ export default function AcceptDialog({
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="collateralValue">Collateral Value (pfUSDC)</Label>
+              <Label htmlFor="collateralValue">Collateral Value (USDC)</Label>
               <Input
                 id="collateralValue"
                 name="collateralValue"
