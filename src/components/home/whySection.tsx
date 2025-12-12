@@ -1,20 +1,20 @@
-import HomeCard from "./homeCard";
-import SectionHeader from "./sectionHeader";
+import HomeCard from './homeCard'
+import SectionHeader from './sectionHeader'
 
 const cardItems = [
   {
-    title: "Leverage your conviction",
-    body: "Use existing Polymarket positions as collateral instead of selling them. Keep your upside while unlocking USDC liquidity.",
+    title: 'Leverage your conviction',
+    body: 'Use existing Polymarket positions as collateral instead of selling them. Keep your upside while unlocking USDC liquidity.',
   },
   {
-    title: "Oracle-free design",
-    body: "PolyLend does not rely on price feeds. Risk and rates are determined entirely by lenders making offers on-chain.",
+    title: 'Oracle-free design',
+    body: 'PolyLend does not rely on price feeds. Risk and rates are determined entirely by lenders making offers on-chain.',
   },
   {
-    title: "Perpetual-style loans",
-    body: "No fixed maturity. Loans can run indefinitely until the borrower repays or a lender calls and a refinancing auction completes.",
+    title: 'Perpetual-style loans',
+    body: 'No fixed maturity. Loans can run indefinitely until the borrower repays or a lender calls and a refinancing auction completes.',
   },
-];
+]
 
 const WhySection = () => {
   return (
@@ -30,7 +30,7 @@ const WhySection = () => {
         ))}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default WhySection;
+export default WhySection

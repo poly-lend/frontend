@@ -1,65 +1,55 @@
-"use client";
+'use client'
 
-import OfferDialog from "@/components/dialogs/offerDialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Spinner } from "@/components/ui/spinner";
-import ConnectWallet from "@/components/web3/connectWallet";
-import { Event, Market, MarketOutcome } from "@/types/polyLend";
-import ClientOnly from "@/utils/clientOnly";
-import { toUSDString } from "@/utils/convertors";
-import { fetchData } from "@/utils/fetchData";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import OfferDialog from '@/components/dialogs/offerDialog'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Spinner } from '@/components/ui/spinner'
+import ConnectWallet from '@/components/web3/connectWallet'
+import { Event, Market, MarketOutcome } from '@/types/polyLend'
+import ClientOnly from '@/utils/clientOnly'
+import { toUSDString } from '@/utils/convertors'
+import { fetchData } from '@/utils/fetchData'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 export default function OfferDetails() {
-  const router = useRouter();
-  const { id } = useParams();
-  const [event, setEvent] = useState<Event | null>(null);
-  const [markets, setMarkets] = useState<Market[] | null>(null);
-  const [selectedMarkets, setSelectedMarkets] = useState<string[]>([]);
-  const { address } = useAccount();
-  const [marketOutcomes, setMarketOutcomes] = useState<
-    Map<string, MarketOutcome>
-  >(new Map());
+  const router = useRouter()
+  const { id } = useParams()
+  const [event, setEvent] = useState<Event | null>(null)
+  const [markets, setMarkets] = useState<Market[] | null>(null)
+  const [selectedMarkets, setSelectedMarkets] = useState<string[]>([])
+  const { address } = useAccount()
+  const [marketOutcomes, setMarketOutcomes] = useState<Map<string, MarketOutcome>>(new Map())
 
-  const calculateCheckAllStatus = (
-    selectedMarkets: string[],
-    markets: Market[]
-  ) => {
+  const calculateCheckAllStatus = (selectedMarkets: string[], markets: Market[]) => {
     if (selectedMarkets?.length === 0) {
-      return false;
+      return false
     } else if (selectedMarkets?.length === markets?.length * 2) {
-      return true;
+      return true
     } else {
-      return "indeterminate";
+      return 'indeterminate'
     }
-  };
+  }
 
   const handleSelectMarket = (marketOutcomeIds: string[]) => {
-    setSelectedMarkets([...(selectedMarkets || []), ...marketOutcomeIds]);
-  };
+    setSelectedMarkets([...(selectedMarkets || []), ...marketOutcomeIds])
+  }
 
   const handleUnselectMarket = (marketOutcomeIds: string[]) => {
-    setSelectedMarkets(
-      selectedMarkets?.filter((m: string) => !marketOutcomeIds.includes(m))
-    );
-  };
+    setSelectedMarkets(selectedMarkets?.filter((m: string) => !marketOutcomeIds.includes(m)))
+  }
 
   useEffect(() => {
     fetchData({}).then((data) => {
-      const event = data.events.find((event: Event) => event.slug === id);
-      if (!event) return;
-      let markets = event?.markets?.filter((market: Market) => market.active);
-      markets = markets!.sort(
-        (a: Market, b: Market) =>
-          Number(b.outcomePrices[0]) - Number(a.outcomePrices[0])
-      );
-      setEvent(event);
-      setMarkets(markets);
-      setMarketOutcomes(data.marketOutcomes);
-    });
-  }, []);
+      const event = data.events.find((event: Event) => event.slug === id)
+      if (!event) return
+      let markets = event?.markets?.filter((market: Market) => market.active)
+      markets = markets!.sort((a: Market, b: Market) => Number(b.outcomePrices[0]) - Number(a.outcomePrices[0]))
+      setEvent(event)
+      setMarkets(markets)
+      setMarketOutcomes(data.marketOutcomes)
+    })
+  }, [])
 
   return (
     <div>
@@ -71,16 +61,10 @@ export default function OfferDetails() {
               onCheckedChange={(checked) => {
                 if (checked) {
                   setSelectedMarkets(
-                    markets!.reduce(
-                      (acc: string[], market: Market) => [
-                        ...acc,
-                        ...market.clobTokenIds,
-                      ],
-                      []
-                    ) || []
-                  );
+                    markets!.reduce((acc: string[], market: Market) => [...acc, ...market.clobTokenIds], []) || [],
+                  )
                 } else {
-                  setSelectedMarkets([]);
+                  setSelectedMarkets([])
                 }
               }}
             />
@@ -91,7 +75,7 @@ export default function OfferDetails() {
                 marketOutcomeIds={selectedMarkets}
                 marketOutcomes={marketOutcomes}
                 onSuccess={async () => {
-                  router.push("/lender-offers");
+                  router.push('/lender-offers')
                 }}
               />
             ) : (
@@ -107,18 +91,13 @@ export default function OfferDetails() {
                   checked={selectedMarkets.includes(market.clobTokenIds[0])}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      handleSelectMarket(market.clobTokenIds);
+                      handleSelectMarket(market.clobTokenIds)
                     } else {
-                      handleUnselectMarket(market.clobTokenIds);
+                      handleUnselectMarket(market.clobTokenIds)
                     }
                   }}
                 />
-                <img
-                  width={40}
-                  height={40}
-                  src={market.icon}
-                  alt={market.groupItemTitle}
-                />
+                <img width={40} height={40} src={market.icon} alt={market.groupItemTitle} />
                 <p className="font-bold text-lg flex-1 flex flex-col gap-2">
                   {market.groupItemTitle}
                   <span className="text-sm text-gray-500 flex items-center gap-2">
@@ -126,9 +105,7 @@ export default function OfferDetails() {
                     {toUSDString(market.liquidityNum)}
                   </span>
                 </p>
-                <p className="text-lg">
-                  {Math.round(market.outcomePrices[0] * 100)}%
-                </p>
+                <p className="text-lg">{Math.round(market.outcomePrices[0] * 100)}%</p>
               </div>
             ))}
           </div>
@@ -139,5 +116,5 @@ export default function OfferDetails() {
         </div>
       )}
     </div>
-  );
+  )
 }

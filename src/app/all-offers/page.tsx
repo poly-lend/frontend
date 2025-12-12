@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import AllOffersTable from "@/components/lender/allOffersTable";
-import { Spinner } from "@/components/ui/spinner";
-import WalletGuard from "@/components/web3/walletGuard";
-import { AllLoanData } from "@/types/polyLend";
-import { fetchData } from "@/utils/fetchData";
-import { Suspense, useEffect, useState } from "react";
+import AllOffersTable from '@/components/lender/allOffersTable'
+import { Spinner } from '@/components/ui/spinner'
+import WalletGuard from '@/components/web3/walletGuard'
+import { AllLoanData } from '@/types/polyLend'
+import { fetchData } from '@/utils/fetchData'
+import { Suspense, useEffect, useState } from 'react'
 
 export default function Lend() {
-  const [data, setData] = useState<AllLoanData | null>(null);
+  const [data, setData] = useState<AllLoanData | null>(null)
 
   useEffect(() => {
-    fetchData({}).then(setData);
-  }, []);
+    fetchData({}).then(setData)
+  }, [])
 
   const handleRefreshData = () => {
-    fetchData({}).then(setData);
-  };
+    fetchData({}).then(setData)
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -39,5 +39,5 @@ export default function Lend() {
         </Suspense>
       </WalletGuard>
     </div>
-  );
+  )
 }

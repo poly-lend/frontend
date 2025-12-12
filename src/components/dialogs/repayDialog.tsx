@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -7,141 +7,121 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { polylendAddress, usdcAddress, usdcDecimals } from "@/config";
-import { polylendConfig } from "@/contracts/polylend";
-import { usdcConfig } from "@/contracts/usdc";
-import useErc20Allowance from "@/hooks/useErc20Allowance";
-import { fetchAmountOwed } from "@/utils/fetchAmountOwed";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { BaseError } from "viem";
-import {
-  usePublicClient,
-  useWaitForTransactionReceipt,
-  useWalletClient,
-} from "wagmi";
-import InfoAlert from "../widgets/infoAlert";
-import LoadingActionButton from "../widgets/loadingActionButton";
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { polylendAddress, usdcAddress, usdcDecimals } from '@/config'
+import { polylendConfig } from '@/contracts/polylend'
+import { usdcConfig } from '@/contracts/usdc'
+import useErc20Allowance from '@/hooks/useErc20Allowance'
+import { fetchAmountOwed } from '@/utils/fetchAmountOwed'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { BaseError } from 'viem'
+import { usePublicClient, useWaitForTransactionReceipt, useWalletClient } from 'wagmi'
+import InfoAlert from '../widgets/infoAlert'
+import LoadingActionButton from '../widgets/loadingActionButton'
 
 export type RepayDialogProps = {
-  loanId: string;
-  onDataRefresh: () => void;
-};
+  loanId: string
+  onDataRefresh: () => void
+}
 
-export default function RepayDialog({
-  loanId,
-  onDataRefresh,
-}: RepayDialogProps) {
-  const [open, setOpen] = useState(false);
-  const timestamp = BigInt(Math.floor(Date.now() / 1000));
-  const [amount, setAmount] = useState<bigint>(BigInt(0));
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
-  const [isApproving, setIsApproving] = useState(false);
-  const [approvalTxHash, setApprovalTxHash] = useState<
-    `0x${string}` | undefined
-  >(undefined);
-  const [isRepaying, setIsRepaying] = useState(false);
-  const [repayTxHash, setRepayTxHash] = useState<`0x${string}` | undefined>(
-    undefined
-  );
+export default function RepayDialog({ loanId, onDataRefresh }: RepayDialogProps) {
+  const [open, setOpen] = useState(false)
+  const timestamp = BigInt(Math.floor(Date.now() / 1000))
+  const [amount, setAmount] = useState<bigint>(BigInt(0))
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+  const [isApproving, setIsApproving] = useState(false)
+  const [approvalTxHash, setApprovalTxHash] = useState<`0x${string}` | undefined>(undefined)
+  const [isRepaying, setIsRepaying] = useState(false)
+  const [repayTxHash, setRepayTxHash] = useState<`0x${string}` | undefined>(undefined)
 
-  const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } =
-    useWaitForTransactionReceipt({
-      hash: approvalTxHash,
-    });
-  const { isLoading: isRepayConfirming, isSuccess: isRepayConfirmed } =
-    useWaitForTransactionReceipt({
-      hash: repayTxHash,
-    });
+  const { isLoading: isApprovalConfirming, isSuccess: isApprovalConfirmed } = useWaitForTransactionReceipt({
+    hash: approvalTxHash,
+  })
+  const { isLoading: isRepayConfirming, isSuccess: isRepayConfirmed } = useWaitForTransactionReceipt({
+    hash: repayTxHash,
+  })
 
   const { allowance, isLoading: isAllowanceLoading } = useErc20Allowance(
     open,
     usdcAddress as `0x${string}`,
     polylendAddress as `0x${string}`,
-    [isApprovalConfirmed]
-  );
+    [isApprovalConfirmed],
+  )
 
-  const hasSufficientAllowance = allowance >= amount;
-  const repayIsEnabled =
-    !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance);
+  const hasSufficientAllowance = allowance >= amount
+  const repayIsEnabled = !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance)
 
   useEffect(() => {
     const getAmountOwed = async () => {
-      if (!publicClient || !open) return;
+      if (!publicClient || !open) return
       const amount = await fetchAmountOwed({
         publicClient,
         loanId,
         timestamp,
-      });
-      setAmount(amount);
-    };
-    getAmountOwed();
-  }, [open, publicClient, loanId, timestamp]);
+      })
+      setAmount(amount)
+    }
+    getAmountOwed()
+  }, [open, publicClient, loanId, timestamp])
 
   useEffect(() => {
     if (open) {
-      setIsApproving(false);
-      setApprovalTxHash(undefined);
-      setIsRepaying(false);
-      setRepayTxHash(undefined);
+      setIsApproving(false)
+      setApprovalTxHash(undefined)
+      setIsRepaying(false)
+      setRepayTxHash(undefined)
     }
-  }, [open]);
+  }, [open])
 
   useEffect(() => {
     if (isRepayConfirmed) {
-      setOpen(false);
-      toast.success("Repayment submitted successfully");
-      onDataRefresh();
+      setOpen(false)
+      toast.success('Repayment submitted successfully')
+      onDataRefresh()
     }
-  }, [isRepayConfirmed]);
+  }, [isRepayConfirmed])
 
   const handleApproval = async (amount: bigint) => {
-    if (!walletClient || !publicClient) return;
+    if (!walletClient || !publicClient) return
     try {
-      setIsApproving(true);
+      setIsApproving(true)
       const hash = await walletClient.writeContract({
         address: usdcAddress as `0x${string}`,
         abi: usdcConfig.abi,
-        functionName: "approve",
+        functionName: 'approve',
         args: [polylendAddress, amount],
-      });
-      setApprovalTxHash(hash);
+      })
+      setApprovalTxHash(hash)
     } catch (err) {
-      const message =
-        (err as BaseError)?.shortMessage ||
-        (err as Error)?.message ||
-        "Transaction failed";
-      toast.error(message);
+      const message = (err as BaseError)?.shortMessage || (err as Error)?.message || 'Transaction failed'
+      toast.error(message)
     } finally {
-      setIsApproving(false);
+      setIsApproving(false)
     }
-  };
+  }
 
   const handleRepay = async (loanId: string, timestamp: bigint) => {
-    if (!walletClient || !publicClient) return;
+    if (!walletClient || !publicClient) return
     try {
-      setIsRepaying(true);
+      setIsRepaying(true)
       const hash = await walletClient.writeContract({
         address: polylendAddress as `0x${string}`,
         abi: polylendConfig.abi,
-        functionName: "repay",
+        functionName: 'repay',
         args: [BigInt(loanId), timestamp],
-      });
-      setRepayTxHash(hash);
+      })
+      setRepayTxHash(hash)
     } catch (err) {
-      const message =
-        (err as BaseError)?.shortMessage ||
-        (err as Error)?.message ||
-        "Transaction failed";
-      toast.error(message);
+      const message = (err as BaseError)?.shortMessage || (err as Error)?.message || 'Transaction failed'
+      toast.error(message)
     } finally {
-      setIsRepaying(false);
+      setIsRepaying(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -158,12 +138,7 @@ export default function RepayDialog({
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="amountOwed">Amount Owed</Label>
-              <Input
-                id="amountOwed"
-                type="text"
-                value={(Number(amount) / 10 ** usdcDecimals).toFixed(6)}
-                disabled
-              />
+              <Input id="amountOwed" type="text" value={(Number(amount) / 10 ** usdcDecimals).toFixed(6)} disabled />
             </div>
 
             {!repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
@@ -179,9 +154,7 @@ export default function RepayDialog({
               {!repayIsEnabled && !isAllowanceLoading && (
                 <LoadingActionButton
                   onClick={() => handleApproval(amount)}
-                  disabled={
-                    isApproving || isApprovalConfirming || amount === BigInt(0)
-                  }
+                  disabled={isApproving || isApprovalConfirming || amount === BigInt(0)}
                   loading={isApproving || isApprovalConfirming}
                 >
                   Approve
@@ -200,5 +173,5 @@ export default function RepayDialog({
         </DialogContent>
       </form>
     </Dialog>
-  );
+  )
 }

@@ -1,30 +1,25 @@
-import Link from "next/link";
-import { Button } from "../ui/button";
+import Link from 'next/link'
+import { Button } from '../ui/button'
 
 const heroSteps = [
   {
-    title: "Lock collateral",
-    description:
-      "Connect your wallet and lock Polymarket YES/NO shares into PolyLend as collateral.",
+    title: 'Lock collateral',
+    description: 'Connect your wallet and lock Polymarket YES/NO shares into PolyLend as collateral.',
   },
   {
-    title: "Borrow or lend",
-    description:
-      "Borrowers request USDC against their positions; lenders post principal + rate offers on-chain.",
+    title: 'Borrow or lend',
+    description: 'Borrowers request USDC against their positions; lenders post principal + rate offers on-chain.',
   },
   {
-    title: "Repay or auction",
+    title: 'Repay or auction',
     description:
-      "Borrowers can repay anytime. Lenders can call loans, triggering a Dutch auction to refinance or liquidate the position.",
+      'Borrowers can repay anytime. Lenders can call loans, triggering a Dutch auction to refinance or liquidate the position.',
   },
-];
+]
 
 const HeroSection = () => {
   return (
-    <section
-      id="product"
-      className="grid flex-1 grid-cols-1 gap-8 mb-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]"
-    >
+    <section id="product" className="grid flex-1 grid-cols-1 gap-8 mb-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)]">
       <div className="flex flex-col justify-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-slate-600/80 bg-linear-to-r from-(--brand-yellow-15) via-transparent to-transparent px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.18em] text-slate-300">
           <span className="h-2 w-2 rounded-full bg-(--brand-yellow) shadow-[0_0_10px_var(--brand-yellow-90)]" />
@@ -32,17 +27,16 @@ const HeroSection = () => {
         </div>
 
         <h1 className="mt-5 text-3xl font-semibold leading-tight sm:text-4xl lg:text-[2.7rem]">
-          Leverage your{" "}
+          Leverage your{' '}
           <span className="bg-linear-to-r from-(--brand-yellow) to-(--brand-yellow-soft) bg-clip-text text-transparent">
             Polymarket conviction
-          </span>{" "}
+          </span>{' '}
           without leaving the market.
         </h1>
 
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-300">
-          Borrow USDC against your conditional token positions and scale the
-          trades you already believe in. Peer-to-peer fixed-rate loans, no price
-          oracles, Blend-inspired auctions.
+          Borrow USDC against your conditional token positions and scale the trades you already believe in. Peer-to-peer
+          fixed-rate loans, no price oracles, Blend-inspired auctions.
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -55,9 +49,8 @@ const HeroSection = () => {
         </div>
 
         <p className="mt-3 text-xs text-slate-400">
-          <span className="font-semibold text-red-400">Warning:</span> PolyLend
-          is unaudited and experimental. Do not deposit funds you cannot afford
-          to lose.
+          <span className="font-semibold text-red-400">Warning:</span> PolyLend is unaudited and experimental. Do not
+          deposit funds you cannot afford to lose.
         </p>
       </div>
 
@@ -74,12 +67,10 @@ const HeroSection = () => {
           </span>
         </div>
 
-        <h2 className="text-sm font-semibold text-slate-50">
-          One flow for traders, one for lenders.
-        </h2>
+        <h2 className="text-sm font-semibold text-slate-50">One flow for traders, one for lenders.</h2>
         <p className="mt-2 text-xs leading-relaxed text-slate-300">
-          Collateral stays on-chain, loans are over-collateralized, and rates
-          are discovered by lenders competing for your demand.
+          Collateral stays on-chain, loans are over-collateralized, and rates are discovered by lenders competing for
+          your demand.
         </p>
 
         <ol className="mt-4 space-y-3 text-[0.75rem]">
@@ -99,7 +90,7 @@ const HeroSection = () => {
         </ol>
       </aside>
     </section>
-  );
-};
+  )
+}
 
-export default HeroSection;
+export default HeroSection

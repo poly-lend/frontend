@@ -1,29 +1,23 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
-import { AllLoanData, LoanOffer } from "@/types/polyLend";
-import { toUSDString } from "@/utils/convertors";
-import { fetchData } from "@/utils/fetchData";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
+import { AllLoanData, LoanOffer } from '@/types/polyLend'
+import { toUSDString } from '@/utils/convertors'
+import { fetchData } from '@/utils/fetchData'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 export default function Markets() {
-  const [data, setData] = useState<AllLoanData | null>(null);
+  const [data, setData] = useState<AllLoanData | null>(null)
 
-  const { address } = useAccount();
+  const { address } = useAccount()
 
   useEffect(() => {
-    fetchData({}).then(setData);
-  }, []);
+    fetchData({}).then(setData)
+  }, [])
 
   return (
     <div className="flex flex-col gap-2">
@@ -34,12 +28,7 @@ export default function Markets() {
             <Card key={event.slug} className="w-full max-w-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <img
-                    width={40}
-                    height={40}
-                    src={event.icon}
-                    alt={event.title}
-                  />
+                  <img width={40} height={40} src={event.icon} alt={event.title} />
                   <p className="text-lg font-bold">{event.title}</p>
                 </CardTitle>
               </CardHeader>
@@ -47,60 +36,38 @@ export default function Markets() {
                 <p className="line-clamp-2">{event.description}</p>
                 <div className="flex items-center gap-2">
                   <p className="flex-1 text-sm text-gray-500">Liquidity:</p>
-                  <p className="text-sm text-gray-500">
-                    {toUSDString(event.liquidity)}
-                  </p>
+                  <p className="text-sm text-gray-500">{toUSDString(event.liquidity)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-gray-500">Volume:</p>
-                  <p className="text-sm text-gray-500">
-                    {toUSDString(event.volume)}
-                  </p>
+                  <p className="text-sm text-gray-500">{toUSDString(event.volume)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-gray-500">Markets:</p>
                   <p className="text-sm text-gray-500">
-                    {
-                      event.markets?.filter((market: any) => market.active)
-                        .length
-                    }{" "}
-                    Yes{" | "}
-                    {
-                      event.markets?.filter((market: any) => market.active)
-                        .length
-                    }{" "}
-                    No
+                    {event.markets?.filter((market: any) => market.active).length} Yes{' | '}
+                    {event.markets?.filter((market: any) => market.active).length} No
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-primary">Offers:</p>
-                  <Link
-                    href={`/all-offers?event=${event.slug}`}
-                    className="text-sm text-primary underline"
-                  >
+                  <Link href={`/all-offers?event=${event.slug}`} className="text-sm text-primary underline">
                     {data.offers.length}
                   </Link>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-primary">My Offers:</p>
-                  <Link
-                    href="/lender-offers"
-                    className="text-sm text-primary underline"
-                  >
+                  <Link href="/lender-offers" className="text-sm text-primary underline">
                     {
-                      data.offers.filter(
-                        (offer: LoanOffer) =>
-                          offer.lender.toLowerCase() === address?.toLowerCase()
-                      ).length
+                      data.offers.filter((offer: LoanOffer) => offer.lender.toLowerCase() === address?.toLowerCase())
+                        .length
                     }
                   </Link>
                 </div>
               </CardContent>
               <CardFooter className="flex-col gap-2">
                 <Button type="submit" className="w-full" asChild>
-                  <Link href={`/lender-event/${event.slug}`}>
-                    Check Market & Create Offer
-                  </Link>
+                  <Link href={`/lender-event/${event.slug}`}>Check Market & Create Offer</Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -117,5 +84,5 @@ export default function Markets() {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,36 +1,24 @@
-import { AllLoanData } from "@/types/polyLend";
-import { calculateAmountOwed } from "@/utils/calculations";
-import {
-  toAPYText,
-  toDuration,
-  toSharesText,
-  toUSDCString,
-} from "@/utils/convertors";
-import RepayDialog from "../dialogs/repayDialog";
-import Address from "../widgets/address";
-import Market from "../widgets/market";
+import { AllLoanData } from '@/types/polyLend'
+import { calculateAmountOwed } from '@/utils/calculations'
+import { toAPYText, toDuration, toSharesText, toUSDCString } from '@/utils/convertors'
+import RepayDialog from '../dialogs/repayDialog'
+import Address from '../widgets/address'
+import Market from '../widgets/market'
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import OutcomeBadge from "../widgets/outcomeBadge";
+import OutcomeBadge from '../widgets/outcomeBadge'
 
 export default function BorrowerLoansTable({
   data,
   onDataRefresh,
 }: {
-  borrower?: `0x${string}`;
-  lender?: `0x${string}`;
-  data: AllLoanData;
-  onDataRefresh: () => void;
+  borrower?: `0x${string}`
+  lender?: `0x${string}`
+  data: AllLoanData
+  onDataRefresh: () => void
 }) {
-  const loans = data.loans;
+  const loans = data.loans
 
   return (
     <div>
@@ -65,42 +53,23 @@ export default function BorrowerLoansTable({
                   <TableCell align="center">
                     <OutcomeBadge outcome={loan.marketOutcome.outcome} />
                   </TableCell>
+                  <TableCell align="right">{toSharesText(loan.collateralAmount)}</TableCell>
                   <TableCell align="right">
-                    {toSharesText(loan.collateralAmount)}
+                    {toUSDCString(Number(loan.marketOutcome.outcomePrice) * Number(loan.collateralAmount))}
                   </TableCell>
+                  <TableCell align="right">{toUSDCString(loan.loanAmount)}</TableCell>
                   <TableCell align="right">
                     {toUSDCString(
-                      Number(loan.marketOutcome.outcomePrice) *
-                        Number(loan.collateralAmount)
+                      calculateAmountOwed(Number(loan.loanAmount), Number(loan.rate), Number(loan.startTime)),
                     )}
                   </TableCell>
+                  <TableCell align="right">{toDuration(Number(loan.minimumDuration))}</TableCell>
                   <TableCell align="right">
-                    {toUSDCString(loan.loanAmount)}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toUSDCString(
-                      calculateAmountOwed(
-                        Number(loan.loanAmount),
-                        Number(loan.rate),
-                        Number(loan.startTime)
-                      )
-                    )}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toDuration(Number(loan.minimumDuration))}
-                  </TableCell>
-                  <TableCell align="right">
-                    {toDuration(
-                      Number(loan.minimumDuration) -
-                        (Date.now() / 1000 - Number(loan.startTime))
-                    )}
+                    {toDuration(Number(loan.minimumDuration) - (Date.now() / 1000 - Number(loan.startTime)))}
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
-                    <RepayDialog
-                      loanId={loan.loanId}
-                      onDataRefresh={onDataRefresh}
-                    />
+                    <RepayDialog loanId={loan.loanId} onDataRefresh={onDataRefresh} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -109,5 +78,5 @@ export default function BorrowerLoansTable({
         </div>
       )}
     </div>
-  );
+  )
 }

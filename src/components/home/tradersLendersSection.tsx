@@ -1,37 +1,37 @@
-import BadgePill from "./badgePill";
-import HomeCard from "./homeCard";
-import SectionHeader from "./sectionHeader";
+import BadgePill from './badgePill'
+import HomeCard from './homeCard'
+import SectionHeader from './sectionHeader'
 
 const audienceCards = [
   {
-    title: "Borrow without closing your position",
+    title: 'Borrow without closing your position',
     description:
-      "Lock in a conviction trade on Polymarket, then post it as collateral on PolyLend to borrow USDC. Re-enter the same market or diversify into new ones.",
+      'Lock in a conviction trade on Polymarket, then post it as collateral on PolyLend to borrow USDC. Re-enter the same market or diversify into new ones.',
     badges: [
-      { label: "For traders", variant: "brand" as const },
-      { label: "Polymarket power users", variant: "neutral" as const },
+      { label: 'For traders', variant: 'brand' as const },
+      { label: 'Polymarket power users', variant: 'neutral' as const },
     ],
     bullets: [
-      "Request a loan with amount and minimum duration.",
-      "Choose from competing lender offers at different rates.",
-      "Repay early anytime to reclaim your conditional tokens.",
+      'Request a loan with amount and minimum duration.',
+      'Choose from competing lender offers at different rates.',
+      'Repay early anytime to reclaim your conditional tokens.',
     ],
   },
   {
-    title: "Earn yield from prediction markets",
+    title: 'Earn yield from prediction markets',
     description:
-      "Provide USDC loans to traders seeking leverage. You choose which markets, which collateral, and what interest rate you are willing to accept.",
+      'Provide USDC loans to traders seeking leverage. You choose which markets, which collateral, and what interest rate you are willing to accept.',
     badges: [
-      { label: "For lenders", variant: "brand" as const },
-      { label: "USDC native", variant: "neutral" as const },
+      { label: 'For lenders', variant: 'brand' as const },
+      { label: 'USDC native', variant: 'neutral' as const },
     ],
     bullets: [
-      "Browse open loan requests filtered by market and collateral.",
-      "Post principal + rate offers, optionally with a minimum duration.",
-      "Call loans after the minimum period and rely on auctions to exit or take collateral.",
+      'Browse open loan requests filtered by market and collateral.',
+      'Post principal + rate offers, optionally with a minimum duration.',
+      'Call loans after the minimum period and rely on auctions to exit or take collateral.',
     ],
   },
-];
+]
 
 const TradersLendersSection = () => {
   return (
@@ -45,19 +45,15 @@ const TradersLendersSection = () => {
             title={title}
             body={
               <>
-                <p className="mb-2 text-xs leading-relaxed text-slate-300">
-                  {description}
-                </p>
+                <p className="mb-2 text-xs leading-relaxed text-slate-300">{description}</p>
                 <ul className="space-y-1 text-xs text-slate-300">
                   {bullets.map((bullet) => (
                     <li key={bullet} className="relative pl-3">
-                      <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">
-                        •
-                      </span>
+                      <span className="absolute left-0 top-1 text-[var(--brand-yellow)]">•</span>
                       {bullet}
                     </li>
                   ))}
-                </ul>{" "}
+                </ul>{' '}
               </>
             }
             preface={
@@ -73,7 +69,7 @@ const TradersLendersSection = () => {
         ))}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default TradersLendersSection;
+export default TradersLendersSection

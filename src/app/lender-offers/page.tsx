@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import LenderOffersTable from "@/components/lender/lenderOffersTable";
-import { Spinner } from "@/components/ui/spinner";
-import WalletGuard from "@/components/web3/walletGuard";
-import { AllLoanData } from "@/types/polyLend";
-import { fetchData } from "@/utils/fetchData";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import LenderOffersTable from '@/components/lender/lenderOffersTable'
+import { Spinner } from '@/components/ui/spinner'
+import WalletGuard from '@/components/web3/walletGuard'
+import { AllLoanData } from '@/types/polyLend'
+import { fetchData } from '@/utils/fetchData'
+import { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 export default function Lend() {
-  const { address } = useAccount();
+  const { address } = useAccount()
 
-  const [data, setData] = useState<AllLoanData | null>(null);
+  const [data, setData] = useState<AllLoanData | null>(null)
 
   useEffect(() => {
-    fetchData({}).then(setData);
-  }, []);
+    fetchData({}).then(setData)
+  }, [])
 
   const handleRefreshData = () => {
-    fetchData({}).then(setData);
-  };
+    fetchData({}).then(setData)
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -44,5 +44,5 @@ export default function Lend() {
         />
       </WalletGuard>
     </div>
-  );
+  )
 }

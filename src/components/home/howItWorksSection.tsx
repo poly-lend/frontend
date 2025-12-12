@@ -1,16 +1,16 @@
-import HomeCard from "./homeCard";
-import SectionHeader from "./sectionHeader";
+import HomeCard from './homeCard'
+import SectionHeader from './sectionHeader'
 
 const steps = [
   {
-    title: "1. Loan initiation",
-    body: "A borrower locks conditional tokens as collateral and creates a loan request. Lenders post offers specifying principal, interest rate, and optional minimum duration. When the borrower accepts an offer, the loan becomes active and USDC is transferred.",
+    title: '1. Loan initiation',
+    body: 'A borrower locks conditional tokens as collateral and creates a loan request. Lenders post offers specifying principal, interest rate, and optional minimum duration. When the borrower accepts an offer, the loan becomes active and USDC is transferred.',
   },
   {
-    title: "2. Repayment and auctions",
-    body: "Interest accrues continuously. Borrowers can repay at any time, reclaiming their collateral. After the minimum duration, the lender may call the loan, triggering a Dutch auction in interest-rate space to find a new lender or result in liquidation.",
+    title: '2. Repayment and auctions',
+    body: 'Interest accrues continuously. Borrowers can repay at any time, reclaiming their collateral. After the minimum duration, the lender may call the loan, triggering a Dutch auction in interest-rate space to find a new lender or result in liquidation.',
   },
-];
+]
 
 const HowItWorksSection = () => {
   return (
@@ -26,7 +26,7 @@ const HowItWorksSection = () => {
         ))}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default HowItWorksSection;
+export default HowItWorksSection
