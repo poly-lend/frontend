@@ -42,7 +42,7 @@ export default function AcceptDialog({
   const [collateralAmount, setCollateralAmount] = useState(0)
   const [collateralValue, setCollateralValue] = useState(0)
   const [percentage, setPercentage] = useState(100)
-  const [minimumDuration, setMinimumDuration] = useState(Number(BigInt(offer.duration) / BigInt(60 * 60 * 24)))
+  const [minimumDuration, setMinimumDuration] = useState(offer.remainingDays)
   const [isApproving, setIsApproving] = useState(false)
   const [approvalTxHash, setApprovalTxHash] = useState<`0x${string}` | undefined>(undefined)
   const [isAccepting, setIsAccepting] = useState(false)
@@ -67,7 +67,7 @@ export default function AcceptDialog({
       setIsAccepting(false)
       setAcceptTxHash(undefined)
       setPercentage(100)
-      setMinimumDuration(Number(BigInt(offer.duration) / BigInt(60 * 60 * 24)))
+      setMinimumDuration(offer.remainingDays)
     }
   }, [open])
 
@@ -206,8 +206,19 @@ export default function AcceptDialog({
                 id="minimumDuration"
                 name="minimumDuration"
                 type="number"
+                max={offer.remainingDays}
+                min={0}
                 value={minimumDuration.toString()}
-                onChange={(e) => setMinimumDuration(Number(e.target.value))}
+                onChange={(e) => {
+                  const val = Number(e.target.value)
+                  if (val > offer.remainingDays) {
+                    setMinimumDuration(offer.remainingDays)
+                  } else if (val < 0) {
+                    setMinimumDuration(0)
+                  } else {
+                    setMinimumDuration(val)
+                  }
+                }}
               />
             </div>
           </div>
