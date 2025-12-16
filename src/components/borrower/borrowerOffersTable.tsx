@@ -3,7 +3,7 @@ import { Fragment, useState } from 'react'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { polymarketSharesDecimals } from '@/config'
+import { polymarketSharesDecimals, usdcDecimals } from '@/config'
 import useProxyAddress from '@/hooks/useProxyAddress'
 import { Position } from '@/types/polymarketPosition'
 import { toAPYText, toDuration, toSharesText, toUSDCString } from '@/utils/convertors'
@@ -37,7 +37,14 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
         position.marketOutcome = data.marketOutcomes.get(position.asset)!
         position.offers = []
         data.offers.forEach((offer) => {
-          if (offer.positionIds.includes(position.asset)) {
+          console.log(offer)
+          let shouldAdd = true
+          shouldAdd = shouldAdd && offer.positionIds.includes(position.asset)
+          shouldAdd =
+            shouldAdd &&
+            BigInt(offer.minimumLoanAmount) <= BigInt(Math.round(position.currentValue * 10 ** usdcDecimals))
+
+          if (shouldAdd) {
             position.offers.push(offer)
           }
         })
@@ -54,8 +61,8 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
 
   return (
     <>
-      {positions && positions?.length === 0 && <div className="text-center">No positions found</div>}
-      {positions && positions?.length > 0 && (
+      {positions && positions.length === 0 && <div className="text-center">No positions found</div>}
+      {positions && positions.length > 0 && (
         <Table>
           <TableHeader>
             <TableRow>

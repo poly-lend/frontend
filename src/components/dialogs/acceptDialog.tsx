@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { polylendAddress, polymarketSharesDecimals, polymarketTokensAddress, usdcDecimals } from '@/config'
+import { polylendAddress, polymarketSharesDecimals, polymarketTokensAddress } from '@/config'
 import { polylendConfig } from '@/contracts/polylend'
 
 import { polymarketTokensConfig } from '@/contracts/polymarketTokens'
@@ -76,10 +76,6 @@ export default function AcceptDialog({
     const offerCollateralAmount = BigInt(offer.collateralAmounts[positionIndex])
     const offerLoanAmount = BigInt(offer.loanAmount)
 
-    const minimumLoanAmount = BigInt(offer.minimumLoanAmount)
-    const minimumShares =
-      (minimumLoanAmount * BigInt(10 ** usdcDecimals) * offerCollateralAmount) /
-      (BigInt(position.curPrice * 10 ** usdcDecimals) * offerLoanAmount)
     const positionSizeRaw = BigInt(position.size * 10 ** polymarketSharesDecimals)
     const collateralAmountRaw = (positionSizeRaw * BigInt(percentage)) / BigInt(100)
 
@@ -135,8 +131,8 @@ export default function AcceptDialog({
         functionName: 'accept',
         args: [
           BigInt(offer.offerId),
-          BigInt(collateralAmount * 10 ** polymarketSharesDecimals),
-          BigInt(minimumDuration * 60 * 60 * 24),
+          BigInt(Math.round(collateralAmount * 10 ** polymarketSharesDecimals)),
+          BigInt(Math.round(minimumDuration * 60 * 60 * 24)),
           BigInt(position.asset),
           true,
         ],
