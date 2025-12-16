@@ -10,7 +10,7 @@ import { toUSDString } from '@/utils/convertors'
 import { fetchData } from '@/utils/fetchData'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useConnection } from 'wagmi'
 
 export default function OfferDetails() {
   const router = useRouter()
@@ -18,7 +18,7 @@ export default function OfferDetails() {
   const [event, setEvent] = useState<Event | null>(null)
   const [markets, setMarkets] = useState<Market[] | null>(null)
   const [selectedMarkets, setSelectedMarkets] = useState<string[]>([])
-  const { address } = useAccount()
+  const { address } = useConnection()
   const [marketOutcomes, setMarketOutcomes] = useState<Map<string, MarketOutcome>>(new Map())
 
   const calculateCheckAllStatus = (selectedMarkets: string[], markets: Market[]) => {

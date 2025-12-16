@@ -1,37 +1,33 @@
-import { usdcDecimals } from "@/config";
-import { usdcConfig } from "@/contracts/usdc";
-import { chain } from "@/utils/wagmi";
-import { useContext, useEffect } from "react";
-import { useAccount, useReadContract } from "wagmi";
-import { BalanceRefreshContext } from "../../app/context";
+import { usdcDecimals } from '@/config'
+import { usdcConfig } from '@/contracts/usdc'
+import { chain } from '@/utils/wagmi'
+import { useContext, useEffect } from 'react'
+import { useConnection, useReadContract } from 'wagmi'
+import { BalanceRefreshContext } from '../../app/context'
 
 export default function Balance() {
-  const { address, chain: currentChain } = useAccount();
-  const { balanceRefresh, setBalanceRefresh } = useContext(
-    BalanceRefreshContext
-  );
+  const { address, chain: currentChain } = useConnection()
+  const { balanceRefresh, setBalanceRefresh } = useContext(BalanceRefreshContext)
 
   const { data: balance, refetch } = useReadContract({
     ...usdcConfig,
-    functionName: "balanceOf",
+    functionName: 'balanceOf',
     args: [address as `0x${string}`],
-  });
+  })
 
   useEffect(() => {
-    if (!balanceRefresh) return;
+    if (!balanceRefresh) return
 
-    refetch();
-    setBalanceRefresh(false);
-  }, [balanceRefresh, refetch, setBalanceRefresh]);
+    refetch()
+    setBalanceRefresh(false)
+  }, [balanceRefresh, refetch, setBalanceRefresh])
 
-  const isPolygon = currentChain?.id === chain.id;
+  const isPolygon = currentChain?.id === chain.id
 
   return (
     address &&
     isPolygon && (
-      <div className="mr-4 font-bold">
-        {(balance ? Number(balance) / 10 ** usdcDecimals : 0).toFixed(2)} USDC
-      </div>
+      <div className="mr-4 font-bold">{(balance ? Number(balance) / 10 ** usdcDecimals : 0).toFixed(2)} USDC</div>
     )
-  );
+  )
 }

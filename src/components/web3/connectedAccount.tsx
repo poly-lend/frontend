@@ -1,13 +1,13 @@
-import { truncateAddress } from "@/utils/convertors";
-import { LogOut } from "lucide-react";
-import { Button } from "../ui/button";
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from "wagmi";
+import { truncateAddress } from '@/utils/convertors'
+import { LogOut } from 'lucide-react'
+import { useConnection, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import { Button } from '../ui/button'
 
 export function ConnectedAccount() {
-  const { address } = useAccount();
-  const { disconnect } = useDisconnect();
-  const { data: ensName } = useEnsName({ address });
-  const { data: ensAvatar } = useEnsAvatar({ name: ensName! });
+  const { address } = useConnection()
+  const { mutate } = useDisconnect()
+  const { data: ensName } = useEnsName({ address })
+  const { data: ensAvatar } = useEnsAvatar({ name: ensName! })
 
   return (
     <div className="flex items-center gap-2">
@@ -20,9 +20,9 @@ export function ConnectedAccount() {
         </div>
       )}
 
-      <Button onClick={() => disconnect()}>
+      <Button onClick={() => mutate()}>
         <LogOut className="size-5 stroke-[2.5px]" />
       </Button>
     </div>
-  );
+  )
 }

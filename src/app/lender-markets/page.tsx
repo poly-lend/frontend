@@ -8,12 +8,12 @@ import { toUSDString } from '@/utils/convertors'
 import { fetchData } from '@/utils/fetchData'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useConnection } from 'wagmi'
 
 export default function Markets() {
   const [data, setData] = useState<AllLoanData | null>(null)
 
-  const { address } = useAccount()
+  const { address } = useConnection()
 
   useEffect(() => {
     fetchData({}).then(setData)

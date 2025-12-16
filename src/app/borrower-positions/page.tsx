@@ -5,12 +5,12 @@ import WalletGuard from '@/components/web3/walletGuard'
 import { AllLoanData } from '@/types/polyLend'
 import { fetchData } from '@/utils/fetchData'
 import { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useConnection } from 'wagmi'
 
 export default function BorrowerPositions() {
   const [data, setData] = useState<AllLoanData | null>(null)
 
-  const { address } = useAccount()
+  const { address } = useConnection()
 
   useEffect(() => {
     fetchData({ borrower: address }).then(setData)
