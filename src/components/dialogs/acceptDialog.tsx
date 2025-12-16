@@ -76,11 +76,14 @@ export default function AcceptDialog({
     const offerCollateralAmount = BigInt(offer.collateralAmounts[positionIndex])
     const offerLoanAmount = BigInt(offer.loanAmount)
     const minLoanAmount = BigInt(offer.minimumLoanAmount)
-    const minLoanShares = (offerLoanAmount * minLoanAmount) / offerCollateralAmount
-
+    const minCollateralAmount = (offerCollateralAmount * minLoanAmount) / offerLoanAmount
+    const remainingAmount = BigInt(offer.loanAmount) - BigInt(offer.borrowedAmount)
+    const remainingCollateralAmount = (offerCollateralAmount * remainingAmount) / offerLoanAmount
     const positionSizeRaw = BigInt(position.size * 10 ** polymarketSharesDecimals)
+    const maxCollateralAmount = BigInt(Math.min(Number(remainingCollateralAmount), Number(positionSizeRaw)))
 
-    const collateralAmountRaw = (positionSizeRaw * BigInt(percentage)) / BigInt(100)
+    const collateralAmountRaw =
+      minCollateralAmount + ((maxCollateralAmount - minCollateralAmount) * BigInt(percentage)) / BigInt(100)
 
     setCollateralAmount(Number(collateralAmountRaw) / 10 ** polymarketSharesDecimals)
     setCollateralValue(Math.round(Number(collateralAmountRaw) * position.curPrice))
