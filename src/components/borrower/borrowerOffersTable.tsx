@@ -110,7 +110,7 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                             <TableHead className="text-right">Lender</TableHead>
                             <TableHead className="text-right">Amount</TableHead>
                             <TableHead className="text-right">Minimum Amount</TableHead>
-                            <TableHead className="text-right">Duration</TableHead>
+                            <TableHead className="text-right">Max. Duration</TableHead>
                             <TableHead className="text-right">Rate</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                           </TableRow>
@@ -123,7 +123,7 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                               </TableCell>
                               <TableCell align="right">{toUSDCString(offer.loanAmount)}</TableCell>
                               <TableCell align="right">{toUSDCString(offer.minimumLoanAmount)}</TableCell>
-                              <TableCell align="right">{toDuration(offer.duration)}</TableCell>
+                              <TableCell align="right">{toDuration(offer.remainingDays * 60 * 60 * 24)}</TableCell>
                               <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                               <TableCell align="right" className="flex justify-end">
                                 <AcceptDialog
