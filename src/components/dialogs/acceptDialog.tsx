@@ -156,6 +156,7 @@ export default function AcceptDialog({
     polymarketTokensAddress as `0x${string}`,
     proxyAddress as `0x${string}` | undefined,
     polylendAddress as `0x${string}`,
+    [isApprovalConfirmed],
   )
 
   return (
