@@ -18,6 +18,9 @@ export const fetchOffers = async (params: { address?: `0x${string}` }): Promise<
     ),
   }))
   offers = offers.filter((offer: LoanOffer) => offer.remainingDays > 0)
+  offers = offers.filter(
+    (offer: LoanOffer) => BigInt(offer.loanAmount) - BigInt(offer.borrowedAmount) > BigInt(offer.minimumLoanAmount),
+  )
   if (params.address) {
     offers = offers.filter((offer: LoanOffer) => offer.lender.toLowerCase() === params.address?.toLocaleLowerCase())
   }
