@@ -83,7 +83,6 @@ export default function AcceptDialog({
     const positionSizeRaw = BigInt(position.size * 10 ** polymarketSharesDecimals)
     const collateralAmountRaw = (positionSizeRaw * BigInt(percentage)) / BigInt(100)
 
-    console.log('collateralAmountRaw, minimumShares, ', collateralAmountRaw, minimumShares)
     setCollateralAmount(Number(collateralAmountRaw) / 10 ** polymarketSharesDecimals)
     setCollateralValue(Math.round(Number(collateralAmountRaw) * position.curPrice * percentage) / 100)
 
