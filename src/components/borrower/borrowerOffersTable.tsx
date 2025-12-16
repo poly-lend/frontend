@@ -149,7 +149,9 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                                 {toUSDCString(BigInt(offer.loanAmount) - BigInt(offer.borrowedAmount))}
                               </TableCell>
                               <TableCell align="right">{toUSDCString(offer.minimumLoanAmount)}</TableCell>
-                              <TableCell align="right">{getCollateralRatio(offer, position).toFixed(2)}x</TableCell>
+                              <TableCell align="right">
+                                {(getCollateralRatio(offer, position) * 100).toFixed(2)}%
+                              </TableCell>
                               <TableCell align="right">{toDuration(offer.remainingDays * 60 * 60 * 24)}</TableCell>
                               <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                               <TableCell align="right" className="flex justify-end">
