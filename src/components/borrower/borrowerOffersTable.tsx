@@ -3,7 +3,7 @@ import { Fragment, useState } from 'react'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { polymarketSharesDecimals, usdcDecimals } from '@/config'
+import { polymarketSharesDecimals } from '@/config'
 import useProxyAddress from '@/hooks/useProxyAddress'
 import { Position } from '@/types/polymarketPosition'
 import { toAPYText, toDuration, toSharesText, toUSDCString } from '@/utils/convertors'
@@ -37,12 +37,20 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
         position.marketOutcome = data.marketOutcomes.get(position.asset)!
         position.offers = []
         data.offers.forEach((offer) => {
-          console.log(offer)
+          if (!offer.positionIds.includes(position.asset)) return
+          const positionIndex = offer.positionIds.indexOf(position.asset)
+          const offerCollateralAmount = BigInt(offer.collateralAmounts[positionIndex])
+          const offerLoanAmount = BigInt(offer.loanAmount)
+          const minLoanAmount = BigInt(offer.minimumLoanAmount)
+
           let shouldAdd = true
           shouldAdd = shouldAdd && offer.positionIds.includes(position.asset)
+
+          const minCollateralAmount = (offerLoanAmount * minLoanAmount) / offerCollateralAmount
+
           shouldAdd =
             shouldAdd &&
-            BigInt(offer.minimumLoanAmount) <= BigInt(Math.round(position.currentValue * 10 ** usdcDecimals))
+            BigInt(minCollateralAmount) <= BigInt(Math.round(position.size * 10 ** polymarketSharesDecimals))
 
           if (shouldAdd) {
             position.offers.push(offer)
