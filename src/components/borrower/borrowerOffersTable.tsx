@@ -1,9 +1,8 @@
 import { AllLoanData, LoanOffer } from '@/types/polyLend'
-import { Fragment, useContext, useState } from 'react'
+import { Fragment, useState } from 'react'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { BalanceRefreshContext } from '@/app/context'
 import { polymarketSharesDecimals } from '@/config'
 import useProxyAddress from '@/hooks/useProxyAddress'
 import { Position } from '@/types/polymarketPosition'
@@ -21,7 +20,6 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
   const router = useRouter()
   const { data: proxyAddress } = useProxyAddress()
   const [unsupportedPositions, setUnsupportedPositions] = useState(0)
-  const { doBalanceRefresh } = useContext(BalanceRefreshContext)
 
   const getCollateralRatio = (offer: LoanOffer, position: Position) => {
     const positionIndex = offer.positionIds.indexOf(position.asset)
@@ -161,7 +159,6 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                                   offer={offer}
                                   position={position}
                                   onSuccess={async () => {
-                                    doBalanceRefresh(true)
                                     router.push('/borrower-loans')
                                   }}
                                 />
