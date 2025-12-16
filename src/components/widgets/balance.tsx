@@ -1,33 +1,21 @@
-import { usdcDecimals } from '@/config'
-import { usdcConfig } from '@/contracts/usdc'
+import useUSDCBalance from '@/hooks/useUSDCBalance'
+import { toUSDCString } from '@/utils/convertors'
 import { chain } from '@/utils/wagmi'
 import { useContext, useEffect } from 'react'
-import { useConnection, useReadContract } from 'wagmi'
+import { useConnection } from 'wagmi'
 import { BalanceRefreshContext } from '../../app/context'
 
 export default function Balance() {
   const { address, chain: currentChain } = useConnection()
-  const { balanceRefresh, setBalanceRefresh } = useContext(BalanceRefreshContext)
+  const { balanceRefresh } = useContext(BalanceRefreshContext)
 
-  const { data: balance, refetch } = useReadContract({
-    ...usdcConfig,
-    functionName: 'balanceOf',
-    args: [address as `0x${string}`],
-  })
+  const { balance, refresh } = useUSDCBalance(true)
 
   useEffect(() => {
-    if (!balanceRefresh) return
-
-    refetch()
-    setBalanceRefresh(false)
-  }, [balanceRefresh, refetch, setBalanceRefresh])
+    refresh()
+  }, [balanceRefresh, refresh])
 
   const isPolygon = currentChain?.id === chain.id
 
-  return (
-    address &&
-    isPolygon && (
-      <div className="mr-4 font-bold">{(balance ? Number(balance) / 10 ** usdcDecimals : 0).toFixed(2)} USDC</div>
-    )
-  )
+  return address && isPolygon && <div className="mr-4 font-bold">{balance ? toUSDCString(balance) : 0}</div>
 }
