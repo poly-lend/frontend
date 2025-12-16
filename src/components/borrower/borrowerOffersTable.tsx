@@ -1,4 +1,4 @@
-import { AllLoanData } from '@/types/polyLend'
+import { AllLoanData, LoanOffer } from '@/types/polyLend'
 import { Fragment, useState } from 'react'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -20,6 +20,14 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
   const router = useRouter()
   const { data: proxyAddress } = useProxyAddress()
   const [unsupportedPositions, setUnsupportedPositions] = useState(0)
+
+  const getCollateralRatio = (offer: LoanOffer, position: Position) => {
+    const positionIndex = offer.positionIds.indexOf(position.asset)
+    const offerCollateralAmount = BigInt(offer.collateralAmounts[positionIndex])
+
+    return (Number(offerCollateralAmount) * position.curPrice) / Number(offer.loanAmount)
+  }
+
   const { data: positions } = useQuery({
     queryKey: ['positions', proxyAddress],
     queryFn: async () => {
@@ -125,6 +133,7 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                             <TableHead className="text-right">Lender</TableHead>
                             <TableHead className="text-right">Amount</TableHead>
                             <TableHead className="text-right">Minimum Amount</TableHead>
+                            <TableHead className="text-right">Collateral</TableHead>
                             <TableHead className="text-right">Max. Duration</TableHead>
                             <TableHead className="text-right">Rate</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
@@ -136,8 +145,11 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                               <TableCell align="right">
                                 <Address address={offer.lender} />
                               </TableCell>
-                              <TableCell align="right">{toUSDCString(offer.loanAmount)}</TableCell>
+                              <TableCell align="right">
+                                {toUSDCString(BigInt(offer.loanAmount) - BigInt(offer.borrowedAmount))}
+                              </TableCell>
                               <TableCell align="right">{toUSDCString(offer.minimumLoanAmount)}</TableCell>
+                              <TableCell align="right">{getCollateralRatio(offer, position).toFixed(2)}x</TableCell>
                               <TableCell align="right">{toDuration(offer.remainingDays * 60 * 60 * 24)}</TableCell>
                               <TableCell align="right">{toAPYText(offer.rate)}</TableCell>
                               <TableCell align="right" className="flex justify-end">
