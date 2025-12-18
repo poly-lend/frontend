@@ -77,7 +77,9 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
 
   return (
     <>
-      {positions && positions.length === 0 && <div className="text-center">No positions found</div>}
+      {positions && positions.length === 0 && unsupportedPositions === 0 && (
+        <div className="text-center">No positions found</div>
+      )}
       {positions && positions.length > 0 && (
         <Table>
           <TableHeader>
@@ -172,17 +174,15 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                 )}
               </Fragment>
             ))}
-            {unsupportedPositions > 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center text-muted-foreground">
-                  You have {unsupportedPositions}
-                  {unsupportedPositions === 1 ? ' more position ' : ' more positions '}
-                  that has no lenders yet
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
+      )}
+      {unsupportedPositions > 0 && (
+        <div className="text-center text-muted-foreground">
+          You have {unsupportedPositions}
+          {unsupportedPositions === 1 ? ' position ' : ' positions '}
+          that has no lenders yet
+        </div>
       )}
     </>
   )
