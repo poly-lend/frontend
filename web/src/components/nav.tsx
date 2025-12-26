@@ -51,7 +51,7 @@ export default function Nav() {
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/borrower-positions">Borrow</Link>
+                      <Link href="/borrow">Borrow</Link>
                     </NavigationMenuLink>
                     {/* <NavigationMenuTrigger>Borrower</NavigationMenuTrigger> */}
                     {/* <NavigationMenuContent className="bg-background min-w-[200px]">
@@ -137,11 +137,11 @@ export default function Nav() {
           <div className="md:hidden border-t border-border border-b bg-background pb-4 shadow-md">
             <div className="flex flex-col pt-2">
               <Link
-                href="/borrower-positions"
+                href="/borrow"
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   'flex items-center justify-between py-2 text-base font-semibold',
-                  pathname === '/borrower-positions' && 'text-primary',
+                  pathname === '/borrow' && 'text-primary',
                 )}
               >
                 <span className="flex items-center gap-1.5">Positions & Offers</span>

@@ -40,7 +40,7 @@ const HeroSection = () => {
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Link href="/borrower-positions">
+          <Link href="/borrow">
             <Button>Borrow now</Button>
           </Link>
           <Link href="https://docs.polylend.com" target="_blank">
