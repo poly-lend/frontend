@@ -43,10 +43,7 @@ export default function Nav() {
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link
-                        href="https://polylend.com"
-                        className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}
-                      >
+                      <Link href="https://polylend.com" className={cn(navigationMenuTriggerStyle())}>
                         <div className="flex items-center gap-1.5 text-base font-bold">Home</div>
                       </Link>
                     </NavigationMenuLink>
@@ -54,41 +51,21 @@ export default function Nav() {
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/">Borrow</Link>
+                      <Link href="/" className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}>
+                        <div className="flex items-center gap-1.5 text-base font-bold">Borrow</div>
+                      </Link>
                     </NavigationMenuLink>
-                    {/* <NavigationMenuTrigger>Borrower</NavigationMenuTrigger> */}
-                    {/* <NavigationMenuContent className="bg-background min-w-[200px]">
-
-                      <NavigationMenuLink asChild>
-                        <Link href="/borrower-loans">Loans</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent> */}
                   </NavigationMenuItem>
-
-                  <NavigationMenuLink asChild>
-                    <Link href="/borrower-loans">Loans</Link>
-                  </NavigationMenuLink>
-
-                  {/* <NavigationMenuItem>
-                    <NavigationMenuTrigger>Lender</NavigationMenuTrigger>
-                    <NavigationMenuContent className="bg-background min-w-[200px]">
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-markets">Markets</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-offers">Sent offers</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/all-offers">All offers</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-loans">My Loans</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-loans?all">All loans</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem> */}
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href="/borrower-loans"
+                        className={cn(navigationMenuTriggerStyle(), pathname === '/borrower-loans' && 'text-primary')}
+                      >
+                        <div className="flex items-center gap-1.5 text-base font-bold">Loans</div>
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
@@ -138,18 +115,23 @@ export default function Nav() {
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="md:hidden border-t border-border border-b bg-background pb-4 shadow-md">
-            <div className="flex flex-col pt-2">
-              <Link
-                href="/borrow"
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  'flex items-center justify-between py-2 text-base font-semibold',
-                  pathname === '/borrow' && 'text-primary',
-                )}
-              >
-                <span className="flex items-center gap-1.5">Positions & Offers</span>
-              </Link>
-            </div>
+            <Link
+              href="https://polylend.com"
+              className="flex items-center justify-between py-2 text-base font-semibold"
+            >
+              Home
+            </Link>
+            <Link
+              href="/"
+              onClick={() => setMobileOpen(false)}
+              className={cn(
+                'flex items-center justify-between py-2 text-base font-semibold',
+                pathname === '/borrow' && 'text-primary',
+              )}
+            >
+              <span className="flex items-center gap-1.5">Borrow</span>
+            </Link>
+
             <Link
               href="/borrower-loans"
               onClick={() => setMobileOpen(false)}
@@ -160,6 +142,20 @@ export default function Nav() {
             >
               <span className="flex items-center gap-1.5">Loans</span>
             </Link>
+
+            <Link
+              href="https://docs.polylend.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between py-2 text-base font-semibold"
+            >
+              <span className="flex items-center gap-1.5">
+                Docs
+                <ExternalLink className="h-4 w-4" />
+              </span>
+            </Link>
+
             <div className="mt-4 flex flex-col gap-3 font-bold">
               <ClientOnly>
                 <SwitchChain />
