@@ -1,4 +1,8 @@
 polylend.com {
+    reverse_proxy landing:3000
+}
+
+app.polylend.com {
     reverse_proxy web:3000
 }
 
