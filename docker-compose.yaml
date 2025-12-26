@@ -22,7 +22,6 @@ services:
     command: ["npm", "start"]
   landing:
     image: polylend-landing
-    context: ./landing
     container_name: polylend-landing
     build:
       context: ./landing
