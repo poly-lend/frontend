@@ -11,12 +11,25 @@ services:
     restart: unless-stopped
   web:
     image: polylend-web
+    context: ./web
     container_name: polylend-web
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    command: ["npm", "start"]
+  landing:
+    image: polylend-landing
+    context: ./landing
+    container_name: polylend-landing
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
     environment:
       - NODE_ENV=production
     command: ["npm", "start"]
