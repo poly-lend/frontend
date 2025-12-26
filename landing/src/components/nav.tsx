@@ -1,22 +1,16 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils'
-import { ExternalLink, Menu, X } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import ClientOnly from '../utils/clientOnly'
-import ConnectWallet from './web3/connectWallet'
-import SwitchChain from './web3/switchChain'
-import Balance from './widgets/balance'
 
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -41,51 +35,14 @@ export default function Nav() {
                       <img src="/logo.png" alt="logo" className="h-12 w-auto" />
                     </Link>
                   </NavigationMenuItem>
+
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/" className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}>
-                        <div className="flex items-center gap-1.5 text-base font-bold">Home</div>
+                      <Link href="https://app.polylend.com/borrow">
+                        <div className="flex items-center gap-1.5 text-base font-bold">Borrow</div>
                       </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link href="/borrower-positions">Borrow</Link>
-                    </NavigationMenuLink>
-                    {/* <NavigationMenuTrigger>Borrower</NavigationMenuTrigger> */}
-                    {/* <NavigationMenuContent className="bg-background min-w-[200px]">
-
-                      <NavigationMenuLink asChild>
-                        <Link href="/borrower-loans">Loans</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent> */}
-                  </NavigationMenuItem>
-
-                  <NavigationMenuLink asChild>
-                    <Link href="/borrower-loans">Loans</Link>
-                  </NavigationMenuLink>
-
-                  {/* <NavigationMenuItem>
-                    <NavigationMenuTrigger>Lender</NavigationMenuTrigger>
-                    <NavigationMenuContent className="bg-background min-w-[200px]">
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-markets">Markets</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-offers">Sent offers</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/all-offers">All offers</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-loans">My Loans</Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/lender-loans?all">All loans</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem> */}
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
@@ -99,35 +56,6 @@ export default function Nav() {
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {/* Desktop wallet controls */}
-            <div className="hidden md:flex items-center gap-4 font-bold">
-              <ClientOnly>
-                <SwitchChain />
-              </ClientOnly>
-              <ClientOnly>
-                <div className="text-right">
-                  <Balance />
-                </div>
-              </ClientOnly>
-              <ClientOnly>
-                <ConnectWallet />
-              </ClientOnly>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setMobileOpen((open) => !open)}
-                aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              >
-                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
             </div>
           </div>
         </div>
@@ -157,17 +85,6 @@ export default function Nav() {
             >
               <span className="flex items-center gap-1.5">Loans</span>
             </Link>
-            <div className="mt-4 flex flex-col gap-3 font-bold">
-              <ClientOnly>
-                <SwitchChain />
-              </ClientOnly>
-              <ClientOnly>
-                <Balance />
-              </ClientOnly>
-              <ClientOnly>
-                <ConnectWallet />
-              </ClientOnly>
-            </div>
           </div>
         )}
       </div>
