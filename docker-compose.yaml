@@ -11,10 +11,9 @@ services:
     restart: unless-stopped
   web:
     image: polylend-web
-    context: ./web
     container_name: polylend-web
     build:
-      context: .
+      context: ./web
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -26,7 +25,7 @@ services:
     context: ./landing
     container_name: polylend-landing
     build:
-      context: .
+      context: ./landing
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
