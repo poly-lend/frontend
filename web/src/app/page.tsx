@@ -1,23 +1,28 @@
-"use client";
+'use client'
 
-import FaqSection from "@/components/home/faqSection";
-import HeroSection from "@/components/home/heroSection";
-import HowItWorksSection from "@/components/home/howItWorksSection";
-import RisksSection from "@/components/home/risksSection";
-import TradersLendersSection from "@/components/home/tradersLendersSection";
-import WhySection from "@/components/home/whySection";
+import BorrowerOffersTable from '@/components/borrower/borrowerOffersTable'
+import WalletGuard from '@/components/web3/walletGuard'
+import { AllLoanData } from '@/types/polyLend'
+import { fetchData } from '@/utils/fetchData'
+import { useEffect, useState } from 'react'
+import { useConnection } from 'wagmi'
 
-export default function Home() {
+export default function Borrowe() {
+  const [data, setData] = useState<AllLoanData | null>(null)
+
+  const { address } = useConnection()
+
+  useEffect(() => {
+    fetchData({ borrower: address }).then(setData)
+  }, [address])
+
   return (
-    <div className="flex flex-col items-center justify-center gap-1 px-4 sm:px-6 lg:px-8 mx-auto ">
-      <HeroSection />
-      <main className="space-y-10">
-        <WhySection />
-        <TradersLendersSection />
-        <HowItWorksSection />
-        <RisksSection />
-        <FaqSection />
-      </main>
+    <div className="flex flex-col gap-2">
+      <h1 className="font-bold text-center text-4xl mb-4">Positions & Offers</h1>
+
+      <WalletGuard isDataReady={!!data}>
+        <BorrowerOffersTable data={data as AllLoanData} />
+      </WalletGuard>
     </div>
-  );
+  )
 }

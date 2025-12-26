@@ -37,13 +37,16 @@ export default function Nav() {
               <NavigationMenu viewport={false}>
                 <NavigationMenuList className="gap-4 items-center flex">
                   <NavigationMenuItem className="mr-2 lg:mr-6">
-                    <Link href="/" className="flex items-center">
+                    <Link href="https://polylend.com" className="flex items-center">
                       <img src="/logo.png" alt="logo" className="h-12 w-auto" />
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/" className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}>
+                      <Link
+                        href="https://polylend.com"
+                        className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}
+                      >
                         <div className="flex items-center gap-1.5 text-base font-bold">Home</div>
                       </Link>
                     </NavigationMenuLink>
@@ -51,7 +54,7 @@ export default function Nav() {
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/borrow">Borrow</Link>
+                      <Link href="/">Borrow</Link>
                     </NavigationMenuLink>
                     {/* <NavigationMenuTrigger>Borrower</NavigationMenuTrigger> */}
                     {/* <NavigationMenuContent className="bg-background min-w-[200px]">

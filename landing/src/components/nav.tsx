@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -7,7 +8,7 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -31,14 +32,14 @@ export default function Nav() {
               <NavigationMenu viewport={false}>
                 <NavigationMenuList className="gap-4 items-center flex">
                   <NavigationMenuItem className="mr-2 lg:mr-6">
-                    <Link href="/" className="flex items-center">
+                    <Link href="https://polylend.com" className="flex items-center">
                       <img src="/logo.png" alt="logo" className="h-12 w-auto" />
                     </Link>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="https://app.polylend.com/borrow">
+                      <Link href="https://app.polylend.com">
                         <div className="flex items-center gap-1.5 text-base font-bold">Borrow</div>
                       </Link>
                     </NavigationMenuLink>
@@ -58,33 +59,49 @@ export default function Nav() {
               </NavigationMenu>
             </div>
           </div>
+
+          <div className="flex items-center gap-4">
+            {/* Desktop wallet controls */}
+            <div className="hidden md:flex items-center gap-4 font-bold"></div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setMobileOpen((open) => !open)}
+                aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="md:hidden border-t border-border border-b bg-background pb-4 shadow-md">
-            <div className="flex flex-col pt-2">
-              <Link
-                href="https://app.polylend.com/borrow"
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  'flex items-center justify-between py-2 text-base font-semibold',
-                  pathname === '/borrow' && 'text-primary',
-                )}
-              >
-                <span className="flex items-center gap-1.5">Positions & Offers</span>
-              </Link>
-            </div>
             <Link
-              href="/borrower-loans"
+              href="https://app.polylend.com"
               onClick={() => setMobileOpen(false)}
-              className={cn(
-                'flex items-center justify-between py-2 text-base font-semibold',
-                pathname === '/borrower-loans' && 'text-primary',
-              )}
+              className="flex items-center justify-between py-2 text-base font-semibold"
             >
-              <span className="flex items-center gap-1.5">Loans</span>
+              Borrow
             </Link>
+
+            <Link
+              href="https://docs.polylend.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between py-2 text-base font-semibold"
+            >
+              <span className="flex items-center gap-1.5">
+                Docs
+                <ExternalLink className="h-4 w-4" />
+              </span>
+            </Link>
+            <div className="mt-4 flex flex-col gap-3 font-bold"></div>
           </div>
         )}
       </div>
