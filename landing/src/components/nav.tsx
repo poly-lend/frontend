@@ -28,21 +28,13 @@ export default function Nav() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-6 flex-1">
               <NavigationMenu viewport={false}>
                 <NavigationMenuList className="gap-4 items-center flex">
                   <NavigationMenuItem className="mr-2 lg:mr-6">
                     <Link href="https://polylend.com" className="flex items-center">
                       <img src="/logo.png" alt="logo" className="h-12 w-auto" />
                     </Link>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link href="https://app.polylend.com">
-                        <div className="flex items-center gap-1.5 text-base font-bold">Borrow</div>
-                      </Link>
-                    </NavigationMenuLink>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
@@ -57,6 +49,11 @@ export default function Nav() {
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
+            </div>
+            <div className="ml-auto">
+              <Link href="https://app.polylend.com">
+                <Button>Go to App</Button>
+              </Link>
             </div>
           </div>
 
@@ -81,13 +78,11 @@ export default function Nav() {
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="md:hidden border-t border-border border-b bg-background pb-4 shadow-md">
-            <Link
-              href="https://app.polylend.com"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-base font-semibold"
-            >
-              Borrow
-            </Link>
+            <div className="py-2">
+              <Link href="https://app.polylend.com" onClick={() => setMobileOpen(false)}>
+                <Button className="w-full">Go to App</Button>
+              </Link>
+            </div>
 
             <Link
               href="https://docs.polylend.com"
