@@ -1,15 +1,12 @@
-# Stage 1: build
+# Build stage
 FROM node:24-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ic
+RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: run
-FROM node:24-alpine
-WORKDIR /app
-COPY --from=builder /app ./
-ENV NODE_ENV=production
-EXPOSE 3000
-CMD ["npm", "start"]
+# Output: static files in /dist
+FROM alpine
+COPY --from=builder /app/dist /dist
+CMD ["cp", "-r", "/dist/.", "/landing/"]

@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { Button } from '../ui/button'
 
 const heroSteps = [
@@ -40,12 +39,12 @@ const HeroSection = () => {
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Link href="https://app.polylend.com">
+          <a href="https://app.polylend.com">
             <Button>Go to App</Button>
-          </Link>
-          <Link href="https://docs.polylend.com" target="_blank">
+          </a>
+          <a href="https://docs.polylend.com" target="_blank" rel="noopener noreferrer">
             <Button variant="outline">View docs</Button>
-          </Link>
+          </a>
         </div>
 
         <p className="mt-3 text-xs text-slate-400">
