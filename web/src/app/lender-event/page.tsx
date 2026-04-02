@@ -1,5 +1,3 @@
-'use client'
-
 import OfferDialog from '@/components/dialogs/offerDialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Spinner } from '@/components/ui/spinner'
@@ -8,12 +6,12 @@ import { Event, Market, MarketOutcome } from '@/types/polyLend'
 import ClientOnly from '@/utils/clientOnly'
 import { toUSDString } from '@/utils/convertors'
 import { fetchData } from '@/utils/fetchData'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useConnection } from 'wagmi'
 
 export default function OfferDetails() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { id } = useParams()
   const [event, setEvent] = useState<Event | null>(null)
   const [markets, setMarkets] = useState<Market[] | null>(null)
@@ -75,7 +73,7 @@ export default function OfferDetails() {
                 marketOutcomeIds={selectedMarkets}
                 marketOutcomes={marketOutcomes}
                 onSuccess={async () => {
-                  router.push('/lender-offers')
+                  navigate('/lender-offers')
                 }}
               />
             ) : (

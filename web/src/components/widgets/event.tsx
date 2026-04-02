@@ -1,12 +1,12 @@
 import { Event } from "@/types/polyLend";
 import { ExternalLink } from "lucide-react";
-import Link from "next/link";
 
 const EventWidget = ({ event }: { event: Event }) => {
   return (
-    <Link
+    <a
       href={`https://polymarket.com/event/${event.slug}`}
       target="_blank"
+      rel="noopener noreferrer"
       className="flex items-center hover:underline hover:text-white/80"
     >
       <img
@@ -21,7 +21,7 @@ const EventWidget = ({ event }: { event: Event }) => {
         <p className={`line-clamp-2 min-w-0 max-w-[400px]`}>{event.title}</p>
         <ExternalLink className="w-4 h-4 shrink-0" />
       </div>
-    </Link>
+    </a>
   );
 };
 

@@ -1,10 +1,9 @@
-import Link from "next/link";
-
 export default function TelegramIcon() {
   return (
-    <Link
+    <a
       href="https://t.me/poly_lend"
       target="_blank"
+      rel="noopener noreferrer"
       className=" hover:scale-110 transition-all duration-150"
     >
       <svg
@@ -61,6 +60,6 @@ export default function TelegramIcon() {
           </g>{" "}
         </g>
       </svg>
-    </Link>
+    </a>
   );
 }

@@ -2,14 +2,14 @@ import { AllLoanData, LoanOffer } from '@/types/polyLend'
 import { toAPYText, toDuration, toUSDCString } from '@/utils/convertors'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'react-router-dom'
 import Address from '../widgets/address'
 import EventWidget from '../widgets/event'
 
 export default function LenderOffersTable({ data }: { data: AllLoanData }) {
   let offers = data.offers
 
-  const searchParams = useSearchParams()
+  const [searchParams] = useSearchParams()
   const eventSlug = searchParams.get('event') ?? undefined
 
   const getEventFromPositionId = (positionId: string) => {

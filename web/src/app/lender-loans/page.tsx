@@ -1,5 +1,3 @@
-'use client'
-
 import LenderLoansTable from '@/components/lender/lenderLoansTable'
 import { Spinner } from '@/components/ui/spinner'
 import WalletGuard from '@/components/web3/walletGuard'

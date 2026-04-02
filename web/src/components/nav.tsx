@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
@@ -10,8 +8,7 @@ import {
 } from '@/components/ui/navigation-menu'
 import { cn } from '@/lib/utils'
 import { ExternalLink, Menu, X } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import ClientOnly from '../utils/clientOnly'
 import ConnectWallet from './web3/connectWallet'
@@ -20,7 +17,7 @@ import Balance from './widgets/balance'
 
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const pathname = usePathname()
+  const { pathname } = useLocation()
 
   return (
     <div className={cn('sticky z-20 top-0 w-full bg-background/95 backdrop-blur', mobileOpen && 'shadow-md')}>
@@ -28,7 +25,7 @@ export default function Nav() {
         <div className="flex items-center h-16 justify-between">
           <div className="flex items-center gap-4">
             {/* Mobile logo */}
-            <Link href="/" className="flex items-center md:hidden">
+            <Link to="/" className="flex items-center md:hidden">
               <img src="/logo.png" alt="logo" className="h-10 w-auto" />
             </Link>
 
@@ -37,21 +34,21 @@ export default function Nav() {
               <NavigationMenu viewport={false}>
                 <NavigationMenuList className="gap-4 items-center flex">
                   <NavigationMenuItem className="mr-2 lg:mr-6">
-                    <Link href="https://polylend.com" className="flex items-center">
+                    <a href="https://polylend.com" className="flex items-center">
                       <img src="/logo.png" alt="logo" className="h-12 w-auto" />
-                    </Link>
+                    </a>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="https://polylend.com" className={cn(navigationMenuTriggerStyle())}>
+                      <a href="https://polylend.com" className={cn(navigationMenuTriggerStyle())}>
                         <div className="flex items-center gap-1.5 text-base font-bold">Home</div>
-                      </Link>
+                      </a>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="/" className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}>
+                      <Link to="/" className={cn(navigationMenuTriggerStyle(), pathname === '/' && 'text-primary')}>
                         <div className="flex items-center gap-1.5 text-base font-bold">Borrow</div>
                       </Link>
                     </NavigationMenuLink>
@@ -59,7 +56,7 @@ export default function Nav() {
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
                       <Link
-                        href="/borrower-loans"
+                        to="/borrower-loans"
                         className={cn(navigationMenuTriggerStyle(), pathname === '/borrower-loans' && 'text-primary')}
                       >
                         <div className="flex items-center gap-1.5 text-base font-bold">Loans</div>
@@ -69,12 +66,12 @@ export default function Nav() {
 
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                      <Link href="https://docs.polylend.com" target="_blank" rel="noopener noreferrer">
+                      <a href="https://docs.polylend.com" target="_blank" rel="noopener noreferrer">
                         <div className="flex items-center gap-1.5 text-base font-bold">
                           Docs
                           <ExternalLink className="h-4 w-4" />
                         </div>
-                      </Link>
+                      </a>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 </NavigationMenuList>
@@ -115,14 +112,14 @@ export default function Nav() {
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="md:hidden border-t border-border border-b bg-background pb-4 shadow-md">
-            <Link
+            <a
               href="https://polylend.com"
               className="flex items-center justify-between py-2 text-base font-semibold"
             >
               Home
-            </Link>
+            </a>
             <Link
-              href="/"
+              to="/"
               onClick={() => setMobileOpen(false)}
               className={cn(
                 'flex items-center justify-between py-2 text-base font-semibold',
@@ -133,7 +130,7 @@ export default function Nav() {
             </Link>
 
             <Link
-              href="/borrower-loans"
+              to="/borrower-loans"
               onClick={() => setMobileOpen(false)}
               className={cn(
                 'flex items-center justify-between py-2 text-base font-semibold',
@@ -143,7 +140,7 @@ export default function Nav() {
               <span className="flex items-center gap-1.5">Loans</span>
             </Link>
 
-            <Link
+            <a
               href="https://docs.polylend.com"
               target="_blank"
               rel="noopener noreferrer"
@@ -154,7 +151,7 @@ export default function Nav() {
                 Docs
                 <ExternalLink className="h-4 w-4" />
               </span>
-            </Link>
+            </a>
 
             <div className="mt-4 flex flex-col gap-3 font-bold">
               <ClientOnly>

@@ -9,7 +9,7 @@ import { Position } from '@/types/polymarketPosition'
 import { toAPYText, toDuration, toSharesText, toUSDCString } from '@/utils/convertors'
 import { useQuery } from '@tanstack/react-query'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 import AcceptDialog from '../dialogs/acceptDialog'
 import { Button } from '../ui/button'
 import Address from '../widgets/address'
@@ -17,7 +17,7 @@ import Market from '../widgets/market'
 import OutcomeBadge from '../widgets/outcomeBadge'
 
 export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { data: proxyAddress } = useProxyAddress()
   const [unsupportedPositions, setUnsupportedPositions] = useState(0)
 
@@ -161,7 +161,7 @@ export default function BorrowerOffersTable({ data }: { data: AllLoanData }) {
                                   offer={offer}
                                   position={position}
                                   onSuccess={async () => {
-                                    router.push('/borrower-loans')
+                                    navigate('/borrower-loans')
                                   }}
                                 />
                               </TableCell>

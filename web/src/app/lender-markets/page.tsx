@@ -1,12 +1,10 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import { AllLoanData, LoanOffer } from '@/types/polyLend'
 import { toUSDString } from '@/utils/convertors'
 import { fetchData } from '@/utils/fetchData'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useConnection } from 'wagmi'
 
@@ -51,13 +49,13 @@ export default function Markets() {
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-primary">Offers:</p>
-                  <Link href={`/all-offers?event=${event.slug}`} className="text-sm text-primary underline">
+                  <Link to={`/all-offers?event=${event.slug}`} className="text-sm text-primary underline">
                     {data.offers.length}
                   </Link>
                 </div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm flex-1 text-primary">My Offers:</p>
-                  <Link href="/lender-offers" className="text-sm text-primary underline">
+                  <Link to="/lender-offers" className="text-sm text-primary underline">
                     {
                       data.offers.filter((offer: LoanOffer) => offer.lender.toLowerCase() === address?.toLowerCase())
                         .length
@@ -67,7 +65,7 @@ export default function Markets() {
               </CardContent>
               <CardFooter className="flex-col gap-2">
                 <Button type="submit" className="w-full" asChild>
-                  <Link href={`/lender-event/${event.slug}`}>Check Market & Create Offer</Link>
+                  <Link to={`/lender-event/${event.slug}`}>Check Market & Create Offer</Link>
                 </Button>
               </CardFooter>
             </Card>

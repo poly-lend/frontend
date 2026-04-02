@@ -1,5 +1,3 @@
-'use client'
-
 import BorrowerLoansTable from '@/components/borrower/borrowerLoansTable'
 import WalletGuard from '@/components/web3/walletGuard'
 import { AllLoanData } from '@/types/polyLend'

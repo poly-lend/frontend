@@ -1,8 +1,7 @@
-import Link from "next/link";
-import DexScreenerIcon from "./svgs/dexscreenerIcon";
-import GithubIcon from "./svgs/githubIcon";
-import TelegramIcon from "./svgs/telegramIcon";
-import XIcon from "./svgs/xIcon";
+import DexScreenerIcon from './svgs/dexscreenerIcon'
+import GithubIcon from './svgs/githubIcon'
+import TelegramIcon from './svgs/telegramIcon'
+import XIcon from './svgs/xIcon'
 
 export default function Bottom() {
   return (
@@ -15,5 +14,5 @@ export default function Bottom() {
         <XIcon />
       </div>
     </footer>
-  );
+  )
 }

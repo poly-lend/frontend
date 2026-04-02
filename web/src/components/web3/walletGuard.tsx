@@ -1,4 +1,3 @@
-'use client'
 
 import ClientOnly from '@/utils/clientOnly'
 import { chain } from '@/utils/wagmi'
