@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { polylendAddress, polymarketSharesDecimals, polymarketTokensAddress } from '@/config'
+import { MINIMUM_LOAN_DURATION_SECONDS, polylendAddress, polymarketSharesDecimals, polymarketTokensAddress } from '@/config'
 import { polylendConfig } from '@/contracts/polylend'
 
 import { polymarketTokensConfig } from '@/contracts/polymarketTokens'
@@ -42,7 +42,8 @@ export default function AcceptDialog({
   const [collateralAmount, setCollateralAmount] = useState(0)
   const [collateralValue, setCollateralValue] = useState(0)
   const [percentage, setPercentage] = useState(100)
-  const [minimumDuration, setMinimumDuration] = useState(offer.remainingDays)
+  const minimumLoanDurationDays = Math.ceil(MINIMUM_LOAN_DURATION_SECONDS / (60 * 60 * 24))
+  const [minimumDuration, setMinimumDuration] = useState(Math.max(offer.remainingDays, minimumLoanDurationDays))
   const [isApproving, setIsApproving] = useState(false)
   const [approvalTxHash, setApprovalTxHash] = useState<`0x${string}` | undefined>(undefined)
   const [isAccepting, setIsAccepting] = useState(false)
@@ -67,7 +68,7 @@ export default function AcceptDialog({
       setIsAccepting(false)
       setAcceptTxHash(undefined)
       setPercentage(100)
-      setMinimumDuration(offer.remainingDays)
+      setMinimumDuration(Math.max(offer.remainingDays, minimumLoanDurationDays))
     }
   }, [open])
 
@@ -208,14 +209,14 @@ export default function AcceptDialog({
                 name="minimumDuration"
                 type="number"
                 max={offer.remainingDays}
-                min={0}
+                min={minimumLoanDurationDays}
                 value={minimumDuration.toString()}
                 onChange={(e) => {
                   const val = Number(e.target.value)
                   if (val > offer.remainingDays) {
                     setMinimumDuration(offer.remainingDays)
-                  } else if (val < 0) {
-                    setMinimumDuration(0)
+                  } else if (val < minimumLoanDurationDays) {
+                    setMinimumDuration(minimumLoanDurationDays)
                   } else {
                     setMinimumDuration(val)
                   }
@@ -249,7 +250,7 @@ export default function AcceptDialog({
               <LoadingActionButton
                 onClick={handleAccept}
                 disabled={
-                  loanAmount <= 0 || minimumDuration <= 0 || collateralAmount <= 0 || isAccepting || !isApproved
+                  loanAmount <= 0 || minimumDuration < minimumLoanDurationDays || collateralAmount <= 0 || isAccepting || !isApproved
                 }
                 loading={isAccepting || isAcceptConfirming}
               >

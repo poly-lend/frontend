@@ -69,7 +69,7 @@ export default function BorrowerLoansTable({
                   </TableCell>
                   <TableCell align="right">{toAPYText(loan.rate)}</TableCell>
                   <TableCell align="right">
-                    <RepayDialog loanId={loan.loanId} onDataRefresh={onDataRefresh} />
+                    <RepayDialog loanId={loan.loanId} startTime={loan.startTime} onDataRefresh={onDataRefresh} />
                   </TableCell>
                 </TableRow>
               ))}

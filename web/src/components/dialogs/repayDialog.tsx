@@ -10,10 +10,11 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { polylendAddress, usdcAddress, usdcDecimals } from '@/config'
+import { MINIMUM_LOAN_DURATION_SECONDS, polylendAddress, usdcAddress, usdcDecimals } from '@/config'
 import { polylendConfig } from '@/contracts/polylend'
 import { usdcConfig } from '@/contracts/usdc'
 import useErc20Allowance from '@/hooks/useErc20Allowance'
+import { toDuration } from '@/utils/convertors'
 import { fetchAmountOwed } from '@/utils/fetchAmountOwed'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -24,10 +25,11 @@ import LoadingActionButton from '../widgets/loadingActionButton'
 
 export type RepayDialogProps = {
   loanId: string
+  startTime: string
   onDataRefresh: () => void
 }
 
-export default function RepayDialog({ loanId, onDataRefresh }: RepayDialogProps) {
+export default function RepayDialog({ loanId, startTime, onDataRefresh }: RepayDialogProps) {
   const [open, setOpen] = useState(false)
   const timestamp = BigInt(Math.floor(Date.now() / 1000))
   const [amount, setAmount] = useState<bigint>(BigInt(0))
@@ -53,7 +55,11 @@ export default function RepayDialog({ loanId, onDataRefresh }: RepayDialogProps)
   )
 
   const hasSufficientAllowance = allowance >= amount
-  const repayIsEnabled = !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance)
+  const now = Math.floor(Date.now() / 1000)
+  const loanAge = now - Number(startTime)
+  const canRepayYet = loanAge >= MINIMUM_LOAN_DURATION_SECONDS
+  const timeUntilRepay = MINIMUM_LOAN_DURATION_SECONDS - loanAge
+  const repayIsEnabled = !isAllowanceLoading && (isApprovalConfirmed || hasSufficientAllowance) && canRepayYet
 
   useEffect(() => {
     const getAmountOwed = async () => {
@@ -141,7 +147,10 @@ export default function RepayDialog({ loanId, onDataRefresh }: RepayDialogProps)
               <Input id="amountOwed" type="text" value={(Number(amount) / 10 ** usdcDecimals).toFixed(6)} disabled />
             </div>
 
-            {!repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
+            {!canRepayYet && (
+              <InfoAlert text={`Minimum loan duration not met. You can repay in ${toDuration(timeUntilRepay)}.`} />
+            )}
+            {canRepayYet && !repayIsEnabled && amount > BigInt(0) && !isAllowanceLoading && (
               <InfoAlert text="You need to approve the contract to spend your tokens before you can repay the loan. Click 'Approve' first, then 'Repay' once the approval is confirmed." />
             )}
           </div>

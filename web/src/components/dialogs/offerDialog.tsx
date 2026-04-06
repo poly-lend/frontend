@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { polylendAddress, polymarketSharesDecimals, usdcAddress, usdcDecimals } from '@/config'
+import { MINIMUM_LOAN_DURATION_SECONDS, polylendAddress, polymarketSharesDecimals, usdcAddress, usdcDecimals } from '@/config'
 import { polylendConfig } from '@/contracts/polylend'
 import { usdcConfig } from '@/contracts/usdc'
 import useErc20Allowance from '@/hooks/useErc20Allowance'
@@ -216,8 +216,13 @@ export default function OfferDialog({
                 id="duration"
                 name="duration"
                 type="number"
+                min={Math.ceil(MINIMUM_LOAN_DURATION_SECONDS / (60 * 60 * 24)) + 1}
                 value={duration.toString()}
-                onChange={(e) => setDuration(Number(e.target.value))}
+                onChange={(e) => {
+                  const minDays = Math.ceil(MINIMUM_LOAN_DURATION_SECONDS / (60 * 60 * 24)) + 1
+                  const val = Number(e.target.value)
+                  setDuration(val < minDays ? minDays : val)
+                }}
               />
             </div>
             <div className="grid gap-3">
@@ -255,7 +260,7 @@ export default function OfferDialog({
               )}
               <LoadingActionButton
                 onClick={handleOffer}
-                disabled={loanAmount <= 0 || rate <= 0 || isOffering || !offerIsEnabled}
+                disabled={loanAmount <= 0 || rate <= 0 || duration < Math.ceil(MINIMUM_LOAN_DURATION_SECONDS / (60 * 60 * 24)) + 1 || isOffering || !offerIsEnabled}
                 loading={isOffering || isOfferConfirming}
               >
                 Offer
